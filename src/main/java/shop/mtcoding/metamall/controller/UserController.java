@@ -8,7 +8,6 @@ import shop.mtcoding.metamall.core.exception.Exception401;
 import shop.mtcoding.metamall.core.jwt.JwtProvider;
 import shop.mtcoding.metamall.dto.ResponseDto;
 import shop.mtcoding.metamall.dto.user.UserRequest;
-import shop.mtcoding.metamall.dto.user.UserResponse;
 import shop.mtcoding.metamall.model.log.login.LoginLog;
 import shop.mtcoding.metamall.model.log.login.LoginLogRepository;
 import shop.mtcoding.metamall.model.user.Role;
@@ -30,6 +29,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserRequest.LoginDto loginDto, HttpServletRequest request) {
+        System.out.println("UserController : login 호출됨 ");
         Optional<User> userOP = userRepository.findByUsername(loginDto.getUsername());
         if (userOP.isPresent()) {
             // 1. 유저 정보 꺼내기
@@ -42,7 +42,7 @@ public class UserController {
 
             // 3. JWT 생성하기
             String jwt = JwtProvider.create(userOP.get());
-            System.out.println(jwt);
+            System.out.println(jwt.replace("Bearer ", ""));
             // 4. 최종 로그인 날짜 기록 (더티체킹 - update 쿼리 발생)
             loginUser.setUpdatedAt(LocalDateTime.now());
 
@@ -53,11 +53,6 @@ public class UserController {
                     .clientIP(request.getRemoteAddr())
                     .build();
             loginLogRepository.save(loginLog);
-
-            String authHeader = request.getHeader(JwtProvider.HEADER);
-            if (authHeader != null) {
-                request.removeAttribute("Authorization");
-            }
 
             // 6. 응답 DTO 생성
             ResponseDto<?> responseDto = new ResponseDto<>().data(loginUser);

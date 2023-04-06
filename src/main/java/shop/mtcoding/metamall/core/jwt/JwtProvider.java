@@ -14,7 +14,7 @@ import java.util.Date;
 public class JwtProvider {
 
     private static final String SUBJECT = "jwtstudy";
-    private static final int EXP = 1000 * 60 * 60 * 24 * 100;
+    private static final int EXP = 1000 * 60 * 60;
     public static final String TOKEN_PREFIX = "Bearer "; // 스페이스 필요함
     public static final String HEADER = "Authorization";
     private static final String SECRET = "메타코딩";

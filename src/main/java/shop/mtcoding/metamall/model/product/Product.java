@@ -17,8 +17,11 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false, length = 50)
     private String name; // 상품 이름
+    @Column(nullable = false, length = Integer.MAX_VALUE)
     private Integer price; // 상품 가격
+    @Column(nullable = false, length = Integer.MAX_VALUE)
     private Integer qty; // 상품 재고
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

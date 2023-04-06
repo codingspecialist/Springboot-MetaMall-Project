@@ -1,4 +1,4 @@
-package shop.mtcoding.metamall.dto.board;
+package shop.mtcoding.metamall.dto.product;
 
 import lombok.Getter;
 import lombok.Setter;
