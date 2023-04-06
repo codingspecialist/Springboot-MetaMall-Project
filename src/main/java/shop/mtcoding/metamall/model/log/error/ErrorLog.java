@@ -19,7 +19,6 @@ public class ErrorLog {
     private Long id;
     private String msg;
     private Long userId;
-
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
