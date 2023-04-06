@@ -9,6 +9,7 @@ import shop.mtcoding.metamall.model.orderproduct.OrderProductRepository;
 import shop.mtcoding.metamall.model.ordersheet.OrderSheet;
 import shop.mtcoding.metamall.model.ordersheet.OrderSheetRepository;
 import shop.mtcoding.metamall.model.product.ProductRepository;
+import shop.mtcoding.metamall.model.user.Role;
 import shop.mtcoding.metamall.model.user.User;
 import shop.mtcoding.metamall.model.user.UserRepository;
 
@@ -20,7 +21,7 @@ public class MetamallApplication {
 		return (args)->{
 			// 여기에서 save 하면 됨.
 			// bulk Collector는 saveAll 하면 됨.
-			User ssar = User.builder().username("ssar").password("1234").email("ssar@nate.com").role("USER").build();
+			User ssar = User.builder().username("ssar").password("1234").email("ssar@nate.com").role(Role.USER).build();
 			userRepository.save(ssar);
 		};
 	}

@@ -4,8 +4,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
@@ -17,10 +19,13 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false, length = 30)
     private String username;
+    @Column(nullable = false, length = 100)
     private String password;
+    @Column(nullable = false, length = 50)
     private String email;
-    private String role; // USER(고객), SELLER(판매자), ADMIN(관리자)
+    private Role role; // USER(고객), SELLER(판매자), ADMIN(관리자)
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -35,7 +40,7 @@ public class User {
     }
 
     @Builder
-    public User(Long id, String username, String password, String email, String role, LocalDateTime createdAt) {
+    public User(Long id, String username, String password, String email, Role role, LocalDateTime createdAt) {
         this.id = id;
         this.username = username;
         this.password = password;

@@ -11,6 +11,7 @@ import shop.mtcoding.metamall.dto.user.UserRequest;
 import shop.mtcoding.metamall.dto.user.UserResponse;
 import shop.mtcoding.metamall.model.log.login.LoginLog;
 import shop.mtcoding.metamall.model.log.login.LoginLogRepository;
+import shop.mtcoding.metamall.model.user.Role;
 import shop.mtcoding.metamall.model.user.User;
 import shop.mtcoding.metamall.model.user.UserRepository;
 
@@ -59,5 +60,14 @@ public class UserController {
         } else {
             throw new Exception400("유저네임 혹은 아이디가 잘못되었습니다");
         }
+    }
+
+    @PostMapping("/join")
+    public ResponseEntity<?> join(@RequestBody User joinUser){
+        joinUser.setRole(Role.USER);
+        userRepository.save(joinUser);
+        System.out.println("UserController : join 호출됨 ");
+        ResponseDto<?> responseDto = new ResponseDto<>().data(joinUser);
+        return ResponseEntity.ok().body(responseDto);
     }
 }
