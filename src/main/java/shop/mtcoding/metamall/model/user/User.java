@@ -40,12 +40,13 @@ public class User {
     }
 
     @Builder
-    public User(Long id, String username, String password, String email, Role role, LocalDateTime createdAt) {
+    public User(Long id, String username, String password, String email, Role role, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
         this.role = role;
         this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 }

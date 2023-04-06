@@ -42,7 +42,7 @@ public class UserController {
 
             // 3. JWT 생성하기
             String jwt = JwtProvider.create(userOP.get());
-
+            System.out.println(jwt);
             // 4. 최종 로그인 날짜 기록 (더티체킹 - update 쿼리 발생)
             loginUser.setUpdatedAt(LocalDateTime.now());
 
@@ -53,6 +53,11 @@ public class UserController {
                     .clientIP(request.getRemoteAddr())
                     .build();
             loginLogRepository.save(loginLog);
+
+            String authHeader = request.getHeader(JwtProvider.HEADER);
+            if (authHeader != null) {
+                request.removeAttribute("Authorization");
+            }
 
             // 6. 응답 DTO 생성
             ResponseDto<?> responseDto = new ResponseDto<>().data(loginUser);
