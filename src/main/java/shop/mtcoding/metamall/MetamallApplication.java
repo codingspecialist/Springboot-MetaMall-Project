@@ -30,8 +30,11 @@ public class MetamallApplication {
 			User ssar = User.builder().username("ssar").password("1234").email("ssar@nate.com").role(Role.USER).build();
 			userRepository.save(ssar);
 
-			Product prt = Product.builder().name("book").price(10000).qty(1).build();
-			productRepository.save(prt);
+			Product book = Product.builder().name("book1").price(10000).qty(100).build();
+			productRepository.save(book);
+
+			Product book2 = Product.builder().name("book2").price(15000).qty(100).build();
+			productRepository.save(book2);
 		};
 	}
 

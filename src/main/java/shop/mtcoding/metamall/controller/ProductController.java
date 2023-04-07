@@ -3,6 +3,7 @@ package shop.mtcoding.metamall.controller;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import shop.mtcoding.metamall.core.exception.Exception400;
 import shop.mtcoding.metamall.core.jwt.JwtProvider;
@@ -77,5 +78,66 @@ public class ProductController {
        }else{
            throw new Exception400("판매자만 등록할 수 있습니다");
        }
+    }
+
+    @Transactional
+    @PutMapping("/update/{bookname}")
+    public ResponseEntity<?> update(@PathVariable String bookname, @RequestBody Product updateProduct, HttpServletRequest request){
+        System.out.println("ProductController : update 호출됨 ");
+        // 1. 사용자의 토큰 인증
+        String jwt = request.getHeader(JwtProvider.HEADER).replaceAll("Bearer ", "");
+        System.out.println( JwtProvider.HEADER + " - jwt update : " + jwt);
+        DecodedJWT decodedJWT = JwtProvider.verify(jwt);
+
+        // 2. 사용자의 권한 확인 SELLER(판매자), ADMIN(관리자)여야 등록 가능
+        String role = decodedJWT.getClaim("role").asString();
+        System.out.println("Role : " + role);
+
+        if(role.equals(Role.SELLER.toString())){
+            System.out.println("권한 확인 완료");
+
+            Product productPS = productRepository.findByName(bookname).orElseThrow(() -> {
+                return new Exception400("제품의 이름을 찾을 수 없습니다. ");
+            }); //영속화 하기
+
+            productPS.setPrice(updateProduct.getPrice());
+            productPS.setQty(updateProduct.getQty());
+
+            ResponseDto<?> responseDto = new ResponseDto<>().data(updateProduct);
+            return ResponseEntity.ok().body(responseDto);
+
+        }else{
+            throw new Exception400("판매자만 등록할 수 있습니다");
+        }
+    }
+
+    @Transactional
+    @DeleteMapping("/delete/{name}")
+    public ResponseEntity<?> delete(@PathVariable String name, HttpServletRequest request){
+        System.out.println("ProductController : delete 호출됨 ");
+        // 1. 사용자의 토큰 인증
+        String jwt = request.getHeader(JwtProvider.HEADER).replaceAll("Bearer ", "");
+        System.out.println( JwtProvider.HEADER + " - jwt delete : " + jwt);
+        DecodedJWT decodedJWT = JwtProvider.verify(jwt);
+
+        // 2. 사용자의 권한 확인 SELLER(판매자), ADMIN(관리자)여야 등록 가능
+        String role = decodedJWT.getClaim("role").asString();
+        System.out.println("Role : " + role);
+
+        if(role.equals(Role.SELLER.toString())){
+            System.out.println("권한 확인 완료");
+
+            Product productPS = productRepository.findByName(name).orElseThrow(() -> {
+                return new Exception400("제품의 이름을 찾을 수 없습니다. ");
+            }); //제품이 있는지 확인
+
+            productRepository.deleteById(productPS.getId());
+
+            ResponseDto<?> responseDto = new ResponseDto<>().data("Delete Success!");
+            return ResponseEntity.ok().body(responseDto);
+
+        }else{
+            throw new Exception400("판매자만 삭제할 수 있습니다");
+        }
     }
 }
