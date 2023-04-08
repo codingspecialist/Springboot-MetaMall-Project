@@ -16,10 +16,13 @@ import shop.mtcoding.metamall.model.ordersheet.OrderSheetRepository;
 import shop.mtcoding.metamall.model.product.Product;
 import shop.mtcoding.metamall.model.product.ProductRepository;
 import shop.mtcoding.metamall.model.user.Role;
+import shop.mtcoding.metamall.model.user.User;
+import shop.mtcoding.metamall.model.user.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -29,6 +32,7 @@ public class OrderController {
     private final HttpSession session;
     private final OrderProductRepository orderProductRepository;
     private final OrderSheetRepository orderSheetRepository;
+    private final UserRepository userRepository;
 
     @PostMapping("/order")
     @Transactional
@@ -94,12 +98,12 @@ public class OrderController {
        String role = decodedJWT.getClaim("role").asString();
         Long userId = decodedJWT.getClaim("id").asLong();
 
-       if(role.equals(Role.USER.toString())){
+       if(role.equals(Role.USER.toString())){ // 고객일 경우 본인의 주문 목록 보기
            OrderSheet orderSheet = orderSheetRepository.findByUserId(userId).get();
            List<OrderProduct> orderProductList = orderSheet.getOrderProductList();
            ResponseDto<?> responseDto = new ResponseDto<>().data(orderProductList);
            return ResponseEntity.ok().body(responseDto);
-       }else if(role.equals(Role.SELLER.toString())){
+       }else if(role.equals(Role.SELLER.toString())){ // 판매자일 경우 모든 주문 목록 보기
            List<OrderSheet> orderSheetList = orderSheetRepository.findAll();
            ResponseDto<?> responseDto = new ResponseDto<>().data(orderSheetList);
            return ResponseEntity.ok().body(responseDto);
@@ -108,85 +112,53 @@ public class OrderController {
        }
     }
 
-//    @PostMapping("/upload")
-//    public ResponseEntity<?> upload(@RequestBody Product uploadProduct, HttpServletRequest request){
-//        System.out.println("ProductController : upload 호출됨 ");
-//       // 1. 사용자의 토큰 인증
-//       String jwt = request.getHeader(JwtProvider.HEADER).replaceAll("Bearer ", "");
-//       System.out.println( JwtProvider.HEADER + " - jwt upload : " + jwt);
-//       DecodedJWT decodedJWT = JwtProvider.verify(jwt);
-//
-//       // 2. 사용자의 권한 확인 SELLER(판매자), ADMIN(관리자)여야 등록 가능
-//       String role = decodedJWT.getClaim("role").asString();
-//        System.out.println("Role : " + role);
-//       if(role.equals(Role.SELLER.toString())){
-//           productRepository.save(uploadProduct);
-//           System.out.println("권한 확인 완료");
-//           ResponseDto<?> responseDto = new ResponseDto<>().data(uploadProduct);
-//           return ResponseEntity.ok().body(responseDto);
-//       }else{
-//           throw new Exception400("판매자만 등록할 수 있습니다");
-//       }
-//    }
+    @DeleteMapping("/cancel")
+    public ResponseEntity<?> cancel(HttpServletRequest request){
+        System.out.println("OrderController : cancel 호출됨 ");
+        // 1. 사용자의 토큰 인증
+        String jwt = request.getHeader(JwtProvider.HEADER).replaceAll("Bearer ", "");
+        System.out.println( JwtProvider.HEADER + " - jwt upload : " + jwt);
+        DecodedJWT decodedJWT = JwtProvider.verify(jwt);
 
-//    @Transactional
-//    @PutMapping("/update/{bookname}")
-//    public ResponseEntity<?> update(@PathVariable String bookname, @RequestBody Product updateProduct, HttpServletRequest request){
-//        System.out.println("ProductController : update 호출됨 ");
-//        // 1. 사용자의 토큰 인증
-//        String jwt = request.getHeader(JwtProvider.HEADER).replaceAll("Bearer ", "");
-//        System.out.println( JwtProvider.HEADER + " - jwt update : " + jwt);
-//        DecodedJWT decodedJWT = JwtProvider.verify(jwt);
-//
-//        // 2. 사용자의 권한 확인 SELLER(판매자), ADMIN(관리자)여야 등록 가능
-//        String role = decodedJWT.getClaim("role").asString();
-//        System.out.println("Role : " + role);
-//
-//        if(role.equals(Role.SELLER.toString())){
-//            System.out.println("권한 확인 완료");
-//
-//            Product productPS = productRepository.findByName(bookname).orElseThrow(() -> {
-//                return new Exception400("제품의 이름을 찾을 수 없습니다. ");
-//            }); //영속화 하기
-//
-//            productPS.setPrice(updateProduct.getPrice());
-//            productPS.setQty(updateProduct.getQty());
-//
-//            ResponseDto<?> responseDto = new ResponseDto<>().data(updateProduct);
-//            return ResponseEntity.ok().body(responseDto);
-//
-//        }else{
-//            throw new Exception400("판매자만 등록할 수 있습니다");
-//        }
-//    }
-//
-//    @Transactional
-//    @DeleteMapping("/delete/{name}")
-//    public ResponseEntity<?> delete(@PathVariable String name, HttpServletRequest request){
-//        System.out.println("ProductController : delete 호출됨 ");
-//        // 1. 사용자의 토큰 인증
-//        String jwt = request.getHeader(JwtProvider.HEADER).replaceAll("Bearer ", "");
-//        System.out.println( JwtProvider.HEADER + " - jwt delete : " + jwt);
-//        DecodedJWT decodedJWT = JwtProvider.verify(jwt);
-//
-//        // 2. 사용자의 권한 확인 SELLER(판매자), ADMIN(관리자)여야 등록 가능
-//        String role = decodedJWT.getClaim("role").asString();
-//        System.out.println("Role : " + role);
-//
-//        if(role.equals(Role.SELLER.toString())){
-//            System.out.println("권한 확인 완료");
-//
-//            Product productPS = productRepository.findByName(name).orElseThrow(() -> {
-//                return new Exception400("제품의 이름을 찾을 수 없습니다. ");
-//            }); //제품이 있는지 확인
-//
-//            productRepository.deleteById(productPS.getId());
-//
-//            ResponseDto<?> responseDto = new ResponseDto<>().data("Delete Success!");
-//            return ResponseEntity.ok().body(responseDto);
-//
-//        }else{
-//            throw new Exception400("판매자만 삭제할 수 있습니다");
-//        }
-//    }
+        // 2. 사용자의 권한 확인 SELLER(판매자), ADMIN(관리자)여야 등록 가능
+        String role = decodedJWT.getClaim("role").asString();
+        Long userId = decodedJWT.getClaim("id").asLong();
+
+        if(role.equals(Role.USER.toString())) { // 고객일 경우 본인의 주문 목록 삭제하기 -> 빈 주문 목록으로 새로 생성해주기
+            orderSheetRepository.deleteByUserId(userId);
+            Optional<User> user = userRepository.findById(userId);
+            OrderSheet orderSheet = OrderSheet.builder().user(user.get()).totalPrice(0).build();
+            orderSheetRepository.save(orderSheet);
+            ResponseDto<?> responseDto = new ResponseDto<>().data("주문이 정상적으로 취소되었습니다. ");
+            return ResponseEntity.ok().body(responseDto);
+        }else {
+            throw new Exception400("잘못된 접근입니다. ");
+        }
+    }
+
+    @DeleteMapping("/cancel/{userId}")
+    public ResponseEntity<?> cancelSeller(@PathVariable Long userId, HttpServletRequest request){
+        System.out.println("OrderController : cancelSeller 호출됨 ");
+        // 1. 사용자의 토큰 인증
+        String jwt = request.getHeader(JwtProvider.HEADER).replaceAll("Bearer ", "");
+        System.out.println( JwtProvider.HEADER + " - jwt upload : " + jwt);
+        DecodedJWT decodedJWT = JwtProvider.verify(jwt);
+
+        // 2. 사용자의 권한 확인 SELLER(판매자), ADMIN(관리자)여야 등록 가능
+        String role = decodedJWT.getClaim("role").asString();
+
+        if(role.equals(Role.SELLER.toString())){ // 판매자일 경우 본인의 body에 입력한 고객의 주문 목록 삭제하기 -> 빈 주문 목록으로 새로 생성해주기
+            // Long userId = Long.parseLong(id);
+            orderSheetRepository.deleteByUserId(userId);
+            User user = userRepository.findById(userId).orElseThrow(() -> {
+                return new Exception400(userId + "번 고객을 찾을 수 없습니다. ");
+            });
+            OrderSheet orderSheet = OrderSheet.builder().user(user).totalPrice(0).build();
+            orderSheetRepository.save(orderSheet);
+            ResponseDto<?> responseDto = new ResponseDto<>().data(userId + "번 고객의 주문이 정상적으로 취소되었습니다. ");
+            return ResponseEntity.ok().body(responseDto);
+        }else {
+            throw new Exception400("잘못된 접근입니다. ");
+        }
+    }
 }
