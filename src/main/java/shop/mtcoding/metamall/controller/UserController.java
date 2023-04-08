@@ -3,9 +3,11 @@ package shop.mtcoding.metamall.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import shop.mtcoding.metamall.core.anotation.Authorize;
 import shop.mtcoding.metamall.core.exception.Exception400;
 import shop.mtcoding.metamall.core.exception.Exception401;
 import shop.mtcoding.metamall.core.jwt.JwtProvider;
+import shop.mtcoding.metamall.core.session.LoginUser;
 import shop.mtcoding.metamall.dto.ResponseDto;
 import shop.mtcoding.metamall.dto.user.UserRequest;
 import shop.mtcoding.metamall.model.log.login.LoginLog;
@@ -28,37 +30,43 @@ public class UserController {
     private final UserRepository userRepository;
     private final LoginLogRepository loginLogRepository;
     private final OrderSheetRepository orderSheetRepository;
+
     private final HttpSession session;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserRequest.LoginDto loginDto, HttpServletRequest request) {
-        System.out.println("UserController : login 호출됨 ");
+        session.setAttribute("login", null);
         Optional<User> userOP = userRepository.findByUsername(loginDto.getUsername());
         if (userOP.isPresent()) {
             // 1. 유저 정보 꺼내기
-            User loginUser = userOP.get();
+            User user = userOP.get();
 
             // 2. 패스워드 검증하기
-            if(!loginUser.getPassword().equals(loginDto.getPassword())){
+            if(!user.getPassword().equals(loginDto.getPassword())){
                 throw new Exception401("인증되지 않았습니다");
             }
 
             // 3. JWT 생성하기
             String jwt = JwtProvider.create(userOP.get());
-            System.out.println(jwt.replace("Bearer ", ""));
+
             // 4. 최종 로그인 날짜 기록 (더티체킹 - update 쿼리 발생)
-            loginUser.setUpdatedAt(LocalDateTime.now());
+            user.setUpdatedAt(LocalDateTime.now());
 
             // 5. 로그 테이블 기록
             LoginLog loginLog = LoginLog.builder()
-                    .userId(loginUser.getId())
+                    .userId(user.getId())
                     .userAgent(request.getHeader("User-Agent"))
                     .clientIP(request.getRemoteAddr())
                     .build();
             loginLogRepository.save(loginLog);
 
-            // 6. 응답 DTO 생성
-            ResponseDto<?> responseDto = new ResponseDto<>().data(loginUser);
+//             6.  loginUser에 저장 - 에러에 사용하기 위해서
+            LoginUser loginUser = LoginUser.builder().id(user.getId()).role(user.getRole().toString()).build();
+            session.setAttribute("login", loginUser);
+            System.out.println("로그인 후 유저 정보 : " + loginUser);
+
+            // 7. 응답 DTO 생성
+            ResponseDto<?> responseDto = new ResponseDto<>().data(user);
             return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body(responseDto);
         } else {
             throw new Exception400("유저네임 혹은 아이디가 잘못되었습니다");
@@ -69,7 +77,6 @@ public class UserController {
     public ResponseEntity<?> join(@RequestBody User joinUser){
         joinUser.setRole(Role.USER);
         userRepository.save(joinUser);
-        System.out.println("UserController : join 호출됨 ");
         OrderSheet orderSheet = OrderSheet.builder().user(joinUser).totalPrice(0).build();
         orderSheetRepository.save(orderSheet); // 한 고객 당 주문 시트 생성
 

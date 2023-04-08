@@ -3,6 +3,8 @@ package shop.mtcoding.metamall.core.exception;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import shop.mtcoding.metamall.dto.ResponseDto;
+import shop.mtcoding.metamall.model.log.err.ErrorLog;
+import shop.mtcoding.metamall.model.log.err.ErrorLogRepository;
 
 
 // 리소스 없음
@@ -10,6 +12,7 @@ import shop.mtcoding.metamall.dto.ResponseDto;
 public class Exception404 extends RuntimeException {
     public Exception404(String message) {
         super(message);
+
     }
 
     public ResponseDto<?> body(){

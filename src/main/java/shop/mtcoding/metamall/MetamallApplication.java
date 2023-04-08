@@ -4,6 +4,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import shop.mtcoding.metamall.model.log.err.ErrorLogRepository;
+import shop.mtcoding.metamall.model.log.login.LoginLogRepository;
 import shop.mtcoding.metamall.model.orderproduct.OrderProduct;
 import shop.mtcoding.metamall.model.orderproduct.OrderProductRepository;
 import shop.mtcoding.metamall.model.ordersheet.OrderSheet;
@@ -20,7 +22,7 @@ import java.time.LocalDateTime;
 public class MetamallApplication {
 
 	@Bean
-	CommandLineRunner initData(UserRepository userRepository, ProductRepository productRepository, OrderProductRepository orderProductRepository, OrderSheetRepository orderSheetRepository){
+	CommandLineRunner initData(UserRepository userRepository, ProductRepository productRepository, OrderProductRepository orderProductRepository, OrderSheetRepository orderSheetRepository, ErrorLogRepository errorLogRepository, LoginLogRepository loginLogRepository){
 		return (args)->{
 			// 여기에서 save 하면 됨.
 			// bulk Collector는 saveAll 하면 됨.

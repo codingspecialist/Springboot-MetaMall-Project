@@ -1,4 +1,4 @@
-package shop.mtcoding.metamall.model.log.error;
+package shop.mtcoding.metamall.model.log.err;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -18,27 +18,26 @@ public class ErrorLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String msg;
-
     private Long userId;
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+//    private LocalDateTime updatedAt;  필요 없을 듯
 
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
 
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
+//    @PreUpdate
+//    protected void onUpdate() {
+//        this.updatedAt = LocalDateTime.now();
+//    } 필요 없을 듯
 
     @Builder
-    public ErrorLog(Long id, String msg, Long userId, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public ErrorLog(Long id, String msg, Long userId, LocalDateTime createdAt) {
         this.id = id;
         this.msg = msg;
         this.userId = userId;
         this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+//        this.updatedAt = updatedAt;
     }
 }

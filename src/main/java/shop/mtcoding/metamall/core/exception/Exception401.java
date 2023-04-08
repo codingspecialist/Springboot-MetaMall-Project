@@ -4,6 +4,8 @@ package shop.mtcoding.metamall.core.exception;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import shop.mtcoding.metamall.dto.ResponseDto;
+import shop.mtcoding.metamall.model.log.err.ErrorLog;
+import shop.mtcoding.metamall.model.log.err.ErrorLogRepository;
 
 
 // 인증 안됨
