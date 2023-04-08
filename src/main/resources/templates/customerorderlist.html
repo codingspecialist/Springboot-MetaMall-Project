@@ -16,6 +16,21 @@
             background-color: #f2f2f2;
             color: black;
         }
+        .button {
+            width: 220px;
+            margin: 20px;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -116,8 +131,8 @@
 </table>
 
 <div style="text-align:center; margin-top:20px;">
-    <button type="button" id="cancel-order">주문 취소</button>
-    <button type="button" id="back-to-ordermanagement">주문 관리 페이지로 가기</button>
+    <button type="button" class="button" id="cancel-order">주문 취소</button>
+    <button type="button" class="button" id="back-to-ordermanagement">주문 관리 페이지로 가기</button>
 </div>
 
 </body>
