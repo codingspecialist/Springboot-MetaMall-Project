@@ -1,9 +1,6 @@
 package shop.mtcoding.metamall.model.orderproduct;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import shop.mtcoding.metamall.model.ordersheet.OrderSheet;
 import shop.mtcoding.metamall.model.product.Product;
 
@@ -11,8 +8,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
-@Setter // DTO 만들면 삭제해야됨
-@Getter
+@Data
 @Table(name = "order_product_tb")
 @Entity
 public class OrderProduct { // 주문 상품

@@ -1,16 +1,12 @@
 package shop.mtcoding.metamall.model.user;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
-@Setter // DTO 만들면 삭제해야됨
-@Getter
+@Data // DTO 만들면 삭제해야됨
 @Table(name = "user_tb")
 @Entity
 public class User {

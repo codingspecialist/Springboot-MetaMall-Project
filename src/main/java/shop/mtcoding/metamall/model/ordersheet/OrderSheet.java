@@ -1,9 +1,6 @@
 package shop.mtcoding.metamall.model.ordersheet;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import shop.mtcoding.metamall.model.orderproduct.OrderProduct;
 import shop.mtcoding.metamall.model.product.Product;
 import shop.mtcoding.metamall.model.user.User;
@@ -14,8 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
-@Setter // DTO 만들면 삭제해야됨
-@Getter
+@Data
 @Table(name = "order_sheet_tb")
 @Entity
 public class OrderSheet { // 주문서

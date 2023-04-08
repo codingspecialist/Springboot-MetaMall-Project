@@ -1,16 +1,12 @@
 package shop.mtcoding.metamall.model.log.login;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
-@Setter // DTO 만들면 삭제해야됨
-@Getter
+@Data
 @Table(name = "login_log_tb")
 @Entity
 public class LoginLog {

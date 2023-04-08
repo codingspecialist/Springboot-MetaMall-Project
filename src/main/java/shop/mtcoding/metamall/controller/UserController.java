@@ -2,21 +2,26 @@ package shop.mtcoding.metamall.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import shop.mtcoding.metamall.core.exception.Exception400;
 import shop.mtcoding.metamall.core.exception.Exception401;
 import shop.mtcoding.metamall.core.jwt.JwtProvider;
 import shop.mtcoding.metamall.dto.ResponseDto;
 import shop.mtcoding.metamall.dto.user.UserRequest;
-import shop.mtcoding.metamall.dto.user.UserResponse;
 import shop.mtcoding.metamall.model.log.login.LoginLog;
 import shop.mtcoding.metamall.model.log.login.LoginLogRepository;
 import shop.mtcoding.metamall.model.user.User;
 import shop.mtcoding.metamall.model.user.UserRepository;
+import shop.mtcoding.metamall.service.LoginService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -25,11 +30,30 @@ public class UserController {
 
     private final UserRepository userRepository;
     private final LoginLogRepository loginLogRepository;
+    private final LoginService loginService;
     private final HttpSession session;
 
-    @PostMapping("/login")
+    @PostMapping("/auth/join")
+    public ResponseEntity<?> join(@Validated UserRequest.JoinDto joinDto, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorMap = new HashMap<>();
+            for (FieldError error: bindingResult.getFieldErrors()) {
+                errorMap.put(error.getField(), error.getDefaultMessage());
+            }
+            throw new Exception400("유효성검사가 실패했습니다.");
+
+        } else {
+
+            User user = joinDto.toEntity();
+            User userEntity = loginService.join(user);
+            return ResponseEntity.ok().body(userEntity);
+        }
+    }
+
+    @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody UserRequest.LoginDto loginDto, HttpServletRequest request) {
-        Optional<User> userOP = userRepository.findByUsername(loginDto.getUsername());
+        Optional<User> userOP = Optional.ofNullable(userRepository.findByUsername(loginDto.getUsername()));
         if (userOP.isPresent()) {
             // 1. 유저 정보 꺼내기
             User loginUser = userOP.get();
@@ -60,4 +84,6 @@ public class UserController {
             throw new Exception400("유저네임 혹은 아이디가 잘못되었습니다");
         }
     }
+
+
 }
