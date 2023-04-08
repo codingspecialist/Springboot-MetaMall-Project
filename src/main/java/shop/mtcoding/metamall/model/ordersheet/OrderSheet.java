@@ -23,8 +23,10 @@ public class OrderSheet { // 주문서
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
+    @JoinColumn(name = "userId")
     private User user; // 주문자
-    @OneToMany(mappedBy = "orderSheet")
+
+    @OneToMany(mappedBy = "orderSheet", fetch = FetchType.LAZY)
     private List<OrderProduct> orderProductList = new ArrayList<>(); // 총 주문 상품 리스트
     private Integer totalPrice; // 총 주문 금액 (총 주문 상품 리스트의 orderPrice 합)
     private LocalDateTime createdAt;

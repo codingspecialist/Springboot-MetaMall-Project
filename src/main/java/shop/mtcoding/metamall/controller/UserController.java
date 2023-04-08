@@ -10,6 +10,8 @@ import shop.mtcoding.metamall.dto.ResponseDto;
 import shop.mtcoding.metamall.dto.user.UserRequest;
 import shop.mtcoding.metamall.model.log.login.LoginLog;
 import shop.mtcoding.metamall.model.log.login.LoginLogRepository;
+import shop.mtcoding.metamall.model.ordersheet.OrderSheet;
+import shop.mtcoding.metamall.model.ordersheet.OrderSheetRepository;
 import shop.mtcoding.metamall.model.user.Role;
 import shop.mtcoding.metamall.model.user.User;
 import shop.mtcoding.metamall.model.user.UserRepository;
@@ -25,6 +27,7 @@ public class UserController {
 
     private final UserRepository userRepository;
     private final LoginLogRepository loginLogRepository;
+    private final OrderSheetRepository orderSheetRepository;
     private final HttpSession session;
 
     @PostMapping("/login")
@@ -67,6 +70,9 @@ public class UserController {
         joinUser.setRole(Role.USER);
         userRepository.save(joinUser);
         System.out.println("UserController : join 호출됨 ");
+        OrderSheet orderSheet = OrderSheet.builder().user(joinUser).totalPrice(0).build();
+        orderSheetRepository.save(orderSheet); // 한 고객 당 주문 시트 생성
+
         ResponseDto<?> responseDto = new ResponseDto<>().data(joinUser);
         return ResponseEntity.ok().body(responseDto);
     }
