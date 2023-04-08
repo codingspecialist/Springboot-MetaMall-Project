@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>상품 등록</title>
+    <style>
+        form {
+            width: 300px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        input[type="text"],
+        input[type="number"] {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("form").on("submit", function(event) {
+                event.preventDefault(); // 기본 폼 제출 동작을 막습니다.
+
+                const formData = {
+                    name: $("#name").val(),
+                    price: $("#price").val(),
+                    qty: $("#qty").val(),
+                };
+
+                // 서버에 상품 등록 요청을 보냅니다.
+                $.ajax({
+                    type: "POST",
+                    url: "/item/register",
+                    data: JSON.stringify(formData),
+                    contentType: "application/json",
+                    beforeSend: function(xhr) {
+                        const token = localStorage.getItem('token');
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                    },
+                    success: function(response) {
+                        // 상품 등록 성공 시, 원하는 페이지로 리다이렉트합니다.
+                        window.location.href = "/productmanagement"; // 상품 관리 페이지로 이동
+                    },
+                    error: function(response) {
+                        // 상품 등록 실패 시, 오류 메시지를 표시합니다.
+                        const errorMessage = response.responseJSON.msg;
+                        alert(errorMessage);
+                    },
+                });
+            });
+
+            $("#back-to-productmanagement").on("click", function() {
+                window.location.href = "/productmanagement";
+            });
+        });
+    </script>
+</head>
+<body>
+<form>
+    <label for="name">상품 이름:</label>
+    <input type="text" id="name" name="name" required>
+
+    <label for="price">상품 가격:</label>
+    <input type="number" id="price" name="price" required>
+
+    <label for="qty">상품 재고:</label>
+    <input type="number" id="qty" name="qty" required>
+
+    <button type="submit">상품 등록</button>
+
+    <div style="text-align:center; margin-top:20px;">
+        <button type="button" id="back-to-productmanagement">상품 관리 페이지로 가기</button>
+    </div>
+
+</form>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>로그인</title>
+  <style>
+    form {
+      width: 300px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      width: 100%;
+    }
+
+    input[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function ()
+    {
+      $("#login-form").on("submit", function (event)
+      {
+        event.preventDefault(); // 기본 폼 제출 동작을 막습니다.
+
+        const formData = {
+          username: $("#username").val(),
+          password: $("#password").val(),
+        };
+
+        // 서버에 로그인 요청을 보냅니다.
+        $.ajax({
+          type: "POST",
+          url: "/user/login",
+          data: JSON.stringify(formData),
+          contentType: "application/json",
+          success: function (response, textStatus, jqXHR) {
+            // 로그인 성공 시, 토큰을 로컬 스토리지에 저장합니다.
+            const token = jqXHR.getResponseHeader('Authorization');
+            console.log('Receive token!');
+            localStorage.setItem('token', token);
+            // 로그인 성공 시, 원하는 페이지로 리다이렉트합니다.
+            window.location.href = "/"; // 홈으로 이동
+          },
+          error: function (response) {
+            // 로그인 실패 시, 오류 메시지를 표시합니다.
+            const errorMessage = response.responseJSON.msg;
+            $("#error-message").text(errorMessage);
+          },
+        });
+      });
+    });
+  </script>
+
+</head>
+<body>
+<h1>로그인 폼</h1>
+<form id="login-form">
+  <label for="username">아이디:</label>
+  <input type="text" id="username" name="username" required>
+
+  <label for="password">패스워드:</label>
+  <input type="password" id="password" name="password" required>
+
+  <input type="submit" value="로그인">
+
+  <div id="error-message" style="color: red; text-align: center;"></div>
+</form>
+<div style="text-align:center; margin-top:20px;">
+  <a href="/">홈으로 가기</a>
+</div>
+</body>
+</html>

@@ -8,6 +8,7 @@ import shop.mtcoding.metamall.model.orderproduct.OrderProduct;
 import shop.mtcoding.metamall.model.orderproduct.OrderProductRepository;
 import shop.mtcoding.metamall.model.ordersheet.OrderSheet;
 import shop.mtcoding.metamall.model.ordersheet.OrderSheetRepository;
+import shop.mtcoding.metamall.model.product.Product;
 import shop.mtcoding.metamall.model.product.ProductRepository;
 import shop.mtcoding.metamall.model.user.User;
 import shop.mtcoding.metamall.model.user.UserRepository;
@@ -20,8 +21,17 @@ public class MetamallApplication {
 		return (args)->{
 			// 여기에서 save 하면 됨.
 			// bulk Collector는 saveAll 하면 됨.
-			User ssar = User.builder().username("ssar").password("1234").email("ssar@nate.com").role("USER").build();
+			User ssar = User.builder().username("user").password("1234").email("ssar@nate.com").role("USER").build();
 			userRepository.save(ssar);
+
+			User mook = User.builder().username("seller").password("1234").email("ssar@nate.com").role("SELLER").build();
+			userRepository.save(mook);
+
+			Product product = Product.builder().name("Apple").price(1000).qty(10).build();
+			productRepository.save(product);
+
+			Product product2 = Product.builder().name("Kiwi").price(2000).qty(20).build();
+			productRepository.save(product2);
 		};
 	}
 

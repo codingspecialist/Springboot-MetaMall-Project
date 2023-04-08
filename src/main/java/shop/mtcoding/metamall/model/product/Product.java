@@ -33,6 +33,20 @@ public class Product {
         this.updatedAt = LocalDateTime.now();
     }
 
+    public void addStock(int quantity)
+    {
+        this.qty += quantity;
+    }
+
+    public void removeStock(int quantity)
+    {
+        int restStock = this.qty - quantity;
+        if(restStock < 0)
+            throw new RuntimeException("재고가 부족합니다");
+
+        this.qty = restStock;
+    }
+
     @Builder
     public Product(Long id, String name, Integer price, Integer qty, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
