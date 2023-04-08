@@ -22,7 +22,7 @@ MetaMall은 사용자가 상품을 찾아보고, 구매하고, 관리할 수 있
 
 **에러 처리**
 
-*모든 에러 로그기록
+* 모든 에러 로그기록
 
 
 ![](https://velog.velcdn.com/images/carrot1st/post/53351617-cd76-4dad-ae26-e0d63b3dbd4c/image.png)
