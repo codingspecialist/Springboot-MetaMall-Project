@@ -86,7 +86,15 @@ public class OrderController
             int count = orderProductRequest.getCount();
             int orderPrice = product.getPrice() * count;
 
-            product.removeStock(count);//영속성에 의한 처리됨
+            try
+            {
+                product.removeStock(count);//영속성에 의한 처리됨
+            }
+            catch (Exception e)
+            {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(new ResponseDto<>().fail(HttpStatus.BAD_REQUEST, err.log(loginUser.getId(), "재고가 부족합니다"), ""));
+            }
 
             OrderProduct orderProduct = OrderProduct.builder()
                     .product(product)
@@ -109,8 +117,6 @@ public class OrderController
 
         return ResponseEntity.ok(responseDto);
     }
-
-
 
     @ResponseBody
     @GetMapping("/orders/user")
