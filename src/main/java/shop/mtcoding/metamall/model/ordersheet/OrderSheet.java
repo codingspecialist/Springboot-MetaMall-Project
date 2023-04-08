@@ -1,5 +1,6 @@
 package shop.mtcoding.metamall.model.ordersheet;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,8 +23,9 @@ public class OrderSheet { // 주문서
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user; // 주문자
+    @JsonIgnoreProperties("orderSheet")
     @OneToMany(mappedBy = "orderSheet")
     private List<OrderProduct> orderProductList = new ArrayList<>(); // 총 주문 상품 리스트
     private Integer totalPrice; // 총 주문 금액 (총 주문 상품 리스트의 orderPrice 합)
