@@ -103,6 +103,7 @@ class OrderControllerTest {
     }
 
     @Test
+    @Transactional
     void order() throws Exception{
         //given
         String requestBody = "{\"name\":\"book1\",\"count\":\"10\"}"; //OrderDto 만들어서 전달

@@ -24,6 +24,7 @@ import shop.mtcoding.metamall.model.user.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +40,7 @@ public class OrderController {
 
     @PostMapping("/order")
     @Transactional
-    public ResponseEntity<?> order(@RequestBody OrderRequest.OrderDto orderDto, HttpServletRequest request) {
+    public ResponseEntity<?> order(@Valid @RequestBody OrderRequest.OrderDto orderDto, HttpServletRequest request) {
 
         String jwt = request.getHeader(JwtProvider.HEADER).replaceAll("Bearer ", "");
         DecodedJWT decodedJWT = JwtProvider.verify(jwt);
@@ -130,8 +131,8 @@ public class OrderController {
         }
     }
 
-    @DeleteMapping("/cancel/{userId}")
-    public ResponseEntity<?> cancelSeller(@PathVariable Long userId, HttpServletRequest request){
+    @DeleteMapping("/cancel/{userId}") // 값 안들어오면 seller의 user cancel로 판단해서 403 - 잘못된 접근
+    public ResponseEntity<?> cancelSeller(@PathVariable(required = false) Long userId, HttpServletRequest request){
 
         String jwt = request.getHeader(JwtProvider.HEADER).replaceAll("Bearer ", "");
         DecodedJWT decodedJWT = JwtProvider.verify(jwt);
