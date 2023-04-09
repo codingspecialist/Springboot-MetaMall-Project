@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.transaction.annotation.Transactional;
 import shop.mtcoding.metamall.model.user.User;
 import shop.mtcoding.metamall.model.user.UserRepository;
 
@@ -118,14 +119,14 @@ class ProductControllerTest {
         System.out.println(content);
     }
 
-//    @Test
-//    void delete() throws Exception{
-//
-//        //then
-//         mockMvc.perform(delete("/delete/{productname}", "book2")) 이부분 다시
-//                        .header(HEADER, jwt)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                .andExpect(status().isNoContent());
-//
-//    }
+    @Test
+    @Transactional
+    void delete_Test() throws Exception{
+        //then
+         mockMvc.perform(delete("/delete/{productname}", "book2")
+                        .header(HEADER, jwt)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+    }
 }
