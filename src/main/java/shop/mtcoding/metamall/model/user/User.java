@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
@@ -19,10 +20,13 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false, length = 30)
+    @NotBlank(message = " 입력은 필수입니다")
+    @Column(length = 30)
     private String username;
-    @Column(nullable = false, length = 100)
+    @NotBlank(message = " 입력은 필수입니다")
+    @Column(length = 100)
     private String password;
+    @NotBlank(message = " 입력은 필수입니다")
     @Column(nullable = false, length = 50)
     private String email;
     private Role role; // USER(고객), SELLER(판매자), ADMIN(관리자)

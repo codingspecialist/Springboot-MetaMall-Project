@@ -20,6 +20,7 @@ import shop.mtcoding.metamall.model.user.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -34,7 +35,7 @@ public class UserController {
     private final HttpSession session;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserRequest.LoginDto loginDto, HttpServletRequest request) {
+    public ResponseEntity<?> login(@Valid @RequestBody UserRequest.LoginDto loginDto, HttpServletRequest request) {
         session.setAttribute("login", null);
         Optional<User> userOP = userRepository.findByUsername(loginDto.getUsername());
         if (userOP.isPresent()) {
@@ -74,7 +75,7 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<?> join(@RequestBody User joinUser){
+    public ResponseEntity<?> join(@Valid @RequestBody User joinUser){
         joinUser.setRole(Role.USER);
         userRepository.save(joinUser);
         OrderSheet orderSheet = OrderSheet.builder().user(joinUser).totalPrice(0).build();

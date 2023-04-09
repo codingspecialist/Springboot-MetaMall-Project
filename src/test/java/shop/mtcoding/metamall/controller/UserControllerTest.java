@@ -32,7 +32,7 @@ class UserControllerTest {
         //given
         String requestBody = "{\"username\":\"ssar\", \"password\":1234}";
 
-        //when
+        //then
         mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
@@ -46,7 +46,7 @@ class UserControllerTest {
         //given
         String requestBody = "{\"username\":\"jju\", \"password\":1234, \"email\":\"1234@1234\"}";
 
-        //when
+        //then
         mockMvc.perform(post("/join")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
