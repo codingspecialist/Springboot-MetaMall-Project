@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
-@Setter // DTO 만들면 삭제해야됨
 @Getter
 @Table(name = "order_sheet_tb")
 @Entity
@@ -35,14 +34,17 @@ public class OrderSheet { // 주문서
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
-    
-    // 연관관계 메서드 구현 필요
+
+    public void update(Integer orderPrice) {
+        this.totalPrice += orderPrice;
+    }
 
     @Builder
     public OrderSheet(Long id, User user, Integer totalPrice, LocalDateTime createdAt, LocalDateTime updatedAt) {

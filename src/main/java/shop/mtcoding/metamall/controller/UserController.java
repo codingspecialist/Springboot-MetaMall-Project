@@ -31,12 +31,7 @@ public class UserController {
 
     @PostMapping("/join")
     public ResponseEntity<?> join(@RequestBody UserRequest.JoinDto joinDto) {
-        userRepository.save(User.builder()
-                .username(joinDto.getUsername())
-                .password(joinDto.getPassword())
-                .email(joinDto.getEmail())
-                .role(joinDto.getRole())
-                .build());
+        userRepository.save(joinDto.toEntity());
 
         Optional<User> userOP = userRepository.findByUsername(joinDto.getUsername());
         if (userOP.isPresent()) {

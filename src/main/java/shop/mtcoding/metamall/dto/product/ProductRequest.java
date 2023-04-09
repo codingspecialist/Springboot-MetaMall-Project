@@ -2,6 +2,7 @@ package shop.mtcoding.metamall.dto.product;
 
 import lombok.Getter;
 import lombok.Setter;
+import shop.mtcoding.metamall.model.product.Product;
 
 public class ProductRequest {
     @Getter
@@ -10,6 +11,14 @@ public class ProductRequest {
         private String name;
         private Integer price;
         private Integer qty;
+
+        public Product toEntity() {
+            return Product.builder()
+                    .name(name)
+                    .price(price)
+                    .qty(qty)
+                    .build();
+        }
     }
 
     @Getter
@@ -18,5 +27,13 @@ public class ProductRequest {
         private String name;
         private Integer price;
         private Integer qty;
+
+        public Product toEntity() {
+            return Product.builder()
+                    .name(name)
+                    .price(price)
+                    .qty(qty)
+                    .build();
+        }
     }
 }

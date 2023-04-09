@@ -25,6 +25,7 @@ public class Product {
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
@@ -32,10 +33,10 @@ public class Product {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public void update(String name, Integer price, Integer qty){
-        this.name = name;
-        this.price = price;
-        this.qty = qty;
+    public void update(Product product){
+        this.name = product.getName();
+        this.price = product.getPrice();
+        this.qty = product.getQty();
     }
 
     @Builder

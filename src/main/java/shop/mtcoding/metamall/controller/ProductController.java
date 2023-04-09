@@ -22,11 +22,7 @@ public class ProductController {
 
     @PostMapping("/product")
     public ResponseEntity<?> register(@RequestBody ProductRequest.RegisterDto registerDto) {
-        productRepository.save(Product.builder()
-                .name(registerDto.getName())
-                .price(registerDto.getPrice())
-                .qty(registerDto.getQty())
-                .build());
+        productRepository.save(registerDto.toEntity());
 
         Optional<Product> productOP = productRepository.findByName(registerDto.getName());
         if (productOP.isPresent()) {
@@ -76,10 +72,8 @@ public class ProductController {
                 updateDto.setQty(product.getQty());
             }
 
-            // dutty checking
-            product.update(updateDto.getName(),
-                    updateDto.getPrice(),
-                    updateDto.getQty());
+            // dirty checking
+            product.update(updateDto.toEntity());
 
             ResponseDto<?> responseDto = new ResponseDto<>().data(product);
             return ResponseEntity.ok().body(responseDto);
