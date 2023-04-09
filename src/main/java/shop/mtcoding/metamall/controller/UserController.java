@@ -63,7 +63,7 @@ public class UserController {
 //             6.  loginUser에 저장 - 에러에 사용하기 위해서
             LoginUser loginUser = LoginUser.builder().id(user.getId()).role(user.getRole().toString()).build();
             session.setAttribute("login", loginUser);
-            System.out.println("로그인 후 유저 정보 : " + loginUser);
+            System.out.println("로그인 후 유저 정보 : " + loginUser.toString());
 
             // 7. 응답 DTO 생성
             ResponseDto<?> responseDto = new ResponseDto<>().data(user);
