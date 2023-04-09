@@ -9,7 +9,7 @@ import javax.validation.constraints.NotEmpty;
 public class UserRequest {
 
     @Getter @Setter
-    public static class JoinDto {
+    public static class JoinDTO {
         @NotEmpty
         private String username;
         @NotEmpty
@@ -30,7 +30,7 @@ public class UserRequest {
     }
 
     @Getter @Setter
-    public static class LoginDto {
+    public static class LoginDTO {
         @NotEmpty
         private String username;
         @NotEmpty
@@ -38,7 +38,8 @@ public class UserRequest {
     }
 
     @Getter @Setter
-    public static class RoleUpdateDto {
+    public static class RoleUpdateDTO {
+        @NotEmpty
         private String role;
     }
 

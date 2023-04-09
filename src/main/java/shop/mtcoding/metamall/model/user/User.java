@@ -36,7 +36,7 @@ public class User {
 
     public void updateRole(String role){
         if(this.role.equals(role)){
-            throw new Exception400("동일한 권한으로 변경할 수 없습니다");
+            throw new Exception400("role", "동일한 권한으로 변경할 수 없습니다");
         }
         this.role = role;
     }

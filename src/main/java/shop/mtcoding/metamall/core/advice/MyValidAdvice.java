@@ -5,12 +5,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import shop.mtcoding.metamall.core.exception.ExceptionValid;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.validation.Errors;
+import shop.mtcoding.metamall.core.exception.Exception400;
 
 @Aspect
 @Component
@@ -27,16 +23,14 @@ public class MyValidAdvice {
     public void validationAdvice(JoinPoint jp) throws Throwable {
         Object[] args = jp.getArgs();
         for (Object arg : args) {
-            if (arg instanceof BindingResult) {
-                BindingResult bindingResult = (BindingResult) arg;
+            if (arg instanceof Errors) {
+                Errors errors = (Errors) arg;
 
-                if (bindingResult.hasErrors()) {
-                    Map<String, String> errorMap = new HashMap<>();
-
-                    for (FieldError error : bindingResult.getFieldErrors()) {
-                        errorMap.put(error.getField(), error.getDefaultMessage());
-                    }
-                    throw new ExceptionValid(errorMap);
+                if (errors.hasErrors()) {
+                    throw new Exception400(
+                            errors.getFieldErrors().get(0).getField(),
+                            errors.getFieldErrors().get(0).getDefaultMessage()
+                    );
                 }
             }
         }

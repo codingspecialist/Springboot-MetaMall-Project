@@ -3,10 +3,11 @@ package shop.mtcoding.metamall.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import shop.mtcoding.metamall.core.exception.Exception400;
 import shop.mtcoding.metamall.core.jwt.JwtProvider;
-import shop.mtcoding.metamall.dto.ResponseDto;
+import shop.mtcoding.metamall.dto.ResponseDTO;
 import shop.mtcoding.metamall.dto.user.UserRequest;
 import shop.mtcoding.metamall.model.log.login.LoginLog;
 import shop.mtcoding.metamall.model.log.login.LoginLogRepository;
@@ -27,22 +28,22 @@ public class UserController {
     private final HttpSession session;
 
     @PostMapping("/join")
-    public ResponseEntity<?> join(@RequestBody @Valid UserRequest.JoinDto joinDto, BindingResult bindingResult) {
-        User userPS = userRepository.save(joinDto.toEntity());
-        ResponseDto<?> responseDto = new ResponseDto<>().data(userPS);
+    public ResponseEntity<?> join(@RequestBody @Valid UserRequest.JoinDTO joinDTO, Errors errors) {
+        User userPS = userRepository.save(joinDTO.toEntity());
+        ResponseDTO<?> responseDto = new ResponseDTO<>().data(userPS);
         return ResponseEntity.ok().body(responseDto);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody @Valid UserRequest.LoginDto loginDto, BindingResult bindingResult, HttpServletRequest request) {
-        User sessionUser = userRepository.findByUsername(loginDto.getUsername())
+    public ResponseEntity<?> login(@RequestBody @Valid UserRequest.LoginDTO loginDTO, Errors errors, HttpServletRequest request) {
+        User sessionUser = userRepository.findByUsername(loginDTO.getUsername())
                 .orElseThrow(
-                        () -> new Exception400("유저네임을 찾을 수 없습니다")
+                        () -> new Exception400("username", "유저네임을 찾을 수 없습니다")
                 );
 
         // 1. 패스워드 검증하기
-        if (!sessionUser.getPassword().equals(loginDto.getPassword())) {
-            throw new Exception400("패스워드가 잘못입력되었습니다");
+        if (!sessionUser.getPassword().equals(loginDTO.getPassword())) {
+            throw new Exception400("password", "패스워드가 잘못입력되었습니다");
         }
 
         // 2. JWT 생성하기
@@ -60,7 +61,7 @@ public class UserController {
         loginLogRepository.save(loginLog);
 
         // 5. 응답 DTO 생성
-        ResponseDto<?> responseDto = new ResponseDto<>().data(sessionUser);
+        ResponseDTO<?> responseDto = new ResponseDTO<>().data(sessionUser);
         return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body(responseDto);
 
     }

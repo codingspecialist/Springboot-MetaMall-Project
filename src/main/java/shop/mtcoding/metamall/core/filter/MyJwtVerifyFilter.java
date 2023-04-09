@@ -4,12 +4,10 @@ package shop.mtcoding.metamall.core.filter;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.HttpStatus;
 import shop.mtcoding.metamall.core.exception.Exception400;
 import shop.mtcoding.metamall.core.jwt.JwtProvider;
 import shop.mtcoding.metamall.core.session.SessionUser;
-import shop.mtcoding.metamall.dto.ResponseDto;
+import shop.mtcoding.metamall.util.MyFilterResponseUtils;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -23,10 +21,12 @@ public class MyJwtVerifyFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
         String prefixJwt = req.getHeader(JwtProvider.HEADER);
+
         if(prefixJwt == null){
-            error(resp, new Exception400("토큰이 전달되지 않았습니다"));
+            MyFilterResponseUtils.unAuthorized(resp, new Exception400("Authorization", "토큰이 전달되지 않았습니다"));
             return;
         }
+
         String jwt = prefixJwt.replace(JwtProvider.TOKEN_PREFIX, "");
         try {
             DecodedJWT decodedJWT = JwtProvider.verify(jwt);
@@ -39,19 +39,10 @@ public class MyJwtVerifyFilter implements Filter {
             session.setAttribute("sessionUser", sessionUser);
             chain.doFilter(req, resp);
         }catch (SignatureVerificationException sve){
-            error(resp, sve);
+            MyFilterResponseUtils.unAuthorized(resp, sve);
         }catch (TokenExpiredException tee){
-            error(resp, tee);
+            MyFilterResponseUtils.unAuthorized(resp, tee);
         }
-    }
-
-    private void error(HttpServletResponse resp, Exception e) throws IOException {
-        resp.setStatus(401);
-        resp.setContentType("application/json; charset=utf-8");
-        ResponseDto<?> responseDto = new ResponseDto<>().fail(HttpStatus.UNAUTHORIZED, "인증 안됨", e.getMessage());
-        ObjectMapper om = new ObjectMapper();
-        String responseBody = om.writeValueAsString(responseDto);
-        resp.getWriter().println(responseBody);
     }
 
 }

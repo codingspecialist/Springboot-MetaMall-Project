@@ -1,11 +1,10 @@
-package shop.mtcoding.metamall.model.ordersheet;
+package shop.mtcoding.metamall.model.order.sheet;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import shop.mtcoding.metamall.model.orderproduct.OrderProduct;
-import shop.mtcoding.metamall.model.product.Product;
+import shop.mtcoding.metamall.model.order.product.OrderProduct;
 import shop.mtcoding.metamall.model.user.User;
 
 import javax.persistence.*;
