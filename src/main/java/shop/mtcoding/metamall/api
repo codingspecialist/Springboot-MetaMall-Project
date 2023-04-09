@@ -1,0 +1,327 @@
+1. 회원가입 (POST)
+    요청 주소
+        - http://localhost:8080/join
+    요청 파라미터
+        - application/json
+        {
+            "username" : "jju",
+            "password" : "1234",
+            "email" : "yoo@a,a"
+        }
+    응답 바디
+        - application/json
+        {
+            "status": 200,
+            "msg": "성공",
+            "data": {
+                "id": 4,
+                "username": "jju",
+                "email": "yoo@a,a",
+                "role": "USER",
+                "createdAt": "2023-04-09T22:37:00.4652234",
+                "updatedAt": null
+            }
+        }
+
+2. 로그인 (POST)
+    요청 주소
+        - http://localhost:8080/login
+    요청 파라미터
+        - application/json
+        {
+            "username" : "jju",
+            "password" : "1234"
+        }
+
+    응답 바디
+        - application/json
+        {
+            "status": 200,
+            "msg": "성공",
+            "data": {
+                "id": 3,
+                "username": "jju",
+                "email": "yoo@a,a",
+                "role": "USER",
+                "createdAt": "2023-04-09T22:38:19.389678",
+                "updatedAt": "2023-04-09T22:38:22.6968692"
+            }
+        }
+
+3. 상품등록 (POST)
+    요청 주소
+        - http://localhost:8080/upload
+    요청 헤더
+        - Authorization : Bearer ~    요청 파라미터
+        -
+        {
+            "productname" : "phone",
+            "price" : "500000",
+            "qty" : "100"
+        }
+    응답 바디
+        -
+        {
+            "status": 200,
+            "msg": "성공",
+            "data": {
+                "id": 3,
+                "productname": "phone",
+                "price": 500000,
+                "qty": 100,
+                "createdAt": "2023-04-09T22:40:20.4367407",
+                "updatedAt": null
+            }
+        }
+
+4. 상품목록보기 (GET)
+              요청 주소
+                  - http://localhost:8080/findAll
+              요청 헤더
+                  - Authorization : Bearer ~
+              응답 바디
+                  -
+                  {
+                      "status": 200,
+                      "msg": "성공",
+                      "data": [
+                          {
+                              "id": 1,
+                              "productname": "book1",
+                              "price": 10000,
+                              "qty": 100,
+                              "createdAt": "2023-04-09T22:38:10.774707",
+                              "updatedAt": null
+                          },
+                          {
+                              "id": 2,
+                              "productname": "book2",
+                              "price": 15000,
+                              "qty": 100,
+                              "createdAt": "2023-04-09T22:38:10.777716",
+                              "updatedAt": null
+                          },
+                          {
+                              "id": 3,
+                              "productname": "phone",
+                              "price": 500000,
+                              "qty": 100,
+                              "createdAt": "2023-04-09T22:40:20.436741",
+                              "updatedAt": null
+                          }
+                      ]
+                  }
+
+5. 상품상세보기 (POST)
+              요청 주소
+                  - http://localhost:8080/find
+              요청 헤더
+                  - Authorization : Bearer ~
+              요청 파라미터
+                  -
+                  {
+                      "productname" : "phone"
+                  }
+              응답 바디
+                  -
+                  {
+                      "status": 200,
+                      "msg": "성공",
+                      "data": {
+                          "id": 3,
+                          "productname": "phone",
+                          "price": 500000,
+                          "qty": 100,
+                          "createdAt": "2023-04-09T22:40:20.436741",
+                          "updatedAt": null
+                      }
+                  }
+
+6. 상품수정하기 (PUT)
+    요청 주소
+        - http://localhost:8080/update
+    요청 헤더
+        - Authorization : Bearer ~
+    요청 파라미터
+        -
+        {
+            "productname":"phone",
+            "price" : "11111",
+            "qty" : "1010"
+        }
+    응답 바디
+        -
+        {
+            "status": 200,
+            "msg": "성공",
+            "data": {
+                "id": 3,
+                "productname": "phone",
+                "price": 11111,
+                "qty": 1010,
+                "createdAt": "2023-04-09T22:52:36.532541",
+                "updatedAt": null
+            }
+        }
+
+7. 상품삭제하기 (DELETE)
+    요청 주소
+        - http://localhost:8080/delete/phone
+    요청 헤더
+        -
+    응답 바디
+        -
+        {
+            "status": 200,
+            "msg": "성공",
+            "data": "Delete Success!"
+        }
+
+8. 주문하기 (POST) - OrderProduct를 생성하여, OrderSheet에 추가하세요
+    요청 주소
+        - http://localhost:8080/order
+    요청 헤더
+        - Authorization : Bearer ~
+    요청 파라미터
+        -
+        {
+            "name" : "book1",
+            "count" : "3"
+        }
+    응답 바디
+        -
+        {
+            "status": 200,
+            "msg": "성공",
+            "data": {
+                "id": 1,
+                "user": {
+                    "id": 2,
+                    "username": "ssar",
+                    "email": "ssar@nate.com",
+                    "role": "USER",
+                    "createdAt": "2023-04-09T22:50:25.430306",
+                    "updatedAt": "2023-04-09T22:54:36.025102"
+                },
+                "orderProductList": [
+                    {
+                        "id": 1,
+                        "product": {
+                            "id": 1,
+                            "productname": "book1",
+                            "price": 10000,
+                            "qty": 97,
+                            "createdAt": "2023-04-09T22:50:25.450303",
+                            "updatedAt": "2023-04-09T22:54:47.5028385"
+                        },
+                        "count": 3,
+                        "orderPrice": 30000,
+                        "createdAt": "2023-04-09T22:54:47.4436669",
+                        "orderSheet": 1
+                    }
+                ],
+                "totalPrice": 30000,
+                "createdAt": "2023-04-09T22:50:25.434301",
+                "updatedAt": "2023-04-09T22:54:47.5028385"
+            }
+        }
+
+9. 고객입장 - 주문목록보기 (GET)
+    요청 주소
+        - http://localhost:8080/findAllOrder
+    요청 헤더
+        - Authorization : Bearer ~
+    응답 바디
+        -
+        {
+            "status": 200,
+            "msg": "성공",
+            "data": [
+                {
+                    "id": 1,
+                    "product": {
+                        "id": 1,
+                        "productname": "book1",
+                        "price": 10000,
+                        "qty": 97,
+                        "createdAt": "2023-04-09T22:50:25.450303",
+                        "updatedAt": "2023-04-09T22:54:47.502839"
+                    },
+                    "count": 3,
+                    "orderPrice": 30000,
+                    "createdAt": "2023-04-09T22:54:47.443667",
+                    "orderSheet": 1
+                }
+            ]
+        }
+
+10. 판매자입장 - 주문목록보기 (GET)
+    요청 주소
+        - http://localhost:8080/findAllOrder
+    요청 헤더
+        - Authorization : Bearer ~
+    응답 바디
+        -
+        {
+            "status": 200,
+            "msg": "성공",
+            "data": [
+                {
+                    "id": 1,
+                    "user": {
+                        "id": 2,
+                        "username": "ssar",
+                        "email": "ssar@nate.com",
+                        "role": "USER",
+                        "createdAt": "2023-04-09T22:50:25.430306",
+                        "updatedAt": "2023-04-09T22:54:36.025102"
+                    },
+                    "orderProductList": [
+                        {
+                            "id": 1,
+                            "product": {
+                                "id": 1,
+                                "productname": "book1",
+                                "price": 10000,
+                                "qty": 97,
+                                "createdAt": "2023-04-09T22:50:25.450303",
+                                "updatedAt": "2023-04-09T22:54:47.502839"
+                            },
+                            "count": 3,
+                            "orderPrice": 30000,
+                            "createdAt": "2023-04-09T22:54:47.443667",
+                            "orderSheet": 1
+                        }
+                    ],
+                    "totalPrice": 30000,
+                    "createdAt": "2023-04-09T22:50:25.434301",
+                    "updatedAt": "2023-04-09T22:54:47.502839"
+                }
+            ]
+        }
+
+11. 고객입장 - 주문취소하기 (DELETE) - Casecade 옵션을 활용하세요. (양방향 매핑)
+    요청 주소
+        - http://localhost:8080/cancel
+    요청 헤더
+        - Authorization : Bearer ~
+    응답 바디
+        -
+        {
+            "status": 200,
+            "msg": "성공",
+            "data": "주문이 정상적으로 취소되었습니다. "
+        }
+
+12. 판매자입장 - 주문취소하기 (DELETE) - Casecade 옵션을 활용하세요. (양방향 매핑)
+    요청 주소
+        - http://localhost:8080/cancel/2
+    요청 헤더
+        - Authorization : Bearer ~
+    응답 바디
+        -
+        {
+            "status": 200,
+            "msg": "성공",
+            "data": "2번 고객의 주문이 정상적으로 취소되었습니다. "
+        }

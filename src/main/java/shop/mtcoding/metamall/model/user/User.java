@@ -1,26 +1,38 @@
 package shop.mtcoding.metamall.model.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
-@Setter // DTO 만들면 삭제해야됨
 @Getter
+@Setter
 @Table(name = "user_tb")
 @Entity
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank(message = " 입력은 필수입니다")
+    @Column(length = 30)
     private String username;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @NotBlank(message = " 입력은 필수입니다")
+    @Column(length = 100)
     private String password;
+    @NotBlank(message = " 입력은 필수입니다")
+    @Column(length = 50)
     private String email;
-    private String role; // USER(고객), SELLER(판매자), ADMIN(관리자)
+    private Role role; // USER(고객), SELLER(판매자), ADMIN(관리자)
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -35,12 +47,23 @@ public class User {
     }
 
     @Builder
-    public User(Long id, String username, String password, String email, String role, LocalDateTime createdAt) {
+    public User(Long id, String username, String password, String email, Role role, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
         this.role = role;
         this.createdAt = createdAt;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", role=" + role +
+                '}';
     }
 }
