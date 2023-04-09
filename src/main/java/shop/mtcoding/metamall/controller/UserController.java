@@ -2,13 +2,15 @@ package shop.mtcoding.metamall.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import shop.mtcoding.metamall.core.exception.Exception400;
 import shop.mtcoding.metamall.core.exception.Exception401;
+import shop.mtcoding.metamall.core.exception.Exception404;
 import shop.mtcoding.metamall.core.jwt.JwtProvider;
 import shop.mtcoding.metamall.dto.ResponseDto;
 import shop.mtcoding.metamall.dto.user.UserRequest;
-import shop.mtcoding.metamall.dto.user.UserResponse;
 import shop.mtcoding.metamall.model.log.login.LoginLog;
 import shop.mtcoding.metamall.model.log.login.LoginLogRepository;
 import shop.mtcoding.metamall.model.user.User;
@@ -27,6 +29,26 @@ public class UserController {
     private final LoginLogRepository loginLogRepository;
     private final HttpSession session;
 
+    @PostMapping("/join")
+    public ResponseEntity<?> join(@RequestBody UserRequest.JoinDto joinDto) {
+        userRepository.save(User.builder()
+                .username(joinDto.getUsername())
+                .password(joinDto.getPassword())
+                .email(joinDto.getEmail())
+                .role(joinDto.getRole())
+                .build());
+
+        Optional<User> userOP = userRepository.findByUsername(joinDto.getUsername());
+        if (userOP.isPresent()) {
+            User joinUser = userOP.get();
+
+            ResponseDto<?> responseDto = new ResponseDto<>().data(joinUser);
+            return ResponseEntity.ok().body(responseDto);
+        } else {
+            throw new Exception404("회원가입이 처리되지 않았습니다.");
+        }
+    }
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserRequest.LoginDto loginDto, HttpServletRequest request) {
         Optional<User> userOP = userRepository.findByUsername(loginDto.getUsername());
@@ -35,7 +57,7 @@ public class UserController {
             User loginUser = userOP.get();
 
             // 2. 패스워드 검증하기
-            if(!loginUser.getPassword().equals(loginDto.getPassword())){
+            if (!loginUser.getPassword().equals(loginDto.getPassword())) {
                 throw new Exception401("인증되지 않았습니다");
             }
 
