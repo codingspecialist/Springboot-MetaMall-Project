@@ -2,10 +2,13 @@ package shop.mtcoding.metamall.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import shop.mtcoding.metamall.config.auth.PrincipalDetails;
 import shop.mtcoding.metamall.core.exception.Exception400;
 import shop.mtcoding.metamall.core.exception.Exception401;
 import shop.mtcoding.metamall.core.jwt.JwtProvider;
@@ -33,39 +36,41 @@ public class UserController {
     private final LoginService loginService;
     private final HttpSession session;
 
-    @PostMapping("/auth/join")
-    public ResponseEntity<?> join(@Validated UserRequest.JoinDto joinDto, BindingResult bindingResult) {
+    @PostMapping("/join")
+    public ResponseEntity<?> join(@Validated @RequestBody UserRequest.JoinDto joinDto, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             Map<String, String> errorMap = new HashMap<>();
-            for (FieldError error: bindingResult.getFieldErrors()) {
+            for (FieldError error: bindingResult.getFieldErrors())
                 errorMap.put(error.getField(), error.getDefaultMessage());
-            }
             throw new Exception400("유효성검사가 실패했습니다.");
 
         } else {
-
             User user = joinDto.toEntity();
             User userEntity = loginService.join(user);
             return ResponseEntity.ok().body(userEntity);
         }
     }
 
-    @PostMapping("/auth/login")
-    public ResponseEntity<?> login(@RequestBody UserRequest.LoginDto loginDto, HttpServletRequest request) {
-        Optional<User> userOP = Optional.ofNullable(userRepository.findByUsername(loginDto.getUsername()));
+    @Transactional
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody @Validated UserRequest.LoginDto loginDto,
+                                   HttpServletRequest request, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        System.out.println("나실행됨????????????????????????????????????????");
+        Optional<User> userOP = userRepository.findByUsernameAndPassword(loginDto.getUsername(), loginDto.getPassword());
+
         if (userOP.isPresent()) {
             // 1. 유저 정보 꺼내기
             User loginUser = userOP.get();
 
             // 2. 패스워드 검증하기
-            if(!loginUser.getPassword().equals(loginDto.getPassword())){
+            if (!loginUser.getPassword().equals(principalDetails.getUser().getPassword())) {
                 throw new Exception401("인증되지 않았습니다");
             }
 
             // 3. JWT 생성하기
             String jwt = JwtProvider.create(userOP.get());
-
+            System.out.println(jwt);
             // 4. 최종 로그인 날짜 기록 (더티체킹 - update 쿼리 발생)
             loginUser.setUpdatedAt(LocalDateTime.now());
 
@@ -80,10 +85,9 @@ public class UserController {
             // 6. 응답 DTO 생성
             ResponseDto<?> responseDto = new ResponseDto<>().data(loginUser);
             return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body(responseDto);
+
         } else {
             throw new Exception400("유저네임 혹은 아이디가 잘못되었습니다");
         }
     }
-
-
 }

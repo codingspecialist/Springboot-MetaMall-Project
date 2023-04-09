@@ -18,14 +18,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
+
         http.authorizeRequests()
-                .antMatchers("/", "/api/**").authenticated() // ** 계속 추가할 것
-                .anyRequest().permitAll()
+                .antMatchers("/login", "/h2-console/**", "/join").permitAll() // login 페이지는 누구나 접근 가능
+                .anyRequest().authenticated() // 그 외 요청은 인증된 사용자만 접근 가능
+                .and()
+                .headers().frameOptions().disable() // X-Frame-Options 비활성화
                 .and()
                 .formLogin()
-                .loginPage("/auth/login")
-                .loginProcessingUrl("/auth/login")
-                .defaultSuccessUrl("/");
+                .loginPage("/login").permitAll() // login 페이지는 누구나 접근 가능
+                .loginProcessingUrl("/login") // POST 요청 허용
+                .defaultSuccessUrl("/")
+                .and()
+                .logout().logoutSuccessUrl("/login").permitAll() // 로그아웃은 누구나 접근 가능
+                .and()
+                .csrf().disable(); // CSRF 보안 기능 비활성화
     }
 }

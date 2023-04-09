@@ -9,7 +9,9 @@ import shop.mtcoding.metamall.model.user.User;
 public class UserRequest {
     @Data
     public static class LoginDto {
+        @NotNull
         private String username;
+        @NotNull
         private String password;
     }
 

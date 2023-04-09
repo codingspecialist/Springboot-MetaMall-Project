@@ -2,6 +2,7 @@ package shop.mtcoding.metamall.config.auth;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import shop.mtcoding.metamall.model.user.User;
 
@@ -18,14 +19,15 @@ public class PrincipalDetails implements UserDetails {
         this.user = user;
     }
 
-    @Override // 권한 가져오기
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
         Collection<GrantedAuthority> collector = new ArrayList<>();
-        collector.add(() -> {return user.getRole();});
-
+        collector.add(new SimpleGrantedAuthority(user.getRole()));
+        collector.add(new SimpleGrantedAuthority("ROLE_USER"));
         return collector;
     }
+
 
     @Override
     public String getPassword() {
