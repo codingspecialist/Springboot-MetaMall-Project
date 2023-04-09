@@ -34,10 +34,10 @@ public class MetamallApplication {
 			OrderSheet orderSheet = OrderSheet.builder().user(ssar).totalPrice(0).build();
 			orderSheetRepository.save(orderSheet); // 한 고객 당 주문 시트 생성
 
-			Product book = Product.builder().name("book1").price(10000).qty(100).build();
+			Product book = Product.builder().productname("book1").price(10000).qty(100).build();
 			productRepository.save(book);
 
-			Product book2 = Product.builder().name("book2").price(15000).qty(100).build();
+			Product book2 = Product.builder().productname("book2").price(15000).qty(100).build();
 			productRepository.save(book2);
 		};
 	}
