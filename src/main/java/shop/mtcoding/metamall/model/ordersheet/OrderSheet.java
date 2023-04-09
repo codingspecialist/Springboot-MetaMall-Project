@@ -52,4 +52,14 @@ public class OrderSheet { // 주문서
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
+
+    @Override
+    public String toString() {
+        return "OrderSheet{" +
+                "id=" + id +
+                ", user=" + user +
+                ", orderProductList=" + orderProductList +
+                ", totalPrice=" + totalPrice +
+                '}';
+    }
 }
