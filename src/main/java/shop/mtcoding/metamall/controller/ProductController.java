@@ -26,7 +26,7 @@ public class ProductController {
     private final ProductRepository productRepository;
     private final HttpSession session;
 
-    @GetMapping("/find")
+    @PostMapping("/find")
     public ResponseEntity<?> find(@RequestBody ProductRequest.ProductDto product, HttpServletRequest request) {
         //인증만 필요
         String jwt = request.getHeader(JwtProvider.HEADER).replaceAll("Bearer ", "");
@@ -65,7 +65,7 @@ public class ProductController {
 
        Long userId = decodedJWT.getClaim("id").asLong();
 
-        // 사용자의 권한 확인 SELLER(판매자), ADMIN(관리자)여야 등록 가능
+        // 사용자의 권한 확인 SELLER(판매자) 등록 가능
        String role = decodedJWT.getClaim("role").asString();
 
        if(role.equals(Role.SELLER.toString())){
@@ -97,7 +97,7 @@ public class ProductController {
             productPS.setPrice(updateProduct.getPrice());
             productPS.setQty(updateProduct.getQty());
 
-            ResponseDto<?> responseDto = new ResponseDto<>().data(updateProduct);
+            ResponseDto<?> responseDto = new ResponseDto<>().data(productPS);
             return ResponseEntity.ok().body(responseDto);
 
         }else{
@@ -106,8 +106,8 @@ public class ProductController {
     }
 
     @Transactional
-    @DeleteMapping("/delete/{name}")
-    public ResponseEntity<?> delete(@PathVariable String name, HttpServletRequest request){
+    @DeleteMapping("/delete/{productname}")
+    public ResponseEntity<?> delete(@PathVariable String productname, HttpServletRequest request){
 
         String jwt = request.getHeader(JwtProvider.HEADER).replaceAll("Bearer ", "");
         DecodedJWT decodedJWT = JwtProvider.verify(jwt);
@@ -117,7 +117,7 @@ public class ProductController {
         String role = decodedJWT.getClaim("role").asString();
 
         if(role.equals(Role.SELLER.toString())){
-            Product productPS = productRepository.findByName(name).orElseThrow(() -> {
+            Product productPS = productRepository.findByName(productname).orElseThrow(() -> {
                 return new Exception400("제품의 이름을 찾을 수 없습니다. ");
             }); //제품이 있는지 확인
 
