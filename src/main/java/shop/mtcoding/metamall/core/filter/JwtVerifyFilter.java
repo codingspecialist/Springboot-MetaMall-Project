@@ -31,13 +31,14 @@ public class JwtVerifyFilter implements Filter {
         String jwt = prefixJwt.replace(JwtProvider.TOKEN_PREFIX, "");
         try {
             DecodedJWT decodedJWT = JwtProvider.verify(jwt);
-            int id = decodedJWT.getClaim("id").asInt();
+            Long id = decodedJWT.getClaim("id").asLong();
             String role = decodedJWT.getClaim("role").asString();
 
             // 세션을 사용하는 이유는 권한처리를 하기 위해서이다.
             HttpSession session =  req.getSession();
             LoginUser loginUser = LoginUser.builder().id(id).role(role).build();
             session.setAttribute("loginUser", loginUser);
+            System.out.println("세션 생성됨");
             chain.doFilter(req, resp);
         }catch (SignatureVerificationException sve){
             error(resp, sve);
