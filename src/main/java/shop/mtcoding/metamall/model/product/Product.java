@@ -11,8 +11,8 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
-@Setter // DTO 만들면 삭제해야됨
 @Getter
+@Setter
 @Table(name = "product_tb")
 @Entity
 public class Product {
