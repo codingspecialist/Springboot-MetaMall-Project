@@ -3,7 +3,6 @@ package shop.mtcoding.metamall.controller;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import shop.mtcoding.metamall.core.exception.Exception400;
 import shop.mtcoding.metamall.core.exception.Exception403;
@@ -16,6 +15,7 @@ import shop.mtcoding.metamall.model.user.Role;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,14 +27,13 @@ public class ProductController {
     private final HttpSession session;
 
     @PostMapping("/find")
-    public ResponseEntity<?> find(@RequestBody ProductRequest.ProductDto product, HttpServletRequest request) {
+    public ResponseEntity<?> find(@Valid @RequestBody ProductRequest.ProductDto product, HttpServletRequest request) {
         //인증만 필요
         String jwt = request.getHeader(JwtProvider.HEADER).replaceAll("Bearer ", "");
         DecodedJWT decodedJWT = JwtProvider.verify(jwt);
-
         Long userId = decodedJWT.getClaim("id").asLong();
 
-        Optional<Product> productOP = productRepository.findByName(product.getName());
+        Optional<Product> productOP = productRepository.findByName(product.getProductname());
         if (productOP.isPresent()) {
             // 1. 물건 정보 꺼내기
             Product findProduct = productOP.get();
@@ -49,6 +48,7 @@ public class ProductController {
 
     @GetMapping("/findAll")
     public ResponseEntity<?> findAll(HttpServletRequest request) {
+
        String jwt = request.getHeader(JwtProvider.HEADER).replaceAll("Bearer ", "");
        DecodedJWT decodedJWT = JwtProvider.verify(jwt);
 
@@ -58,7 +58,7 @@ public class ProductController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<?> upload(@RequestBody Product uploadProduct, HttpServletRequest request){
+    public ResponseEntity<?> upload(@Valid @RequestBody Product uploadProduct, HttpServletRequest request){
 
        String jwt = request.getHeader(JwtProvider.HEADER).replaceAll("Bearer ", "");
        DecodedJWT decodedJWT = JwtProvider.verify(jwt);
@@ -77,9 +77,8 @@ public class ProductController {
        }
     }
 
-    @Transactional
-    @PutMapping("/update/{productname}")
-    public ResponseEntity<?> update(@PathVariable String productname, @RequestBody Product updateProduct, HttpServletRequest request){
+    @PutMapping("/update/{productname}") // 값 안들어오면 404 반환
+    public ResponseEntity<?> update(@PathVariable(required = false) String productname, @Valid @RequestBody Product updateProduct, HttpServletRequest request){
 
         String jwt = request.getHeader(JwtProvider.HEADER).replaceAll("Bearer ", "");
         DecodedJWT decodedJWT = JwtProvider.verify(jwt);
@@ -105,9 +104,9 @@ public class ProductController {
         }
     }
 
-    @Transactional
-    @DeleteMapping("/delete/{productname}")
-    public ResponseEntity<?> delete(@PathVariable String productname, HttpServletRequest request){
+
+    @DeleteMapping("/delete/{productname}") // 값 안들어오면 404 반환
+    public ResponseEntity<?> delete(@PathVariable(required = false) String productname, HttpServletRequest request){
 
         String jwt = request.getHeader(JwtProvider.HEADER).replaceAll("Bearer ", "");
         DecodedJWT decodedJWT = JwtProvider.verify(jwt);

@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
@@ -17,12 +19,18 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank(message = "입력은 필수입니다")
     @Column(nullable = false, length = 50)
-    private String name; // 상품 이름
+    private String productname; // 상품 이름
+
+    @NotNull(message = "입력은 필수입니다")
     @Column(nullable = false, length = Integer.MAX_VALUE)
     private Integer price; // 상품 가격
+
+    @NotNull(message = "입력은 필수입니다")
     @Column(nullable = false, length = Integer.MAX_VALUE)
     private Integer qty; // 상품 재고
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -37,9 +45,9 @@ public class Product {
     }
 
     @Builder
-    public Product(Long id, String name, Integer price, Integer qty, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Product(Long id, String productname, Integer price, Integer qty, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
-        this.name = name;
+        this.productname = productname;
         this.price = price;
         this.qty = qty;
         this.createdAt = createdAt;
@@ -50,7 +58,7 @@ public class Product {
     public String toString() {
         return "Product{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", productname='" + productname + '\'' +
                 ", price=" + price +
                 ", qty=" + qty +
                 '}';

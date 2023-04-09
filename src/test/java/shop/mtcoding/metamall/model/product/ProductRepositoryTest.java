@@ -22,7 +22,7 @@ class ProductRepositoryTest {
     void findByName() {
         //given
         String productname = "phone";
-        Product product = Product.builder().name(productname).price(1000).qty(10).build(); // id : 3
+        Product product = Product.builder().productname(productname).price(1000).qty(10).build(); // id : 3
         productRepository.save(product);
         //when
         Product findProduct = productRepository.findByName(productname).get();
