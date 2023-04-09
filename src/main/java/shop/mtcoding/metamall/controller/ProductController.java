@@ -2,6 +2,7 @@ package shop.mtcoding.metamall.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +13,7 @@ import shop.mtcoding.metamall.model.product.Product;
 import shop.mtcoding.metamall.model.product.ProductRepository;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -38,5 +40,13 @@ public class ProductController {
         } else {
             throw new Exception404("상품 등록이 처리되지 않았습니다.");
         }
+    }
+
+    @GetMapping("/products")
+    public ResponseEntity<?> getAll() {
+        List<Product> productListPS = productRepository.findAll();
+
+        ResponseDto<?> responseDto = new ResponseDto<>().data(productListPS);
+        return ResponseEntity.ok().body(responseDto);
     }
 }
