@@ -32,6 +32,12 @@ public class Product {
         this.updatedAt = LocalDateTime.now();
     }
 
+    public void update(String name, Integer price, Integer qty){
+        this.name = name;
+        this.price = price;
+        this.qty = qty;
+    }
+
     @Builder
     public Product(Long id, String name, Integer price, Integer qty, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;

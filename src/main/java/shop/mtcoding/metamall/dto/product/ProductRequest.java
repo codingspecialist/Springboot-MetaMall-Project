@@ -11,4 +11,12 @@ public class ProductRequest {
         private Integer price;
         private Integer qty;
     }
+
+    @Getter
+    @Setter
+    public class UpdateDto {
+        private String name;
+        private Integer price;
+        private Integer qty;
+    }
 }

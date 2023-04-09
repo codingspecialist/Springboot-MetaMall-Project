@@ -59,4 +59,32 @@ public class ProductController {
             throw new Exception404("존재하지 않는 상품입니다.");
         }
     }
+
+    @PutMapping("/product/{id}")
+    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody ProductRequest.UpdateDto updateDto) {
+        Optional<Product> productPS = productRepository.findById(id.longValue());
+        if (productPS.isPresent()) {
+            Product oldProduct = productPS.get();
+            // 입력하지 않은 부분은 기존 값 유지
+            if (updateDto.getName() == null || updateDto.getName().isBlank()) {
+                updateDto.setName(oldProduct.getName());
+            }
+            if (updateDto.getPrice() == null) {
+                updateDto.setPrice(oldProduct.getPrice());
+            }
+            if (updateDto.getQty() == null) {
+                updateDto.setQty(oldProduct.getQty());
+            }
+
+            // dutty checking
+            oldProduct.update(updateDto.getName(),
+                    updateDto.getPrice(),
+                    updateDto.getQty());
+
+            ResponseDto<?> responseDto = new ResponseDto<>().data(oldProduct);
+            return ResponseEntity.ok().body(responseDto);
+        } else {
+            throw new Exception404("존재하지 않는 상품입니다.");
+        }
+    }
 }
