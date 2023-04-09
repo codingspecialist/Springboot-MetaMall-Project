@@ -1,6 +1,6 @@
 # 스프링부트 총정리 (미니프로젝트)
 
-## 배웠던 모든 기술 추가하기
+## 1. 배웠던 모든 기술 추가하기
 - Filter
 - JWT
 - AOP
@@ -24,3 +24,11 @@
 - 더티체킹
 - Repository Test
 - Controller Test
+
+## 2. hibernateLazyInitializer 해결법
+원인은 MessageConverter가 비어있는 객체를 Lazy Loading할 때 발생한다.
+Jackson 라이브러리는 객체를 직렬화할 때 프록시 객체를 처리할 수 없기 때문이다.
+- 직접 Lazy Loading 하기 (강력 추천 - 서비스 레이어에서 DTO 만들 때 사용하면 됨)
+- join fetch 하기 (강력 추천)
+- Eager 전략으로 변경하기 (현재 추천 - 서비스가 없으니까!!)
+- fail-on-empty-beans: false (비 추천)

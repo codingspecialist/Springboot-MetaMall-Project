@@ -1,5 +1,6 @@
 package shop.mtcoding.metamall.model.order.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,9 @@ public class OrderProduct { // 주문 상품
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @JsonIgnoreProperties({"seller"})
+    @ManyToOne
     private Product product;
     @Column(nullable = false)
     private Integer count; // 상품 주문 개수
@@ -28,7 +31,8 @@ public class OrderProduct { // 주문 상품
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"orderProductList"})
+    @ManyToOne
     private OrderSheet orderSheet;
 
     public void syncOrderSheet(OrderSheet orderSheet){

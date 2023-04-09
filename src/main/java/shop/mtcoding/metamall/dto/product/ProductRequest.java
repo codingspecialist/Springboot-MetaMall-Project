@@ -3,11 +3,11 @@ package shop.mtcoding.metamall.dto.product;
 import lombok.Getter;
 import lombok.Setter;
 import shop.mtcoding.metamall.model.product.Product;
+import shop.mtcoding.metamall.model.user.User;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 public class ProductRequest {
 
@@ -25,11 +25,12 @@ public class ProductRequest {
         @NotNull
         private Integer qty;
 
-        public Product toEntity(){
+        public Product toEntity(User seller){
             return Product.builder()
                     .name(name)
                     .price(price)
                     .qty(qty)
+                    .seller(seller)
                     .build();
         }
     }
