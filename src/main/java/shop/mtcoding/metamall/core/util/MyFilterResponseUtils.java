@@ -1,4 +1,4 @@
-package shop.mtcoding.metamall.util;
+package shop.mtcoding.metamall.core.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;

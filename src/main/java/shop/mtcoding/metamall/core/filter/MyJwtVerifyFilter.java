@@ -7,7 +7,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import shop.mtcoding.metamall.core.exception.Exception400;
 import shop.mtcoding.metamall.core.jwt.JwtProvider;
 import shop.mtcoding.metamall.core.session.SessionUser;
-import shop.mtcoding.metamall.util.MyFilterResponseUtils;
+import shop.mtcoding.metamall.core.util.MyFilterResponseUtils;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;

@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
 import shop.mtcoding.metamall.core.exception.Exception403;
 import shop.mtcoding.metamall.core.session.SessionUser;
-import shop.mtcoding.metamall.util.MyFilterResponseUtils;
+import shop.mtcoding.metamall.core.util.MyFilterResponseUtils;
 
 
 import javax.servlet.http.HttpServletRequest;
