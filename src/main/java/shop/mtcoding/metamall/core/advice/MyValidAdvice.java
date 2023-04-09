@@ -20,7 +20,7 @@ public class MyValidAdvice {
     }
 
     @Before("postMapping() || putMapping()")
-    public void validationAdvice(JoinPoint jp) throws Throwable {
+    public void validationAdvice(JoinPoint jp) {
         Object[] args = jp.getArgs();
         for (Object arg : args) {
             if (arg instanceof Errors) {

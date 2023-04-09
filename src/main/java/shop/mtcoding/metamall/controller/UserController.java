@@ -2,9 +2,9 @@ package shop.mtcoding.metamall.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import shop.mtcoding.metamall.core.annotation.MySameUserIdCheck;
 import shop.mtcoding.metamall.core.exception.Exception400;
 import shop.mtcoding.metamall.core.jwt.JwtProvider;
 import shop.mtcoding.metamall.dto.ResponseDTO;
@@ -26,6 +26,16 @@ public class UserController {
     private final UserRepository userRepository;
     private final LoginLogRepository loginLogRepository;
     private final HttpSession session;
+
+    @MySameUserIdCheck
+    @GetMapping("/users/{id}")
+    public ResponseEntity<?> detail(@PathVariable Long id){
+        User userPS =userRepository.findById(id).orElseThrow(
+                ()-> new Exception400("id", "유저를 찾을 수 없습니다")
+        );
+        ResponseDTO<?> responseDto = new ResponseDTO<>().data(userPS);
+        return ResponseEntity.ok().body(responseDto);
+    }
 
     @PostMapping("/join")
     public ResponseEntity<?> join(@RequestBody @Valid UserRequest.JoinDTO joinDTO, Errors errors) {
@@ -63,6 +73,5 @@ public class UserController {
         // 5. 응답 DTO 생성
         ResponseDTO<?> responseDto = new ResponseDTO<>().data(sessionUser);
         return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body(responseDto);
-
     }
 }

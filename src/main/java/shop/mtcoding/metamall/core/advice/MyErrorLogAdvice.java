@@ -20,23 +20,18 @@ public class MyErrorLogAdvice {
     private final HttpSession session;
     private final ErrorLogRepository errorLogRepository;
 
-    // 깃발에 별칭주기
-    @Pointcut("@annotation(shop.mtcoding.metamall.core.annotation.MyErrorLog)")
+    @Pointcut("@annotation(shop.mtcoding.metamall.core.annotation.MyErrorLogRecord)")
     public void myErrorLog(){}
 
     @Before("myErrorLog()")
     public void errorLogAdvice(JoinPoint jp) {
-        System.out.println(1);
         Object[] args = jp.getArgs();
 
         for (Object arg : args) {
-            System.out.println(2);
             if(arg instanceof Exception){
-                System.out.println(3);
                 Exception e = (Exception) arg;
                 SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
                 if(sessionUser != null){
-                    System.out.println(4);
                     ErrorLog errorLog =ErrorLog.builder().userId(sessionUser.getId()).msg(e.getMessage()).build();
                     errorLogRepository.save(errorLog);
                 }

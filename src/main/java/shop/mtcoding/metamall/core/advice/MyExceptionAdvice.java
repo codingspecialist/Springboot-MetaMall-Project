@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
-import shop.mtcoding.metamall.core.annotation.MyErrorLog;
+import shop.mtcoding.metamall.core.annotation.MyErrorLogRecord;
 import shop.mtcoding.metamall.core.exception.*;
 import shop.mtcoding.metamall.dto.ResponseDTO;
 
@@ -14,26 +14,26 @@ import shop.mtcoding.metamall.dto.ResponseDTO;
 @RestControllerAdvice
 public class MyExceptionAdvice {
 
-    @MyErrorLog
+    @MyErrorLogRecord
     @ExceptionHandler(Exception400.class)
     public ResponseEntity<?> badRequest(Exception400 e){
         return new ResponseEntity<>(e.body(), e.status());
     }
 
-    @MyErrorLog
+    @MyErrorLogRecord
     @ExceptionHandler(Exception401.class)
     public ResponseEntity<?> unAuthorized(Exception401 e){
         return new ResponseEntity<>(e.body(), e.status());
     }
 
-    @MyErrorLog
+    @MyErrorLogRecord
     @ExceptionHandler(Exception403.class)
     public ResponseEntity<?> forbidden(Exception403 e){
         return new ResponseEntity<>(e.body(), e.status());
     }
 
 
-    @MyErrorLog
+    @MyErrorLogRecord
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<?> notFound(NoHandlerFoundException e){
         ResponseDTO<String> responseDto = new ResponseDTO<>();
@@ -41,7 +41,7 @@ public class MyExceptionAdvice {
         return new ResponseEntity<>(responseDto, HttpStatus.NOT_FOUND);
     }
 
-    @MyErrorLog
+    @MyErrorLogRecord
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> serverError(Exception e){
         ResponseDTO<String> responseDto = new ResponseDTO<>();

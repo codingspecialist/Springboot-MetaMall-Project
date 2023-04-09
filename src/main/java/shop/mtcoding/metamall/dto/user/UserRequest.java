@@ -5,18 +5,27 @@ import lombok.Setter;
 import shop.mtcoding.metamall.model.user.User;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 public class UserRequest {
 
     @Getter @Setter
     public static class JoinDTO {
         @NotEmpty
+        @Size(min = 3, max = 20)
         private String username;
+        
         @NotEmpty
+        @Size(min = 4, max = 20) // DB에는 60자, 실제 받을 때는 20자 이하
         private String password;
+        
         @NotEmpty
+        @Pattern(regexp = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$", message = "이메일 형식이 아닙니다")
         private String email;
+
         @NotEmpty
+        @Pattern(regexp = "USER|SELLER|ADMIN")
         private String role;
 
         public User toEntity(){
@@ -25,6 +34,7 @@ public class UserRequest {
                     .password(password)
                     .email(email)
                     .role(role)
+                    .status(true)
                     .build();
         }
     }

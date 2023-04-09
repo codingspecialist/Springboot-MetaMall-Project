@@ -23,7 +23,7 @@ public class MyJwtVerifyFilter implements Filter {
         String prefixJwt = req.getHeader(JwtProvider.HEADER);
 
         if(prefixJwt == null){
-            MyFilterResponseUtils.unAuthorized(resp, new Exception400("Authorization", "토큰이 전달되지 않았습니다"));
+            MyFilterResponseUtils.unAuthorized(resp, new Exception400("authorization", "토큰이 전달되지 않았습니다"));
             return;
         }
 
@@ -33,7 +33,7 @@ public class MyJwtVerifyFilter implements Filter {
             Long id = decodedJWT.getClaim("id").asLong();
             String role = decodedJWT.getClaim("role").asString();
 
-            // 세션을 사용하는 이유는 권한처리를 하기 위해서이다.
+            // 세션을 사용하는 이유는 role(권한) 처리를 하기 위해서이다.
             HttpSession session =  req.getSession();
             SessionUser sessionUser = SessionUser.builder().id(id).role(role).build();
             session.setAttribute("sessionUser", sessionUser);
