@@ -1,6 +1,7 @@
 package shop.mtcoding.metamall.dto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @Getter

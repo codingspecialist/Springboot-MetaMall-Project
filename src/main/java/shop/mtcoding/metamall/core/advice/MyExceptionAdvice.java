@@ -1,19 +1,14 @@
 package shop.mtcoding.metamall.core.advice;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import shop.mtcoding.metamall.core.exception.*;
-import shop.mtcoding.metamall.model.log.error.ErrorLogRepository;
 
-@Slf4j
 @RequiredArgsConstructor
 @RestControllerAdvice
 public class MyExceptionAdvice {
-
-    private final ErrorLogRepository errorLogRepository;
 
     @ExceptionHandler(Exception400.class)
     public ResponseEntity<?> badRequest(Exception400 e){

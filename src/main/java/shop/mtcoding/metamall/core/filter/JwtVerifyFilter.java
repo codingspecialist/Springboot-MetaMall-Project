@@ -31,7 +31,7 @@ public class JwtVerifyFilter implements Filter {
         String jwt = prefixJwt.replace(JwtProvider.TOKEN_PREFIX, "");
         try {
             DecodedJWT decodedJWT = JwtProvider.verify(jwt);
-            int id = decodedJWT.getClaim("id").asInt();
+            Long id = decodedJWT.getClaim("id").asLong();
             String role = decodedJWT.getClaim("role").asString();
 
             // 세션을 사용하는 이유는 권한처리를 하기 위해서이다.
