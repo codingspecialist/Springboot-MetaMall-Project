@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import shop.mtcoding.metamall.core.exception.Exception400;
 import shop.mtcoding.metamall.core.jwt.JwtProvider;
-import shop.mtcoding.metamall.core.session.LoginUser;
+import shop.mtcoding.metamall.core.session.SessionUser;
 import shop.mtcoding.metamall.dto.ResponseDto;
 
 import javax.servlet.*;
@@ -17,10 +17,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-public class JwtVerifyFilter implements Filter {
+public class MyJwtVerifyFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        System.out.println("디버그 : JwtVerifyFilter 동작함");
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
         String prefixJwt = req.getHeader(JwtProvider.HEADER);
@@ -36,9 +35,8 @@ public class JwtVerifyFilter implements Filter {
 
             // 세션을 사용하는 이유는 권한처리를 하기 위해서이다.
             HttpSession session =  req.getSession();
-            LoginUser loginUser = LoginUser.builder().id(id).role(role).build();
-            session.setAttribute("loginUser", loginUser);
-            System.out.println("세션 생성됨");
+            SessionUser sessionUser = SessionUser.builder().id(id).role(role).build();
+            session.setAttribute("sessionUser", sessionUser);
             chain.doFilter(req, resp);
         }catch (SignatureVerificationException sve){
             error(resp, sve);

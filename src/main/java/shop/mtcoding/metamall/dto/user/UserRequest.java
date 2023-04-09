@@ -36,4 +36,10 @@ public class UserRequest {
         @NotEmpty
         private String password;
     }
+
+    @Getter @Setter
+    public static class RoleUpdateDto {
+        private String role;
+    }
+
 }

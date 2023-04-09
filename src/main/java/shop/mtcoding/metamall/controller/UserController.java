@@ -35,32 +35,32 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid UserRequest.LoginDto loginDto, BindingResult bindingResult, HttpServletRequest request) {
-        User loginUser = userRepository.findByUsername(loginDto.getUsername())
+        User sessionUser = userRepository.findByUsername(loginDto.getUsername())
                 .orElseThrow(
                         () -> new Exception400("유저네임을 찾을 수 없습니다")
                 );
 
         // 1. 패스워드 검증하기
-        if (!loginUser.getPassword().equals(loginDto.getPassword())) {
+        if (!sessionUser.getPassword().equals(loginDto.getPassword())) {
             throw new Exception400("패스워드가 잘못입력되었습니다");
         }
 
         // 2. JWT 생성하기
-        String jwt = JwtProvider.create(loginUser);
+        String jwt = JwtProvider.create(sessionUser);
 
         // 3. 최종 로그인 날짜 기록 (더티체킹 - update 쿼리 발생)
-        loginUser.setUpdatedAt(LocalDateTime.now());
+        sessionUser.setUpdatedAt(LocalDateTime.now());
 
         // 4. 로그 테이블 기록
         LoginLog loginLog = LoginLog.builder()
-                .userId(loginUser.getId())
+                .userId(sessionUser.getId())
                 .userAgent(request.getHeader("User-Agent"))
                 .clientIP(request.getRemoteAddr())
                 .build();
         loginLogRepository.save(loginLog);
 
         // 5. 응답 DTO 생성
-        ResponseDto<?> responseDto = new ResponseDto<>().data(loginUser);
+        ResponseDto<?> responseDto = new ResponseDto<>().data(sessionUser);
         return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body(responseDto);
 
     }

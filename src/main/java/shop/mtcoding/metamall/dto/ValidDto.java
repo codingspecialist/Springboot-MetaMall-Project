@@ -10,12 +10,12 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class ErrorDto {
-    private List<ErrorDetail> errors = new ArrayList<>();
+public class ValidDto {
+    private List<ValidDetail> errors = new ArrayList<>();
 
-    public ErrorDto(Map<String, String> errorMap) {
+    public ValidDto(Map<String, String> errorMap) {
         errorMap.forEach((k, v) -> {
-                    ErrorDetail error = new ErrorDetail(k, v);
+            ValidDetail error = new ValidDetail(k, v);
                     errors.add(error);
                 }
         );
@@ -24,7 +24,7 @@ public class ErrorDto {
     @Getter
     @Setter
     @AllArgsConstructor
-    public static class ErrorDetail {
+    public static class ValidDetail {
         private String key;
         private String value;
     }
