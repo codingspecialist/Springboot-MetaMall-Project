@@ -58,7 +58,7 @@ public class UserController {
 
             // 2. 패스워드 검증하기
             if (!loginUser.getPassword().equals(loginDto.getPassword())) {
-                throw new Exception401("인증되지 않았습니다");
+                throw new Exception401("비밀번호가 잘못 입력되었습니다.");
             }
 
             // 3. JWT 생성하기
@@ -79,7 +79,7 @@ public class UserController {
             ResponseDto<?> responseDto = new ResponseDto<>().data(loginUser);
             return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body(responseDto);
         } else {
-            throw new Exception400("유저네임 혹은 아이디가 잘못되었습니다");
+            throw new Exception400("아이디가 잘못 입력되었습니다.");
         }
     }
 }
