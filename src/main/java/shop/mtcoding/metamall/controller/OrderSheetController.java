@@ -2,10 +2,7 @@ package shop.mtcoding.metamall.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import shop.mtcoding.metamall.core.exception.Exception404;
 import shop.mtcoding.metamall.dto.ResponseDto;
 import shop.mtcoding.metamall.dto.orderproduct.OrderProductRequest;
@@ -23,7 +20,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
-public class OrderProductController {
+public class OrderSheetController {
 
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
@@ -68,6 +65,32 @@ public class OrderProductController {
             return ResponseEntity.ok().body(responseDto);
         } else {
             throw new Exception404("존재하지 않는 사용자 혹은 상품입니다.");
+        }
+    }
+
+    @GetMapping("/{userId}/orders")
+    public ResponseEntity<?> findBuyerOrders(@PathVariable Integer id) {
+        Optional<List<OrderSheet>> orderSheetListPS = orderSheetRepository.findByUserId(id.longValue());
+        if (orderSheetListPS.isPresent()) {
+            List<OrderSheet> orderSheets = orderSheetListPS.get();
+
+            ResponseDto<?> responseDto = new ResponseDto<>().data(orderSheets);
+            return ResponseEntity.ok().body(responseDto);
+        } else {
+            throw new Exception404("존재하지 않는 사용자입니다.");
+        }
+    }
+
+    @GetMapping("/{userId}/orders")
+    public ResponseEntity<?> findSellerOrders(@PathVariable Integer id) {
+        Optional<List<OrderSheet>> orderSheetListPS = orderSheetRepository.findByUserId(id.longValue());
+        if (orderSheetListPS.isPresent()) {
+            List<OrderSheet> orderSheets = orderSheetListPS.get();
+
+            ResponseDto<?> responseDto = new ResponseDto<>().data(orderSheets);
+            return ResponseEntity.ok().body(responseDto);
+        } else {
+            throw new Exception404("존재하지 않는 사용자입니다.");
         }
     }
 }
