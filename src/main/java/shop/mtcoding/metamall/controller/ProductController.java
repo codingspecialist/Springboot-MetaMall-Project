@@ -77,8 +77,8 @@ public class ProductController {
        }
     }
 
-    @PutMapping("/update/{productname}") // 값 안들어오면 404 반환
-    public ResponseEntity<?> update(@PathVariable(required = false) String productname, @Valid @RequestBody Product updateProduct, HttpServletRequest request){
+    @PutMapping("/update")
+    public ResponseEntity<?> update(@Valid @RequestBody Product updateProduct, HttpServletRequest request){
 
         String jwt = request.getHeader(JwtProvider.HEADER).replaceAll("Bearer ", "");
         DecodedJWT decodedJWT = JwtProvider.verify(jwt);
@@ -89,7 +89,7 @@ public class ProductController {
 
         if(role.equals(Role.SELLER.toString())){
 
-            Product productPS = productRepository.findByName(productname).orElseThrow(() -> {
+            Product productPS = productRepository.findByName(updateProduct.getProductname()).orElseThrow(() -> {
                 return new Exception400("제품의 이름을 찾을 수 없습니다. ");
             }); //영속화 하기
 

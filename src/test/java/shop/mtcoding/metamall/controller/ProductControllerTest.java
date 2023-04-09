@@ -105,10 +105,10 @@ class ProductControllerTest {
     @Test
     void update() throws Exception{
         //given
-        String requestBody = "{\"name\":\"book2\",\"price\":\"12345\",\"qty\":\"10\"}"; // 수정할 물건 내용 book2를 수정
+        String requestBody = "{\"productname\":\"book2\",\"price\":\"12345\",\"qty\":\"10\"}"; // 수정할 물건 내용 book2를 수정
 
         //then
-        MvcResult result =  mockMvc.perform(put("/update/{productname}", "book2")
+        MvcResult result =  mockMvc.perform(put("/update")
                         .header(HEADER, jwt)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
