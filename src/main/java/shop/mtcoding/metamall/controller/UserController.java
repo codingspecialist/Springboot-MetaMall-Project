@@ -15,27 +15,18 @@ import shop.mtcoding.metamall.model.user.User;
 import shop.mtcoding.metamall.model.user.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 
+/**
+ * 회원가입, 로그인, 유저상세보기
+ */
 @RequiredArgsConstructor
 @RestController
 public class UserController {
 
     private final UserRepository userRepository;
     private final LoginLogRepository loginLogRepository;
-    private final HttpSession session;
-
-    @MySameUserIdCheck
-    @GetMapping("/users/{id}")
-    public ResponseEntity<?> detail(@PathVariable Long id){
-        User userPS =userRepository.findById(id).orElseThrow(
-                ()-> new Exception400("id", "유저를 찾을 수 없습니다")
-        );
-        ResponseDTO<?> responseDto = new ResponseDTO<>().data(userPS);
-        return ResponseEntity.ok().body(responseDto);
-    }
 
     @PostMapping("/join")
     public ResponseEntity<?> join(@RequestBody @Valid UserRequest.JoinDTO joinDTO, Errors errors) {
@@ -73,5 +64,15 @@ public class UserController {
         // 5. 응답 DTO 생성
         ResponseDTO<?> responseDto = new ResponseDTO<>().data(sessionUser);
         return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body(responseDto);
+    }
+
+    @MySameUserIdCheck
+    @GetMapping("/users/{id}")
+    public ResponseEntity<?> detail(@PathVariable Long id){
+        User userPS =userRepository.findById(id).orElseThrow(
+                ()-> new Exception400("id", "유저를 찾을 수 없습니다")
+        );
+        ResponseDTO<?> responseDto = new ResponseDTO<>().data(userPS);
+        return ResponseEntity.ok().body(responseDto);
     }
 }

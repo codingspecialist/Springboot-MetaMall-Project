@@ -14,6 +14,9 @@ import shop.mtcoding.metamall.model.user.UserRepository;
 
 import javax.validation.Valid;
 
+/**
+ * 권한 변경
+ */
 @RequiredArgsConstructor
 @RestController
 public class AdminController {

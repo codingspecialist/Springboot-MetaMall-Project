@@ -29,6 +29,10 @@ public class OrderProduct { // 주문 상품
     @ManyToOne(fetch = FetchType.LAZY)
     private OrderSheet orderSheet;
 
+    public void syncOrderSheet(OrderSheet orderSheet){
+        this.orderSheet = orderSheet;
+    }
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
