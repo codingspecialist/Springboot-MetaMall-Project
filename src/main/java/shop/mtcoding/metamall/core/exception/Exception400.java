@@ -7,7 +7,7 @@ import shop.mtcoding.metamall.dto.ResponseDto;
 
 // 유효성 실패
 @Getter
-public class Exception400 extends RuntimeException {
+public class Exception400 extends RuntimeException implements CustomException {
     public Exception400(String message) {
         super(message);
     }

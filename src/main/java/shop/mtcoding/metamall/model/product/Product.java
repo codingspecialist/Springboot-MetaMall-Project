@@ -33,6 +33,7 @@ public class Product {
         this.updatedAt = LocalDateTime.now();
     }
 
+
     @Builder
     public Product(Long id, String name, Integer price, Integer qty, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
@@ -41,5 +42,11 @@ public class Product {
         this.qty = qty;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    public void changeProduct(String name,Integer price,Integer qty){
+                this.name = name;
+                this.price = price;
+                this.qty = qty;
     }
 }

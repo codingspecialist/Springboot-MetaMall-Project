@@ -7,7 +7,7 @@ import shop.mtcoding.metamall.dto.ResponseDto;
 
 // 리소스 없음
 @Getter
-public class Exception404 extends RuntimeException {
+public class Exception404 extends RuntimeException implements CustomException{
     public Exception404(String message) {
         super(message);
     }

@@ -1,8 +1,11 @@
 package shop.mtcoding.metamall.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import shop.mtcoding.metamall.annotation.BindingCheck;
 import shop.mtcoding.metamall.core.exception.Exception400;
 import shop.mtcoding.metamall.core.exception.Exception401;
 import shop.mtcoding.metamall.core.jwt.JwtProvider;
@@ -16,9 +19,12 @@ import shop.mtcoding.metamall.model.user.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 public class UserController {
@@ -47,7 +53,6 @@ public class UserController {
 
             // 5. 로그 테이블 기록
             LoginLog loginLog = LoginLog.builder()
-                    .userId(loginUser.getId())
                     .userAgent(request.getHeader("User-Agent"))
                     .clientIP(request.getRemoteAddr())
                     .build();
@@ -59,5 +64,25 @@ public class UserController {
         } else {
             throw new Exception400("유저네임 혹은 아이디가 잘못되었습니다");
         }
+    }
+
+    @BindingCheck
+    @PostMapping("/join")
+    public ResponseEntity<Boolean> join(@RequestBody @Valid UserRequest.JoinDto joinDto, BindingResult bindingResult){
+           userRepository.save(toEntity(joinDto));
+
+           return ResponseEntity.ok(true);
+    }
+
+
+
+    protected User toEntity(UserRequest.JoinDto joinDto){
+        return User.builder()
+                .username(joinDto.getUsername())
+                .password(joinDto.getPassword())
+                .role("ROLE_USER")
+                .email(joinDto.getEmail())
+                .build();
+
     }
 }

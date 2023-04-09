@@ -1,9 +1,12 @@
 package shop.mtcoding.metamall.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
+import shop.mtcoding.metamall.core.CodeEnum;
 
 @Getter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseDto<T> {
     private Integer status; // 에러시에 의미 있음.
     private String msg; // 에러시에 의미 있음. ex) badRequest
@@ -15,8 +18,20 @@ public class ResponseDto<T> {
         this.data = null;
     }
 
+    public ResponseDto<?> code(CodeEnum errorCode){
+        this.status = errorCode.getCode();
+        return this;
+    }
+    public ResponseDto<?> code(int errorCode){
+        this.status = errorCode;
+        return this;
+    }
     public ResponseDto<?> data(T data){
         this.data = data; // 응답할 데이터 바디
+        return this;
+    }
+    public ResponseDto<?> msg(String msg){
+        this.msg = msg;
         return this;
     }
 
@@ -26,4 +41,6 @@ public class ResponseDto<T> {
         this.data = data; // 에러 내용
         return this;
     }
+
+
 }
