@@ -64,24 +64,39 @@ public class ProductController {
     public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody ProductRequest.UpdateDto updateDto) {
         Optional<Product> productPS = productRepository.findById(id.longValue());
         if (productPS.isPresent()) {
-            Product oldProduct = productPS.get();
+            Product product = productPS.get();
             // 입력하지 않은 부분은 기존 값 유지
             if (updateDto.getName() == null || updateDto.getName().isBlank()) {
-                updateDto.setName(oldProduct.getName());
+                updateDto.setName(product.getName());
             }
             if (updateDto.getPrice() == null) {
-                updateDto.setPrice(oldProduct.getPrice());
+                updateDto.setPrice(product.getPrice());
             }
             if (updateDto.getQty() == null) {
-                updateDto.setQty(oldProduct.getQty());
+                updateDto.setQty(product.getQty());
             }
 
             // dutty checking
-            oldProduct.update(updateDto.getName(),
+            product.update(updateDto.getName(),
                     updateDto.getPrice(),
                     updateDto.getQty());
 
-            ResponseDto<?> responseDto = new ResponseDto<>().data(oldProduct);
+            ResponseDto<?> responseDto = new ResponseDto<>().data(product);
+            return ResponseEntity.ok().body(responseDto);
+        } else {
+            throw new Exception404("존재하지 않는 상품입니다.");
+        }
+    }
+
+    @DeleteMapping("/product/{id}")
+    public ResponseEntity<?> delete(@PathVariable Integer id) {
+        Optional<Product> productPS = productRepository.findById(id.longValue());
+        if (productPS.isPresent()) {
+            Product product = productPS.get();
+
+            productRepository.delete(product);
+
+            ResponseDto<?> responseDto = new ResponseDto<>().data(product.getName() + " 상품 삭제가 완료되었습니다.");
             return ResponseEntity.ok().body(responseDto);
         } else {
             throw new Exception404("존재하지 않는 상품입니다.");
