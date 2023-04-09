@@ -3,6 +3,7 @@ package shop.mtcoding.metamall.core.advice;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -43,9 +44,9 @@ public class MyExceptionAdvice {
 
     @MyErrorLogRecord
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> serverError(Exception e){
+    public ResponseEntity<?> unknownServerError(Exception e){
         ResponseDTO<String> responseDto = new ResponseDTO<>();
-        responseDto.fail(HttpStatus.INTERNAL_SERVER_ERROR, "serverError", e.getMessage());
+        responseDto.fail(HttpStatus.INTERNAL_SERVER_ERROR, "unknownServerError", e.getMessage());
         return new ResponseEntity<>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

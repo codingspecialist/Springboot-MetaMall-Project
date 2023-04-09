@@ -6,7 +6,8 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import shop.mtcoding.metamall.core.interceptor.MyRoleInterceptor;
+import shop.mtcoding.metamall.core.interceptor.MyAdminInterceptor;
+import shop.mtcoding.metamall.core.interceptor.MySellerInterceptor;
 import shop.mtcoding.metamall.core.resolver.MySessionArgumentResolver;
 
 import java.util.List;
@@ -15,7 +16,8 @@ import java.util.List;
 @Configuration
 public class MyWebMvcConfig implements WebMvcConfigurer {
 
-    private final MyRoleInterceptor roleInterceptor;
+    private final MyAdminInterceptor adminInterceptor;
+    private final MySellerInterceptor sellerInterceptor;
     private final MySessionArgumentResolver mySessionArgumentResolver;
 
     @Override
@@ -29,10 +31,15 @@ public class MyWebMvcConfig implements WebMvcConfigurer {
     }
 
 
+    // AOP는 매개변수 값 확인해서 권한 비교해야할 때 사용
+    // Interceptor는 세션 권한으로 체크할 때 사용
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(roleInterceptor)
+        registry.addInterceptor(adminInterceptor)
                 .addPathPatterns("/admin/**");
+
+        registry.addInterceptor(sellerInterceptor)
+                .addPathPatterns("/seller/**");
     }
 
     @Override

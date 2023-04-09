@@ -17,11 +17,20 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false, length = 50)
     private String name; // 상품 이름
+    @Column(nullable = false)
     private Integer price; // 상품 가격
+    @Column(nullable = false)
     private Integer qty; // 상품 재고
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    public void update(String name, Integer price, Integer qty){
+        this.name = name;
+        this.price = price;
+        this.qty = qty;
+    }
 
     @PrePersist
     protected void onCreate() {

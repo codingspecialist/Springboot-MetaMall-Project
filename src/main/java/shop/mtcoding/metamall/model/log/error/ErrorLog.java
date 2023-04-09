@@ -17,7 +17,9 @@ public class ErrorLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false, length = 10000)
     private String msg;
+    @Column(nullable = false)
     private Long userId;
 
     private LocalDateTime createdAt;

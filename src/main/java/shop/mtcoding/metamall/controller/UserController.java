@@ -68,7 +68,7 @@ public class UserController {
 
     @MySameUserIdCheck
     @GetMapping("/users/{id}")
-    public ResponseEntity<?> detail(@PathVariable Long id){
+    public ResponseEntity<?> findById(@PathVariable Long id){
         User userPS =userRepository.findById(id).orElseThrow(
                 ()-> new Exception400("id", "유저를 찾을 수 없습니다")
         );

@@ -12,15 +12,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @Configuration
-public class MyRoleInterceptor implements HandlerInterceptor {
+public class MyAdminInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession();
         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
 
         if(!sessionUser.getRole().equals("ADMIN")){
-            MyFilterResponseUtils.forbidden(response, new Exception403("권한이 없습니다"));
-            return false;
+            throw new Exception403("권한이 없습니다");
         }
         return true;
     }

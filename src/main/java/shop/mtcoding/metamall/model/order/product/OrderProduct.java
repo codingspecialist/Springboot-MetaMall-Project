@@ -21,7 +21,9 @@ public class OrderProduct { // 주문 상품
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     private Product product;
+    @Column(nullable = false)
     private Integer count; // 상품 주문 개수
+    @Column(nullable = false)
     private Integer orderPrice; // 상품 주문 금액
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

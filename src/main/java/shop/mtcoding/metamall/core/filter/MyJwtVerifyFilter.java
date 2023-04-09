@@ -37,6 +37,7 @@ public class MyJwtVerifyFilter implements Filter {
             HttpSession session =  req.getSession();
             SessionUser sessionUser = SessionUser.builder().id(id).role(role).build();
             session.setAttribute("sessionUser", sessionUser);
+            System.out.println("세션 생성됨");
             chain.doFilter(req, resp);
         }catch (SignatureVerificationException sve){
             MyFilterResponseUtils.unAuthorized(resp, sve);

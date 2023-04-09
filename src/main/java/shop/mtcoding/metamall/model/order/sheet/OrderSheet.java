@@ -28,6 +28,7 @@ public class OrderSheet { // 주문서
     @OneToMany(mappedBy = "orderSheet", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderProduct> orderProductList = new ArrayList<>(); // 총 주문 상품 리스트
 
+    @Column(nullable = false)
     private Integer totalPrice; // 총 주문 금액 (총 주문 상품 리스트의 orderPrice 합)
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

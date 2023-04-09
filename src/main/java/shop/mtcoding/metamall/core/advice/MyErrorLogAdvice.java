@@ -5,6 +5,7 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Component;
 import shop.mtcoding.metamall.core.session.SessionUser;
 import shop.mtcoding.metamall.model.log.error.ErrorLog;
@@ -24,7 +25,7 @@ public class MyErrorLogAdvice {
     public void myErrorLog(){}
 
     @Before("myErrorLog()")
-    public void errorLogAdvice(JoinPoint jp) {
+    public void errorLogAdvice(JoinPoint jp) throws HttpMessageNotReadableException {
         Object[] args = jp.getArgs();
 
         for (Object arg : args) {

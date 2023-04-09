@@ -19,8 +19,9 @@ public class MetamallApplication {
 	CommandLineRunner initData(UserRepository userRepository, ProductRepository productRepository, OrderProductRepository orderProductRepository, OrderSheetRepository orderSheetRepository){
 		return (args)->{
 			User ssar = User.builder().username("ssar").password("1234").email("ssar@nate.com").role("USER").status(true).build();
+			User seller = User.builder().username("seller").password("1234").email("seller@nate.com").role("SELLER").status(true).build();
 			User admin = User.builder().username("admin").password("1234").email("admin@nate.com").role("ADMIN").status(true).build();
-			userRepository.saveAll(Arrays.asList(ssar, admin));
+			userRepository.saveAll(Arrays.asList(ssar, seller, admin));
 		};
 	}
 

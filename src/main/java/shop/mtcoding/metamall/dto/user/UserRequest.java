@@ -12,14 +12,17 @@ public class UserRequest {
 
     @Getter @Setter
     public static class JoinDTO {
+
+        // Size는 String에만 쓸 수 있다.
         @NotEmpty
         @Size(min = 3, max = 20)
         private String username;
-        
+
         @NotEmpty
         @Size(min = 4, max = 20) // DB에는 60자, 실제 받을 때는 20자 이하
         private String password;
-        
+
+        // Pattern은 String에만 쓸 수 있다.
         @NotEmpty
         @Pattern(regexp = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$", message = "이메일 형식이 아닙니다")
         private String email;
