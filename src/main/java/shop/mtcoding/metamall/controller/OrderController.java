@@ -55,11 +55,11 @@ public class OrderController {
 
                 Optional<OrderSheet> orderSheetPS = orderSheetRepository.findByUserId(loginUser.getId().longValue());
                 OrderSheet order;
-                if (orderSheetPS.isPresent()) { // 기존에 해당 주문자의 주문이 있었을 경우
+                if (orderSheetPS.isPresent()) { // 기존에 해당 주문자의 주문서가 있었을 경우
                     order = orderSheetPS.get();
                     order.updateList(orderProduct); // 주문서 리스트에 orderproduct 추가
                     order.updateTotalPrice(orderProduct.getOrderPrice()); // 주문서 totalPrice 갱신
-                } else { // 기존에 해당 주문자의 주문이 존재하지 않았을 경우
+                } else { // 기존에 해당 주문자의 주문서가 존재하지 않았을 경우
                     order = orderSheetRepository.save(OrderSheet.builder()
                             .user(user)
                             .totalPrice(orderDto.getOrderPrice())
@@ -101,25 +101,18 @@ public class OrderController {
         }
     }
 
-    @DeleteMapping("/{userId}/order/{orderId}") // 권한에 따라 수행하는 작업이 달라짐
-    public ResponseEntity<?> withdraw(@PathVariable Integer userId,
-                                      @PathVariable Integer orderId) {
-        LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
-        // 고객 권한, 본인의 주문만 취소 가능
-        if (loginUser.getRole().equals(Role.CUSTOMER.getRole()) && loginUser.getId() == userId) {
-            Optional<OrderSheet> orderPS = orderSheetRepository.findByUserIdAndOrderId(userId.longValue(), orderId.longValue());
-            if (orderPS.isPresent()) {
-                OrderSheet order = orderPS.get();
-
-                orderSheetRepository.deleteById(orderId.longValue());
-
-
-            }
-            // 고객 권한, 모든 주문 취소 가능
-        } else if (loginUser.getRole().equals(Role.SELLER.getRole())) {
-
-        } else {
-            throw new Exception403("권한이 없는 사용자입니다.");
-        }
-    }
+//    @DeleteMapping("/{userId}/order/{orderId}") // 권한에 따라 수행하는 작업이 달라짐
+//    public ResponseEntity<?> withdraw(@PathVariable Integer userId,
+//                                      @PathVariable Integer orderId) {
+//        LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
+//        // 고객 권한, 본인의 주문만 취소 가능
+//        if (loginUser.getRole().equals(Role.CUSTOMER.getRole()) && loginUser.getId() == userId) {
+//
+//            // 판매자 권한, 모든 주문 취소 가능
+//        } else if (loginUser.getRole().equals(Role.SELLER.getRole())) {
+//
+//        } else {
+//            throw new Exception403("권한이 없는 사용자입니다.");
+//        }
+//    }
 }
