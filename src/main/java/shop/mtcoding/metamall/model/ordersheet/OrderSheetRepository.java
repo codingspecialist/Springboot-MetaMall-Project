@@ -11,5 +11,9 @@ import java.util.Optional;
 public interface OrderSheetRepository extends JpaRepository<OrderSheet, Long> {
 
     @Query("select os from OrderSheet os where os.user.id = :userId")
-    Optional<List<OrderSheet>> findByUserId(@Param("userId") Long userId);
+    Optional<OrderSheet> findByUserId(@Param("userId") Long userId);
+
+    @Query("select os from OrderSheet os where os.user.id = :userId and os.id = :orderId")
+    Optional<OrderSheet> findByUserIdAndOrderId(@Param("userId") Long userId,
+                                                @Param("orderId") Long orderId);
 }

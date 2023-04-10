@@ -39,6 +39,10 @@ public class Product {
         this.qty = product.getQty();
     }
 
+    public void updateQty(Integer qty) {
+        this.qty = qty;
+    }
+
     @Builder
     public Product(Long id, String name, Integer price, Integer qty, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;

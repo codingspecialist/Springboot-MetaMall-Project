@@ -23,9 +23,8 @@ public class ProductController {
     private final ProductRepository productRepository;
     private final HttpSession session;
 
-    @PostMapping("/{id}/product") // 판매자 권한
-    public ResponseEntity<?> register(@PathVariable Integer id,
-                                      @RequestBody ProductRequest.RegisterDto registerDto) {
+    @PostMapping("/product") // 판매자 권한
+    public ResponseEntity<?> register(@RequestBody ProductRequest.RegisterDto registerDto) {
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         if (loginUser.getRole().equals(Role.SELLER.getRole())) {
             productRepository.save(registerDto.toEntity());
@@ -65,13 +64,12 @@ public class ProductController {
         }
     }
 
-    @PutMapping("/{userId}/product/{productId}") // 판매자 권한
-    public ResponseEntity<?> update(@PathVariable Integer userId,
-                                    @PathVariable Integer productId,
+    @PutMapping("/product/{id}") // 판매자 권한
+    public ResponseEntity<?> update(@PathVariable Integer id,
                                     @RequestBody ProductRequest.UpdateDto updateDto) {
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         if (loginUser.getRole().equals(Role.SELLER.getRole())) {
-            Optional<Product> productPS = productRepository.findById(productId.longValue());
+            Optional<Product> productPS = productRepository.findById(id.longValue());
             if (productPS.isPresent()) {
                 Product product = productPS.get();
                 // 입력하지 않은 부분은 기존 값 유지
@@ -98,12 +96,11 @@ public class ProductController {
         }
     }
 
-    @DeleteMapping("/{userId}/product/{productId}") // 판매자 권한
-    public ResponseEntity<?> delete(@PathVariable Integer userId,
-                                    @PathVariable Integer productId) {
+    @DeleteMapping("/product/{id}") // 판매자 권한
+    public ResponseEntity<?> delete(@PathVariable Integer id) {
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         if (loginUser.getRole().equals(Role.SELLER.getRole())) {
-            Optional<Product> productPS = productRepository.findById(productId.longValue());
+            Optional<Product> productPS = productRepository.findById(id.longValue());
             if (productPS.isPresent()) {
                 Product product = productPS.get();
 

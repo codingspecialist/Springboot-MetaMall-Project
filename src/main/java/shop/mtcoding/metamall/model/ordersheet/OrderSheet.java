@@ -25,7 +25,7 @@ public class OrderSheet { // 주문서
     @ManyToOne(fetch = FetchType.LAZY)
     private User user; // 주문자
     @JsonIgnoreProperties("orderSheet")
-    @OneToMany(mappedBy = "orderSheet")
+    @OneToMany(mappedBy = "orderSheet", cascade = CascadeType.REMOVE)
     private List<OrderProduct> orderProductList = new ArrayList<>(); // 총 주문 상품 리스트
     private Integer totalPrice; // 총 주문 금액 (총 주문 상품 리스트의 orderPrice 합)
     private LocalDateTime createdAt;
@@ -42,7 +42,10 @@ public class OrderSheet { // 주문서
         this.updatedAt = LocalDateTime.now();
     }
 
-    public void update(Integer orderPrice) {
+    public void updateList(OrderProduct orderProduct) {
+        this.orderProductList.add(orderProduct);
+    }
+    public void updateTotalPrice(Integer orderPrice) {
         this.totalPrice += orderPrice;
     }
 
