@@ -51,7 +51,7 @@ public class ProductService {
 
     public ProductListRespDto 상품목록() {
         List<Product> productListPS=productRepository.findAll();
-        ///: 나중에 페이징 처리 필요
+        ///checkpoint: 나중에 페이징 처리 필요
         return new ProductListRespDto(productListPS);
     }
 }
