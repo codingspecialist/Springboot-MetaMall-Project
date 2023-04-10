@@ -7,12 +7,14 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import shop.mtcoding.metamall.config.auth.LoginUser;
 import shop.mtcoding.metamall.dto.ResponseDto;
 import shop.mtcoding.metamall.dto.product.ProductReqDto;
+import shop.mtcoding.metamall.dto.product.ProductReqDto.ProductUpdateReqDto;
 import shop.mtcoding.metamall.dto.product.ProductRespDto.ProductListRespDto;
 import shop.mtcoding.metamall.dto.product.ProductRespDto.ProductListRespDto.ProductDto;
 import shop.mtcoding.metamall.dto.product.ProductRespDto.ProductRegisterRespDto;
@@ -43,6 +45,12 @@ public class ProductController {
     @GetMapping("/a/product/{id}")
     public ResponseEntity<?> getProduct(Long id){
         ProductDto productdto = productService.상품상세(id);
-        return new ResponseEntity<>(new ResponseDto<>(1,"", null), CREATED);
+        return new ResponseEntity<>(new ResponseDto<>(1,"상품상세 보기 완료", productdto), CREATED);
+    }
+    @PutMapping("/admin/product")
+    public ResponseEntity<?> updateProduct(@RequestBody @Valid ProductUpdateReqDto productUpdateReqDto){
+        ProductDto productDto = productService.상품수정(productUpdateReqDto);
+
+        return new ResponseEntity<>(new ResponseDto<>(1,"상품수정 완료", productDto), CREATED);
     }
 }

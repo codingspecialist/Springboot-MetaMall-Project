@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import shop.mtcoding.metamall.domain.Product;
 import shop.mtcoding.metamall.dto.product.ProductReqDto;
 
+import shop.mtcoding.metamall.dto.product.ProductRespDto;
 import shop.mtcoding.metamall.dto.product.ProductRespDto.ProductListRespDto;
 import shop.mtcoding.metamall.dto.product.ProductRespDto.ProductListRespDto.ProductDto;
 import shop.mtcoding.metamall.dto.product.ProductRespDto.ProductRegisterRespDto;
@@ -43,8 +44,8 @@ public class ProductService {
             //중복된 상품이 존재하는 경우 예외발생
             throw new MyApiException("동일한 이름의 상품이 존재합니다.");
         }
-//     2. 패스워드 인코딩 + 회원가입
-        Product productPS = productRepository.save(productRegisterReqDto.toEntity(bCryptPasswordEncoder));
+        //2. 상품 등록
+        Product productPS = productRepository.save(productRegisterReqDto.toEntity());
 //     3. dto 응답
         return new ProductRegisterRespDto(productPS);
 
@@ -61,6 +62,13 @@ public class ProductService {
         Product productPS = productRepository.findById(id).orElseThrow(
                 () -> new MyApiException("해당 상품이 존재하지 않습니다.")
         );
+
+        return new ProductDto(productPS);
+    }
+
+    public ProductDto 상품수정(@Valid ProductReqDto.ProductUpdateReqDto productUpdateReqDto){
+
+        Product productPS=productRepository.save(productUpdateReqDto.toEntity());
 
         return new ProductDto(productPS);
     }
