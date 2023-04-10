@@ -2,6 +2,7 @@ package shop.mtcoding.metamall.config.dummy;
 
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import shop.mtcoding.metamall.domain.Product;
 import shop.mtcoding.metamall.domain.User;
 import shop.mtcoding.metamall.domain.UserEnum;
 
@@ -32,6 +33,24 @@ public class DummyObject {
                 .role(UserEnum.CUSTOMER)
                 .build();
     }
+
+    protected static Product newProduct(String name, Integer qty, Integer price){
+        return Product.builder()
+                .name(name)
+                .qty(qty)
+                .price(1000)
+                .build();
+    }
+
+    protected static Product newMockProduct(Long id,String name, Integer qty, Integer price) {
+        return Product.builder()
+                .id(id)
+                .name(name)
+                .qty(qty)
+                .price(price)
+                .build();
+    }
+    
 
 
 }

@@ -2,9 +2,11 @@ package shop.mtcoding.metamall.config.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -13,8 +15,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import shop.mtcoding.metamall.config.auth.LoginUser;
+import shop.mtcoding.metamall.domain.LoginLog;
+import shop.mtcoding.metamall.domain.User;
 import shop.mtcoding.metamall.dto.user.UserReqDto.LoginReqDto;
 import shop.mtcoding.metamall.dto.user.UserRespDto.LoginRespDto;
+import shop.mtcoding.metamall.repository.LoginLogRepository;
 import shop.mtcoding.metamall.util.MyResponseUtil;
 
 import javax.servlet.FilterChain;
@@ -22,8 +27,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+
+
     private final Logger log = LoggerFactory.getLogger(getClass());
     private AuthenticationManager authenticationManager;
 
@@ -90,8 +98,19 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         //(4) loginUser를 이용해 loginRespDto 변환
         LoginRespDto loginRespDto = new LoginRespDto(loginUser.getUser());
 
-        //CustomResponseUtil에 JSON 응답 DTO 생성하는 메서드 작성
+        //+) 로깅
+//        User user = loginUser.getUser();
+//
+//        LoginLog loginLog = LoginLog.builder()
+//                .userId(user.getId())
+//                .userAgent(request.getHeader("User-Agent"))
+//                .clientIP(request.getRemoteAddr())
+//                .createdAt(LocalDateTime.now())
+//                .build();
+//
+//        loginLogRepository.save(loginLog);
 
+        //MyResponseUtil에 JSON 응답 DTO 생성하는 메서드 작성
         //(5) JSON 응답 DTO 반환
         MyResponseUtil.success(response, loginRespDto);
     }

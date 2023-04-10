@@ -16,15 +16,15 @@ import shop.mtcoding.metamall.repository.UserRepository;
 @SpringBootApplication
 public class MetamallApplication {
 
-	@Bean
-	CommandLineRunner initData(UserRepository userRepository, ProductRepository productRepository, OrderProductRepository orderProductRepository, OrderSheetRepository orderSheetRepository){
-		return (args)->{
-			// 여기에서 save 하면 됨.
-			// bulk Collector는 saveAll 하면 됨.
-			User ssar = User.builder().username("ssar").password("1234").email("ssar@nate.com").role(UserEnum.CUSTOMER).build();
-			userRepository.save(ssar);
-		};
-	}
+//	@Bean
+//	CommandLineRunner initData(UserRepository userRepository, ProductRepository productRepository, OrderProductRepository orderProductRepository, OrderSheetRepository orderSheetRepository){
+//		return (args)->{
+//			// 여기에서 save 하면 됨.
+//			// bulk Collector는 saveAll 하면 됨.
+//			User ssar = User.builder().username("ssar").password("1234").email("ssar@nate.com").role(UserEnum.CUSTOMER).build();
+//			userRepository.save(ssar);
+//		};
+//	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(MetamallApplication.class, args);

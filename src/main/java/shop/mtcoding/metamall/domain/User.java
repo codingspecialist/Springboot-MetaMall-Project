@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 //Spring이 User 객체 생성시 빈생성자로 생성하기 때문에
 @NoArgsConstructor
-@Setter // DTO 만들면 삭제해야됨
 @Getter
 @Table(name = "user_tb")
 @Entity
