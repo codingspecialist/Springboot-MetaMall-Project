@@ -5,14 +5,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import shop.mtcoding.metamall.model.orderproduct.OrderProduct;
-import shop.mtcoding.metamall.model.orderproduct.OrderProductRepository;
-import shop.mtcoding.metamall.model.ordersheet.OrderSheet;
-import shop.mtcoding.metamall.model.ordersheet.OrderSheetRepository;
-import shop.mtcoding.metamall.model.product.ProductRepository;
-import shop.mtcoding.metamall.model.user.User;
-import shop.mtcoding.metamall.model.user.UserEnum;
-import shop.mtcoding.metamall.model.user.UserRepository;
+import shop.mtcoding.metamall.repository.OrderProductRepository;
+import shop.mtcoding.metamall.repository.OrderSheetRepository;
+import shop.mtcoding.metamall.repository.ProductRepository;
+import shop.mtcoding.metamall.domain.User;
+import shop.mtcoding.metamall.domain.UserEnum;
+import shop.mtcoding.metamall.repository.UserRepository;
 //Audit 기능 사용하기 위한 어노테이션 3
 @EnableJpaAuditing
 @SpringBootApplication

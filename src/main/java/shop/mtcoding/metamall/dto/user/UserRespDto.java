@@ -3,7 +3,7 @@ package shop.mtcoding.metamall.dto.user;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import shop.mtcoding.metamall.model.user.User;
+import shop.mtcoding.metamall.domain.User;
 import shop.mtcoding.metamall.util.MyDateUtil;
 
 // 응답 DTO는 서비스 배우고 나서 하기 (할 수 있으면 해보기)
