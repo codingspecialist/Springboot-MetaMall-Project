@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>상품 목록</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: black;
+        }
+        .button {
+            width: 220px;
+            margin: 20px;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+
+            // 서버에서 상품 리스트를 가져와 표시합니다.
+            function fetchProductList() {
+                $.ajax({
+                    type: "GET",
+                    url: "/items",
+                    beforeSend: function(xhr) {
+                        const token = localStorage.getItem('token');
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                    },
+                    success: function(response) {
+                        const products = response.data;
+                        let productRows = '';
+
+                        products.forEach(function(product) {
+                            productRows += `
+                            <tr>
+                                <td><input type="checkbox" name="product" value="${product.id}"></td>
+                                <td>${product.name}</td>
+                                <td>${product.price}</td>
+                                <td class="product-stock">${product.qty}</td>
+                                <td><input type="number" class="count-input" min="1" value=""></td>
+                            </tr>
+                            `;
+                        });
+
+                        $("#product-table tbody").html(productRows);
+                    },
+                    error: function(response) {
+                        const errorMessage = response.responseJSON.msg;
+                        alert(errorMessage);
+                    },
+                });
+            }
+            fetchProductList();
+
+            // 상품 주문 버튼 클릭 이벤트
+            $("#place-order").on("click", function() {
+                const checkedProducts = $("input[name='product']:checked");
+                const orderProductRequests = [];
+
+                if (checkedProducts.length === 0) {
+                    alert("주문할 상품을 선택해주세요.");
+                    return false;
+                }
+
+                checkedProducts.each(function() {
+                    const productId = $(this).val();
+                    const count = $(this).closest("tr").find(".count-input").val();
+                    const stock = $(this).closest("tr").find(".product-stock").text();
+
+                    if (!count) {
+                        alert("선택한 상품의 개수를 입력해주세요.");
+                        return false;
+                    }
+
+                    if (parseInt(count) > parseInt(stock)) {
+                        alert("주문 수량이 상품 재고보다 많습니다. 다시 확인해주세요.");
+                        return false;
+                    }
+
+                    orderProductRequests.push({
+                        productId: productId,
+                        count: parseInt(count)
+                    });
+                });
+
+                if (orderProductRequests.length === 0)
+                {
+                    return false;
+                }
+
+                    const token = localStorage.getItem('token');
+
+                // 서버에 상품 주문 요청을 보냅니다.
+                $.ajax({
+                    type: "POST",
+                    url: "/order/create",
+                    data: JSON.stringify(orderProductRequests),
+                    contentType: "application/json",
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                    },
+                    success: function(response) {
+                        alert("주문이 성공적으로 완료되었습니다.");
+                        location.reload();// 페이지 새로 고침
+                    },
+                    error: function(response) {
+                        const errorMessage_messages = response.responseJSON.msg;
+                        alert(errorMessage_messages);
+                    },
+                });
+            });
+
+            $("#back-to-ordermanagement").on("click", function() {
+                window.location.href = "/ordermanagement";
+            });
+        });
+    </script>
+    >
+</head>
+<body>
+<h1>주문 하기</h1>
+<table id="product-table">
+    <thead>
+    <tr>
+        <th>선택</th>
+        <th>상품 이름</th>
+        <th>상품 가격</th>
+        <th>상품 재고</th>
+        <th>수량</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<div style="text-align:center; margin-top:20px;">
+    <button type="button" class="button" id="place-order">상품 주문</button>
+    <button type="button" class="button" id="back-to-ordermanagement">주문 관리 페이지로 가기</button>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>주문 목록 보기 (고객 전용)</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: black;
+        }
+        .button {
+            width: 220px;
+            margin: 20px;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            function fetchUserOrders() {
+                $.ajax({
+                    type: "GET",
+                    url: "/orders/user",
+                    beforeSend: function(xhr) {
+                        const token = localStorage.getItem('token');
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                    },
+                    success: function(response) {
+                        const orderSheets = response.data;
+                        let orderRows = '';
+
+                        orderSheets.forEach(function(orderSheet) {
+                            const orderProducts = orderSheet.orderProducts.map(product => `${product.productName} (${product.count}개)`).join(', ');
+
+                            orderRows += `
+                        <tr>
+                            <td><input type="radio" name="orderSheet" value="${orderSheet.id}"></td>
+                            <td>${orderSheet.id}</td>
+                            <td>${orderSheet.username}</td>
+                            <td>${orderProducts}</td>
+                            <td>${orderSheet.totalPrice}</td>
+                            <td>${orderSheet.createdAt}</td>
+                            <td>${orderSheet.status}</td>
+                        </tr>
+                        `;
+                        });
+
+                        $("#order-sheet-table tbody").html(orderRows);
+                    },
+                    error: function(response) {
+                        const errorMessage = response.responseJSON.msg;
+                        alert(errorMessage);
+                    },
+                });
+            }
+
+            fetchUserOrders();
+
+            function cancelOrder() {
+                const selectedOrderId = $('input[name="orderSheet"]:checked').val();
+
+                if (!selectedOrderId) {
+                    alert('취소할 주문을 선택해주세요.');
+                    return;
+                }
+
+                $.ajax({
+                    type: "DELETE",
+                    url: `/order/user/cancel/${selectedOrderId}`,
+                    beforeSend: function(xhr) {
+                        const token = localStorage.getItem('token');
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                    },
+                    success: function(response) {
+                        alert('주문이 취소되었습니다.');
+                        location.reload();// 페이지 새로 고침
+                    },
+                    error: function(response) {
+                        const errorMessage = response.responseJSON.msg;
+                        alert(errorMessage);
+                    },
+                });
+            }
+
+
+            $("#back-to-ordermanagement").on("click", function() {
+                window.location.href = "/ordermanagement";
+            });
+
+            // 취소 버튼 클릭 이벤트 리스너
+            $("#cancel-order").on("click", function() {
+                cancelOrder();
+            });
+        });
+    </script>
+</head>
+<body>
+<h1>주문 목록 보기 (고객 전용)</h1>
+<table id="order-sheet-table">
+    <thead>
+    <tr>
+        <th>선택</th>
+        <th>주문 번호</th>
+        <th>주문자</th>
+        <th>주문 상품</th>
+        <th>총 금액</th>
+        <th>주문 날짜</th>
+        <th>주문 상태</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<div style="text-align:center; margin-top:20px;">
+    <button type="button" class="button" id="cancel-order">주문 취소</button>
+    <button type="button" class="button" id="back-to-ordermanagement">주문 관리 페이지로 가기</button>
+</div>
+
+</body>
+</html>

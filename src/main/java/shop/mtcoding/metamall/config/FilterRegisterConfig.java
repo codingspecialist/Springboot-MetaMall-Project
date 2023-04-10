@@ -8,11 +8,16 @@ import shop.mtcoding.metamall.core.filter.JwtVerifyFilter;
 
 @Configuration
 public class FilterRegisterConfig {
+
     @Bean
-    public FilterRegistrationBean<?> jwtVerifyFilterAdd() {
+    public FilterRegistrationBean<?> jwtVerifyFilterAddForItem() {
         FilterRegistrationBean<JwtVerifyFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new JwtVerifyFilter());
-        registration.addUrlPatterns("/user/*");
+        registration.addUrlPatterns("/validate-token");
+        registration.addUrlPatterns("/item/*");
+        registration.addUrlPatterns("/items");
+        registration.addUrlPatterns("/order/*");
+        registration.addUrlPatterns("/orders/*");
         registration.setOrder(1);
         return registration;
     }

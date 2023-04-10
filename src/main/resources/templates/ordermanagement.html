@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Management</title>
+  <style>
+    .button-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .button {
+      width: 250px;
+      margin: 10px;
+      padding: 15px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+<div class="button-container">
+  <button class="button" onclick="location.href='/customerplaceorder'">주문하기 (고객전용)</button>
+  <button class="button" onclick="location.href='/customerorderlist'">주문목록보기 (고객전용)</button>
+  <button class="button" onclick="location.href='/sellerorderlist'">주문목록보기 (판매자전용)</button>
+  <button class="button" onclick="location.href='/'">홈으로 가기</button>
+</div>
+</body>
+</html>

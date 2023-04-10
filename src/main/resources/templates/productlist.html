@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>상품 목록</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: black;
+        }
+        .button {
+            width: 220px;
+            margin: 20px;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+
+            // 서버에서 상품 리스트를 가져와 표시합니다.
+            function fetchProductList() {
+                $.ajax({
+                    type: "GET",
+                    url: "/items",
+                    beforeSend: function(xhr) {
+                        const token = localStorage.getItem('token');
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                    },
+                    success: function(response) {
+                        const products = response.data;
+                        let productRows = '';
+
+                        products.forEach(function(product) {
+                            productRows += `
+                            <tr>
+                                <td>${product.name}</td>
+                                <td>${product.price}</td>
+                                <td>${product.qty}</td>
+                            </tr>
+                        `;
+                        });
+
+                        $("#product-table tbody").html(productRows);
+                    },
+                    error: function(response) {
+                        const errorMessage = response.responseJSON.msg;
+                        alert(errorMessage);
+                    },
+                });
+            }
+
+            fetchProductList();
+
+            $("#back-to-productmanagement").on("click", function() {
+                window.location.href = "/productmanagement";
+            });
+        });
+    </script>
+</head>
+<body>
+<h1>상품 관리</h1>
+<table id="product-table">
+    <thead>
+    <tr>
+        <th>상품 이름</th>
+        <th>상품 가격</th>
+        <th>상품 재고</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<div style="text-align:center; margin-top:20px;">
+    <button type="button" class="button" id="back-to-productmanagement">상품 관리 페이지로 가기</button>
+</div>
+
+</body>
+</html>

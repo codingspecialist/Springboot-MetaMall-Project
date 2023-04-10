@@ -1,5 +1,6 @@
 package shop.mtcoding.metamall.model.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>상품 수정</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: black;
+        }
+
+        .button {
+            width: 220px;
+            margin: 20px;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            let selectedProductId;
+
+            // 서버에서 상품 리스트를 가져와 표시합니다.
+            function fetchProductList() {
+                $.ajax({
+                    type: "GET",
+                    url: "/items",
+                    beforeSend: function(xhr) {
+                        const token = localStorage.getItem('token');
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                    },
+                    success: function(response) {
+                        const products = response.data;
+                        let productRows = '';
+
+                        products.forEach(function(product) {
+                            productRows += `
+                            <tr>
+                                <td><input type="radio" name="product" value="${product.id}" /></td>
+                                <td>${product.name}</td>
+                                <td>${product.price}</td>
+                                <td>${product.qty}</td>
+                            </tr>
+                        `;
+                        });
+
+                        $("#product-table tbody").html(productRows);
+                    },
+                    error: function(response) {
+                        const errorMessage = response.responseJSON.msg;
+                        alert(errorMessage);
+                    },
+                });
+            }
+
+            fetchProductList();
+
+            // 라디오 버튼 선택 시 이벤트
+            $("#product-table").on("change", "input[name='product']", function() {
+                selectedProductId = $(this).val();
+
+                // 선택한 상품의 정보를 입력창에 표시합니다.
+                const selectedProductRow = $(this).closest("tr");
+                const productName = selectedProductRow.find("td:nth-child(2)").text();
+                const productPrice = selectedProductRow.find("td:nth-child(3)").text();
+                const productQty = selectedProductRow.find("td:nth-child(4)").text();
+
+                $("#name").val(productName);
+                $("#price").val(productPrice);
+                $("#qty").val(productQty);
+            });
+
+            // 상품 수정 버튼 클릭 시 이벤트
+            $("#update-product").on("click", function() {
+                if (!selectedProductId) {
+                    alert("수정할 상품을 선택하세요.");
+                    return;
+                }
+
+                const formData = {
+                    name: $("#name").val(),
+                    price: $("#price").val(),
+                    qty: $("#qty").val(),
+                };
+
+                // 서버에 상품 수정 요청을 보냅니다.
+                $.ajax({
+                    type: "PUT",
+                    url: "/item/" + selectedProductId,
+                    data: JSON.stringify(formData),
+                    contentType: "application/json",
+                    beforeSend: function(xhr) {
+                        const token = localStorage.getItem('token');
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                    },
+                    success: function(response) {
+                        // 상품 수정 성공 시, 상품 리스트를 다시 가져옵니다.
+                        fetchProductList();
+                    },
+                    error: function(response) {
+                        // 상품 수정 실패 시, 오류 메시지를 표시합니다.
+                        const errorMessage = response.responseJSON.msg;
+                        alert(errorMessage);
+                    },
+                });
+            });
+
+            $("#back-to-productmanagement").on("click", function() {
+                window.location.href = "/productmanagement";
+            });
+        });
+    </script>
+</head>
+<body>
+<h1>상품 수정</h1>
+<table id="product-table">
+    <thead>
+    <tr>
+        <th>상품 선택</th>
+        <th>상품 이름</th>
+        <th>상품 가격</th>
+        <th>상품 재고</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<h2>상품 수정</h2>
+<label for="name">상품 이름:</label>
+<input type="text" id="name" name="name" required>
+
+<label for="price">상품 가격:</label>
+<input type="number" id="price" name="price" required>
+
+<label for="qty">상품 재고:</label>
+<input type="number" id="qty" name="qty" required><br>
+
+<div style="text-align:left; margin-top:20px;">
+    <button class="button" id="update-product">상품 수정</button>
+</div>
+
+<div style="text-align:center; margin-top:100px;">
+    <button type="button" class="button" id="back-to-productmanagement">상품 관리 페이지로 가기</button>
+</div>
+
+</body>
+</html>
+
