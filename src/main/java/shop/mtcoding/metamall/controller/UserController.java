@@ -7,8 +7,7 @@ import shop.mtcoding.metamall.core.exception.Exception400;
 import shop.mtcoding.metamall.core.exception.Exception401;
 import shop.mtcoding.metamall.core.jwt.JwtProvider;
 import shop.mtcoding.metamall.dto.ResponseDto;
-import shop.mtcoding.metamall.dto.user.UserRequest;
-import shop.mtcoding.metamall.dto.user.UserResponse;
+import shop.mtcoding.metamall.dto.user.UserReqDto.JoinDto;
 import shop.mtcoding.metamall.model.log.login.LoginLog;
 import shop.mtcoding.metamall.model.log.login.LoginLogRepository;
 import shop.mtcoding.metamall.model.user.User;
@@ -28,7 +27,7 @@ public class UserController {
     private final HttpSession session;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserRequest.LoginDto loginDto, HttpServletRequest request) {
+    public ResponseEntity<?> login(@RequestBody JoinDto loginDto, HttpServletRequest request) {
         Optional<User> userOP = userRepository.findByUsername(loginDto.getUsername());
         if (userOP.isPresent()) {
             // 1. 유저 정보 꺼내기
