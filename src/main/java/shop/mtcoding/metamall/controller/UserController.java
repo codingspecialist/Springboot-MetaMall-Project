@@ -1,6 +1,7 @@
 package shop.mtcoding.metamall.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import shop.mtcoding.metamall.core.exception.Exception400;
@@ -17,6 +18,7 @@ import shop.mtcoding.metamall.model.user.UserRepository;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -59,5 +61,17 @@ public class UserController {
         } else {
             throw new Exception400("유저네임 혹은 아이디가 잘못되었습니다");
         }
+    }
+
+    @PostMapping("/join")
+    public ResponseEntity<?> join(@RequestBody UserRequest.JoinDto joinDto){
+        User userPS = userRepository.save(joinDto.toEntity());
+        return new ResponseEntity<>(userPS, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/user/list")
+    public ResponseEntity<?> userList(){
+        List<User> userList = userRepository.findAll();
+        return (ResponseEntity<?>) userList;
     }
 }
