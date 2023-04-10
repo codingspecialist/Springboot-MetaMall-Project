@@ -14,6 +14,7 @@ import shop.mtcoding.metamall.config.auth.LoginUser;
 import shop.mtcoding.metamall.dto.ResponseDto;
 import shop.mtcoding.metamall.dto.product.ProductReqDto;
 import shop.mtcoding.metamall.dto.product.ProductRespDto.ProductListRespDto;
+import shop.mtcoding.metamall.dto.product.ProductRespDto.ProductListRespDto.ProductDto;
 import shop.mtcoding.metamall.dto.product.ProductRespDto.ProductRegisterRespDto;
 import shop.mtcoding.metamall.service.ProductService;
 
@@ -37,6 +38,11 @@ public class ProductController {
     @GetMapping("/s/product")
     public ResponseEntity<?> listProduct(){
         ProductListRespDto productListRespDto=productService.상품목록();
-        return new ResponseEntity<>(new ResponseDto<>(1,"상품목록 보기 완료", productListRespDto), HttpStatus.CREATED);
+        return new ResponseEntity<>(new ResponseDto<>(1,"상품목록 보기 완료", productListRespDto), CREATED);
+    }
+    @GetMapping("/a/product/{id}")
+    public ResponseEntity<?> getProduct(Long id){
+        ProductDto productdto = productService.상품상세(id);
+        return new ResponseEntity<>(new ResponseDto<>(1,"", null), CREATED);
     }
 }

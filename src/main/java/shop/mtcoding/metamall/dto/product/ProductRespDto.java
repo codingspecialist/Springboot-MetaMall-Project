@@ -37,7 +37,7 @@ public class ProductRespDto {
 
         @Getter
         @Setter
-        public class ProductDto {
+        public static class ProductDto {
             private Long id;
             private String name;
             private Integer price;
