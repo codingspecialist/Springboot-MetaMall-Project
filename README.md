@@ -40,18 +40,11 @@ Spring guarantees that the OncePerRequestFilter is executed only once for a give
 
 ```json
 [
-  {
-    "product": {
-      "id": 50,
-      "name": "TEst50",
-      "price": 350,
-      "qty": 50,
-      "createdAt": "2023-04-07T22:40:53.544879",
-      "updatedAt": null
-    },
-    "count": 4,
-    "orderPrice": 4000
-  }
+ {
+  "productId":50,
+  "count": 4,
+  "orderPrice": 4000
+ }
 ]
 
 ```

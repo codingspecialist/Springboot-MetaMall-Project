@@ -21,6 +21,6 @@ public interface OrderSheetRepository extends JpaRepository<OrderSheet, Long> {
     public Optional<List<OrderSheet>> findAllData();
 
 
-    @Query("SELECT os FROM OrderSheet os JOIN FETCH os.user WHERE os.id  = :id ")
+    @Query("SELECT os FROM OrderSheet os JOIN FETCH os.orderProductList JOIN FETCH os.user WHERE os.id  = :id ")
     public Optional<OrderSheet> findByIdWithUser(@Param("id") Long id);
 }

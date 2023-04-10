@@ -44,9 +44,18 @@ public class Product {
         this.updatedAt = updatedAt;
     }
 
-    public void changeProduct(String name,Integer price,Integer qty){
-                this.name = name;
-                this.price = price;
-                this.qty = qty;
+    public void changeProduct(String name, Integer price, Integer qty) {
+        this.name = name;
+        this.price = price;
+        this.qty = qty;
+    }
+
+    public Integer minusQty() {
+        this.qty = this.qty - 1;
+        return qty;
+    }
+
+    public void plusQty() {
+        this.qty = this.qty + 1;
     }
 }
