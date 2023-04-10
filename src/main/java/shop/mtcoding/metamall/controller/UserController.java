@@ -60,4 +60,25 @@ public class UserController {
             throw new Exception400("유저네임 혹은 아이디가 잘못되었습니다");
         }
     }
+
+    /**
+     * 회원가입 : joinDTO를 받아 Username이 존재하지 않을경우 회원가입 처리
+     * */
+    @PostMapping("/join")
+    public ResponseEntity<ResponseDto> join (@RequestBody UserRequest.JoinDto joinDto, HttpServletRequest request) {
+        Optional<User> userOP = userRepository.findByUsername(joinDto.getUsername()); //
+        if(!userOP.isPresent()){
+            User user = User.builder().username(joinDto.getUsername()).password(joinDto.getPassword()).email(joinDto.getEmail()).role(joinDto.getRole()).build();
+            userRepository.save(user);
+            ResponseDto<?> responseDto = new ResponseDto<>().data(user);
+            return ResponseEntity.ok().body(responseDto);
+        }else {
+            throw new Exception400("중복된 유저네임 아이디입니다.");
+        }
+
+
+    }
+
+
+
 }

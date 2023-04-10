@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import shop.mtcoding.metamall.dto.product.ProductRequest;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -42,4 +43,10 @@ public class Product {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
+    public void updateProduct(ProductRequest.ProductUpdateDto productUpdateDto){
+        this.name= productUpdateDto.getName();
+        this.qty=productUpdateDto.getQty();
+        this.price=productUpdateDto.getPrice();
+    }
+
 }

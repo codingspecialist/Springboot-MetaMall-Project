@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Table(name = "error_log_tb")
 @Entity
 public class ErrorLog {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

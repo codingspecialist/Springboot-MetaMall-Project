@@ -26,7 +26,8 @@ public class OrderProduct { // 주문 상품
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="sheet_id")
     private OrderSheet orderSheet;
 
     @PrePersist
