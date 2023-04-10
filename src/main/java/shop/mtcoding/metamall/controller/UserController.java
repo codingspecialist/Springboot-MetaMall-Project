@@ -18,6 +18,7 @@ import shop.mtcoding.metamall.model.user.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -44,6 +45,7 @@ public class UserController {
         }
     }
 
+    @Transactional
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserRequest.LoginDto loginDto, HttpServletRequest request) {
         Optional<User> userOP = userRepository.findByUsername(loginDto.getUsername());
