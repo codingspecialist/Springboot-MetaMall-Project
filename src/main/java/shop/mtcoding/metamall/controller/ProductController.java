@@ -7,6 +7,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,7 +45,7 @@ public class ProductController {
         return new ResponseEntity<>(new ResponseDto<>(1,"상품목록 보기 완료", productListRespDto), CREATED);
     }
     @GetMapping("/a/product/{id}")
-    public ResponseEntity<?> getProduct(Long id){
+    public ResponseEntity<?> getProduct(@PathVariable Long id){
         ProductDto productdto = productService.상품상세(id);
         return new ResponseEntity<>(new ResponseDto<>(1,"상품상세 보기 완료", productdto), CREATED);
     }
@@ -54,8 +55,9 @@ public class ProductController {
         return new ResponseEntity<>(new ResponseDto<>(1,"상품수정 완료", productDto), CREATED);
     }
 
-    @DeleteMapping("/admin/product")
-    public ResponseEntity<?> removeProduct(Long id){
+    @DeleteMapping("/admin/product/{id}")
+    public ResponseEntity<?> removeProduct(@PathVariable Long id){
+         productService.상품삭제(id);
         return new ResponseEntity<>(new ResponseDto<>(1,"상품삭제 완료", null), CREATED);
     }
 }
