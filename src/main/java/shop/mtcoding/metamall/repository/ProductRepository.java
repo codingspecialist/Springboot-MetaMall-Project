@@ -8,6 +8,6 @@ import shop.mtcoding.metamall.domain.User;
 import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    Optional<Product> findByProductName(@Param("name") String name);
+    Optional<Product> findByName(@Param("name") String name);
 
 }

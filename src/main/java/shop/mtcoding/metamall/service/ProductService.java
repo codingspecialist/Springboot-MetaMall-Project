@@ -39,7 +39,7 @@ public class ProductService {
      */
     public ProductRegisterRespDto 상품등록(@Valid ProductReqDto.ProductRegisterReqDto productRegisterReqDto){
 //     1. 상품 이름 중복 체크
-        Optional<Product> productOP = productRepository.findByProductName(productRegisterReqDto.getName());
+        Optional<Product> productOP = productRepository.findByName(productRegisterReqDto.getName());
         if(productOP.isPresent()){
             //중복된 상품이 존재하는 경우 예외발생
             throw new MyApiException("동일한 이름의 상품이 존재합니다.");
@@ -62,14 +62,22 @@ public class ProductService {
         Product productPS = productRepository.findById(id).orElseThrow(
                 () -> new MyApiException("해당 상품이 존재하지 않습니다.")
         );
-
         return new ProductDto(productPS);
     }
-
+    @Transactional
     public ProductDto 상품수정(@Valid ProductReqDto.ProductUpdateReqDto productUpdateReqDto){
 
         Product productPS=productRepository.save(productUpdateReqDto.toEntity());
 
         return new ProductDto(productPS);
+    }
+    @Transactional
+    public void 상품삭제(Long id){
+        //해당 아이디의 상품 존재 확인
+        Product productPS = productRepository.findById(id).orElseThrow(
+                () -> new MyApiException("해당 상품이 존재하지 않습니다.")
+        );
+
+        productRepository.deleteById(id);
     }
 }

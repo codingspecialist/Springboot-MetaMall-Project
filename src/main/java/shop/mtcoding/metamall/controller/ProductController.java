@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -50,7 +51,11 @@ public class ProductController {
     @PutMapping("/admin/product")
     public ResponseEntity<?> updateProduct(@RequestBody @Valid ProductUpdateReqDto productUpdateReqDto){
         ProductDto productDto = productService.상품수정(productUpdateReqDto);
-
         return new ResponseEntity<>(new ResponseDto<>(1,"상품수정 완료", productDto), CREATED);
+    }
+
+    @DeleteMapping("/admin/product")
+    public ResponseEntity<?> removeProduct(Long id){
+        return new ResponseEntity<>(new ResponseDto<>(1,"상품삭제 완료", null), CREATED);
     }
 }
