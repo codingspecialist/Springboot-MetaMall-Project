@@ -3,9 +3,13 @@ package shop.mtcoding.metamall.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import shop.mtcoding.metamall.config.auth.LoginUser;
 import shop.mtcoding.metamall.dto.ResponseDto;
+import shop.mtcoding.metamall.dto.product.ProductReqDto;
+import shop.mtcoding.metamall.dto.product.ProductRespDto.ProductRegisterRespDto;
 import shop.mtcoding.metamall.dto.user.UserReqDto;
 import shop.mtcoding.metamall.dto.user.UserRespDto;
 import shop.mtcoding.metamall.repository.LoginLogRepository;
@@ -13,6 +17,8 @@ import shop.mtcoding.metamall.repository.UserRepository;
 import shop.mtcoding.metamall.service.UserService;
 
 import javax.validation.Valid;
+
+import static org.springframework.http.HttpStatus.CREATED;
 
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -77,4 +83,5 @@ public class UserController {
         UserRespDto.JoinRespDto joinRespDto = userService.회원가입(joinReqDto);
         return new ResponseEntity<>(new ResponseDto<>(1, "회원가입 완료", joinRespDto), HttpStatus.CREATED);
     }
+
 }

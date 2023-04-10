@@ -4,9 +4,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+
+@EntityListeners(AuditingEntityListener.class)
 
 @NoArgsConstructor
 @Setter // DTO 만들면 삭제해야됨
@@ -17,10 +22,19 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = false, length =20)
     private String name; // 상품 이름
+    @Column(nullable = false)
     private Integer price; // 상품 가격
+
+    @Column(unique = false, length =20)
     private Integer qty; // 상품 재고
+    @CreatedDate
+    @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    @Column(nullable = false)
     private LocalDateTime updatedAt;
 
     @PrePersist
