@@ -1,6 +1,7 @@
 package shop.mtcoding.metamall.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,6 +27,7 @@ class UserControllerTest {
     private MockMvc mockMvc;
 
     @Test
+    @DisplayName("회원가입")
     void signUp() throws Exception {
         //given
         UserRequest.SignUpDto singup  = UserRequest.SignUpDto.builder()
@@ -33,7 +35,7 @@ class UserControllerTest {
                 .email("test1@email.com")
                 .password("1234")
                 .passwordCheck("1234")
-                .role("USER")
+                .role(User.Role.USER)
                 .build();
         String requestBody = new ObjectMapper().writeValueAsString(singup);
 
@@ -51,6 +53,7 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("로그인")
     void login() throws Exception {
         //given
         UserRequest.LoginDto login = UserRequest.LoginDto.builder()

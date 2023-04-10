@@ -1,6 +1,10 @@
 package shop.mtcoding.metamall.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -68,26 +72,64 @@ class OrderControllerTest {
 
     }
 
-    @Test
+    @Nested
     @DisplayName("주문조회")
-    void getOrders(){
-        //given
-        User ssar = userRepository.findByUsername("ssar").orElse(null);
-        HttpHeaders headers = headers(ssar);
-        HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+    class Orders{
+        @Test
+        @DisplayName("USER")
+        void getOrders1() throws JsonProcessingException {
+            //given
+            User ssar = userRepository.findByUsername("ssar").orElse(null);
+            HttpHeaders headers = headers(ssar);
+            HttpEntity<?> requestEntity = new HttpEntity<>(headers);
 
-        //when
+            //when
 
-        ResponseEntity<?> response = testRestTemplate
-                .exchange(
-                        "/api/orders",
-                        HttpMethod.GET,
-                        requestEntity,
-                        ResponseDto.class
-                );
+            ResponseEntity<?> response = testRestTemplate
+                    .exchange(
+                            "/api/orders",
+                            HttpMethod.GET,
+                            requestEntity,
+                            ResponseDto.class
+                    );
 
-        //then
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+            //then
+            assertEquals(HttpStatus.OK, response.getStatusCode());
+            ObjectMapper om = new ObjectMapper();
+            JsonNode jsonNode = om.readTree(om.writeValueAsString(response.getBody()));
+            JsonNode orderSheetNode = jsonNode.get("data");
+            JsonNode productListNode = jsonNode.get("data").get(0).get("orderProductList");
+            assertEquals(1,orderSheetNode.size());
+            assertEquals(2,productListNode.size());
+        }
+
+        @Test
+        @DisplayName("SELLER")
+        void getOrders2() throws JsonProcessingException {
+            //given
+            User seller = userRepository.findByUsername("seller1").orElse(null);
+            HttpHeaders headers = headers(seller);
+            HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+
+            //when
+
+            ResponseEntity<?> response = testRestTemplate
+                    .exchange(
+                            "/api/orders",
+                            HttpMethod.GET,
+                            requestEntity,
+                            ResponseDto.class
+                    );
+
+            //then
+            assertEquals(HttpStatus.OK, response.getStatusCode());
+            ObjectMapper om = new ObjectMapper();
+            JsonNode jsonNode = om.readTree(om.writeValueAsString(response.getBody()));
+            JsonNode orderSheetNode = jsonNode.get("data");
+            JsonNode productListNode = jsonNode.get("data").get(0).get("orderProductList");
+            assertEquals(2,orderSheetNode.size());
+            assertEquals(1,productListNode.size());
+        }
     }
 
     @Test

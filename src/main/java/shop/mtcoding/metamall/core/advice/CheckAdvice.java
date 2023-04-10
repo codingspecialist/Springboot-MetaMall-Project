@@ -48,30 +48,23 @@ public class CheckAdvice {
 
     @Before("roleUser()")
     public void roleUserCheck(JoinPoint jp){
-        boolean role = roleCheck(jp, "SELLER");
-        if(!role) throw new Exception403("권한이 없습니다");
+        if(!roleCheck(jp, User.Role.USER)) throw new Exception403("권한이 없습니다");
     }
 
     @Before("roleSeller()")
     public void roleSellerCheck(JoinPoint jp){
-        boolean role = roleCheck(jp, "USER");
-        if(!role) throw new Exception403("권한이 없습니다");
+        if(!roleCheck(jp, User.Role.SELLER)) throw new Exception403("권한이 없습니다");
     }
 
     @Before("roleAdmin()")
     public void roleAdminCheck(JoinPoint jp){
-        boolean role = roleCheck(jp, "ADMIN");
-        if(!role) throw new Exception403("권한이 없습니다");
+        if(!roleCheck(jp, User.Role.ADMIN)) throw new Exception403("권한이 없습니다");
     }
 
-    private boolean roleCheck(JoinPoint jp, String role){
-        boolean result = true;
+    private boolean roleCheck(JoinPoint jp, User.Role role){
         for(Object arg:jp.getArgs()){
-            if(arg instanceof User) {
-                if(role.equals("ADMIN")) result = ((User) arg).getRole().equals(role);
-                else result = !((User) arg).getRole().equals(role);
-            }
+            if(arg instanceof User) return ((User) arg).getRole() == role;
         }
-        return result;
+        return true;
     }
 }

@@ -29,28 +29,32 @@ public class MetamallApplication {
 		return (args)->{
 			// 여기에서 save 하면 됨.
 			// bulk Collector는 saveAll 하면 됨.
-			User ssar = User.builder().username("ssar").password("1234").email("ssar@nate.com").role("USER").build();
-			User tester = User.builder().username("tester").password("1234").email("tester@nate.com").role("USER").build();
-			User seller1 = User.builder().username("seller1").password("5678").email("seller1@email.com").role("SELLER").build();
-			User seller2 = User.builder().username("seller2").password("5678").email("seller2@email.com").role("SELLER").build();
-			User admin = User.builder().username("admin").password("0000").email("admin@email.com").role("ADMIN").build();
+			User ssar = User.builder().username("ssar").password("1234").email("ssar@nate.com").role(User.Role.USER).build();
+			User tester = User.builder().username("tester").password("1234").email("tester@nate.com").role(User.Role.USER).build();
+			User seller1 = User.builder().username("seller1").password("5678").email("seller1@email.com").role(User.Role.SELLER).build();
+			User seller2 = User.builder().username("seller2").password("5678").email("seller2@email.com").role(User.Role.SELLER).build();
+			User admin = User.builder().username("admin").password("0000").email("admin@email.com").role(User.Role.ADMIN).build();
 			List<User> users = Stream.of(ssar,tester,seller1,seller2,admin).collect(Collectors.toList());
 			userRepository.saveAll(users);
 
-			Product product1 = Product.builder().user(seller1).name("제품1").qty(1).price(10000).build();
+			Product product1 = Product.builder().user(seller1).name("제품1").qty(2).price(10000).build();
 			Product product2 = Product.builder().user(seller2).name("제품2").qty(2).price(1000).build();
 			List<Product> products = Stream.of(product1,product2).collect(Collectors.toList());
 			productRepository.saveAll(products);
 
-			List<OrderProduct> orders = Stream.of(
-					OrderProduct.builder().product(product1).count(1).orderPrice(product1.getPrice()).build(),
-					OrderProduct.builder().product(product2).count(1).orderPrice(product2.getPrice()).build())
-					.collect(Collectors.toList());
-			int totalPrice = orders.stream().mapToInt(OrderProduct::getOrderPrice).sum();
-			OrderSheet orderSheet = OrderSheet.builder().user(ssar).totalPrice(totalPrice).build();
-			orders.forEach(orderSheet::addOrderProductList);
-			orderSheetRepository.save(orderSheet);
+			orderSheetSave(product1,product2,ssar,orderSheetRepository);
+			orderSheetSave(product1,product2,tester,orderSheetRepository);
 		};
+	}
+	private void orderSheetSave(Product product1, Product product2, User user, OrderSheetRepository orderSheetRepository){
+		List<OrderProduct> orders = Stream.of(
+						OrderProduct.builder().product(product1).count(1).orderPrice(product1.getPrice()).build(),
+						OrderProduct.builder().product(product2).count(1).orderPrice(product2.getPrice()).build())
+				.collect(Collectors.toList());
+		int totalPrice = orders.stream().mapToInt(OrderProduct::getOrderPrice).sum();
+		OrderSheet orderSheet = OrderSheet.builder().user(user).totalPrice(totalPrice).build();
+		orders.forEach(orderSheet::addOrderProductList);
+		orderSheetRepository.save(orderSheet);
 	}
 
 	public static void main(String[] args) {

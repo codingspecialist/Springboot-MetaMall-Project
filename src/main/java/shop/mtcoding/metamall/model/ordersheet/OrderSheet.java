@@ -3,6 +3,8 @@ package shop.mtcoding.metamall.model.ordersheet;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import shop.mtcoding.metamall.model.orderproduct.OrderProduct;
 import shop.mtcoding.metamall.model.user.User;
 

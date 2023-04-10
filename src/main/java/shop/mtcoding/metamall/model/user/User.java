@@ -13,6 +13,9 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 public class User {
+    public enum Role{
+        USER,SELLER,ADMIN
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,7 +25,8 @@ public class User {
     @Column(nullable = false)
     private String password;
     private String email;
-    private String role; // USER(고객), SELLER(판매자), ADMIN(관리자)
+    @Enumerated(EnumType.ORDINAL)
+    private Role role; // USER(고객), SELLER(판매자), ADMIN(관리자)
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -41,7 +45,7 @@ public class User {
     }
 
     @Builder
-    public User(Long id, String username, String password, String email, String role, LocalDateTime createdAt) {
+    public User(Long id, String username, String password, String email, Role role, LocalDateTime createdAt) {
         this.id = id;
         this.username = username;
         this.password = password;

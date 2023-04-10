@@ -11,7 +11,6 @@ import shop.mtcoding.metamall.core.exception.Exception404;
 import shop.mtcoding.metamall.dto.ResponseDto;
 import shop.mtcoding.metamall.dto.order.OrderRequest;
 import shop.mtcoding.metamall.model.orderproduct.OrderProduct;
-import shop.mtcoding.metamall.model.orderproduct.OrderProductRepository;
 import shop.mtcoding.metamall.model.ordersheet.OrderSheet;
 import shop.mtcoding.metamall.model.ordersheet.OrderSheetRepository;
 import shop.mtcoding.metamall.model.product.Product;
@@ -65,8 +64,8 @@ public class OrderController {
     @GetMapping("/orders")
     public ResponseEntity<?> getOrders(@Auth User user){
         List<OrderSheet> orderSheets = new ArrayList<>();
-        if(user.getRole().equals("USER")) orderSheets = orderSheetRepository.findByUser(user);
-        else if(user.getRole().equals("SELLER")) orderSheets = orderSheetRepository.findBySeller(user);
+        if(user.getRole() == User.Role.USER) orderSheets = orderSheetRepository.findByUser(user);
+        else if(user.getRole() == User.Role.SELLER) orderSheets = orderSheetRepository.findBySeller(user);
         return ResponseEntity.ok().body(new ResponseDto<>().data(orderSheets));
     }
 
@@ -87,9 +86,9 @@ public class OrderController {
     @DeleteMapping("/order/{id}")
     public ResponseEntity<?> cancelOrder(@Auth User user, @PathVariable Long id){
         OrderSheet orderSheet = null;
-        if(user.getRole().equals("USER")) orderSheet = orderSheetRepository.findByIdAndUser(id,user).orElseThrow(
+        if(user.getRole() == User.Role.USER) orderSheet = orderSheetRepository.findByIdAndUser(id,user).orElseThrow(
                 () -> new Exception404("주문이 없습니다"));
-        else if(user.getRole().equals("SELLER")) orderSheet = orderSheetRepository.findByIdOrSeller(id,user).orElseThrow(
+        else if(user.getRole() == User.Role.SELLER) orderSheet = orderSheetRepository.findByIdAndSeller(id,user).orElseThrow(
                 () -> new Exception404("주문이 없습니다"));
         orderSheetRepository.delete(orderSheet);
         return ResponseEntity.ok().body(new ResponseDto<>().data(orderSheet));

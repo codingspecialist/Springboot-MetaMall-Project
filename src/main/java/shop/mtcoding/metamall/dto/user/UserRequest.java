@@ -3,6 +3,7 @@ package shop.mtcoding.metamall.dto.user;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
+import shop.mtcoding.metamall.model.user.User;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -36,10 +37,10 @@ public class UserRequest {
         @Pattern(regexp = "\\w+@\\w+\\.\\w{2,}")
         private final String email;
         @NotNull
-        private final String role;
+        private final User.Role role;
 
         @Builder
-        public SignUpDto(String username, String password, String passwordCheck, String email, String role) {
+        public SignUpDto(String username, String password, String passwordCheck, String email, User.Role role) {
             this.username = username;
             this.password = password;
             this.passwordCheck = passwordCheck;
