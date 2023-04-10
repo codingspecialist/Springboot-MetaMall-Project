@@ -4,9 +4,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import shop.mtcoding.metamall.model.ordersheet.OrderSheet;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @Setter // DTO 만들면 삭제해야됨
@@ -23,6 +26,8 @@ public class User {
     private String role; // USER(고객), SELLER(판매자), ADMIN(관리자)
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    @OneToMany(mappedBy = "user")
+    private List<OrderSheet> orderSheets = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {

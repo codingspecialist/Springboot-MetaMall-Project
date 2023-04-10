@@ -11,6 +11,8 @@ import shop.mtcoding.metamall.dto.user.UserRequest;
 import shop.mtcoding.metamall.dto.user.UserResponse;
 import shop.mtcoding.metamall.model.log.login.LoginLog;
 import shop.mtcoding.metamall.model.log.login.LoginLogRepository;
+import shop.mtcoding.metamall.model.product.Product;
+import shop.mtcoding.metamall.model.product.ProductRepository;
 import shop.mtcoding.metamall.model.user.User;
 import shop.mtcoding.metamall.model.user.UserRepository;
 
@@ -25,6 +27,7 @@ public class UserController {
 
     private final UserRepository userRepository;
     private final LoginLogRepository loginLogRepository;
+    private final ProductRepository productRepository;
     private final HttpSession session;
 
     @PostMapping("/login")
@@ -60,4 +63,26 @@ public class UserController {
             throw new Exception400("유저네임 혹은 아이디가 잘못되었습니다");
         }
     }
+
+    @PostMapping("/join")
+    public ResponseEntity<?> join(@RequestBody UserRequest.JoinDto joinDto, HttpServletRequest request) {
+        Optional<User> userOP = userRepository.findByUsername(joinDto.getUsername());
+
+        if (userOP.isPresent()) {
+            throw new Exception400("이미 가입된 회원의 아이디입니다.");
+        }
+
+        User joinedUser = User.builder().username(joinDto.getUsername())
+                .password(joinDto.getPassword())
+                .email(joinDto.getEmail())
+                .role(joinDto.getRole())
+                .createdAt(joinDto.getCreatedAt())
+                .build();
+
+        ResponseDto<?> responseDto = new ResponseDto<>().data(joinedUser);
+        return ResponseEntity.ok().body(responseDto);
+    }
+
+
+
 }
