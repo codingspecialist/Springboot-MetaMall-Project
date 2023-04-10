@@ -19,11 +19,20 @@ public class OrderProduct { // 주문 상품
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", insertable = false, updatable = false)
     private Product product;
+
+    @Column(name = "product_id")
+    private Long productId;
+
     private Integer count; // 상품 주문 개수
+
     private Integer orderPrice; // 상품 주문 금액
+
     private LocalDateTime createdAt;
+
     private LocalDateTime updatedAt;
 
     @ManyToOne
