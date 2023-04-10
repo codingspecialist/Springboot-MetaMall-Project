@@ -50,7 +50,7 @@ public class User {
     private LocalDateTime updatedAt;
 
     @Builder
-    public User(Long id, String username, String password, String email, UserEnum role, LocalDateTime createdAt) {
+    public User(Long id, String username, String password, String email, UserEnum role, LocalDateTime createdAt,LocalDateTime updatedAt) {
         this.id = id;
         this.username = username;
         this.password = password;

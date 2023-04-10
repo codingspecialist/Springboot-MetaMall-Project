@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 //Audit 기능 사용하기 위한 어노테이션 1
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor
-@Setter // DTO 만들면 삭제해야됨
 @Getter
 @Table(name = "error_log_tb")
 @Entity
@@ -23,8 +22,6 @@ public class ErrorLog {
     private Long id;
     private String msg;
     private Long userId;
-
-
 
     @CreatedDate
     @Column(nullable = false)

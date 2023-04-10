@@ -30,9 +30,6 @@ public class LoginLog {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    @LastModifiedDate
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
 
     @Builder
     public LoginLog(Long id, Long userId, String userAgent, String clientIP, LocalDateTime createdAt) {
