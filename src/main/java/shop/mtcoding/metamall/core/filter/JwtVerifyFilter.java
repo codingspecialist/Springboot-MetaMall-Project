@@ -10,6 +10,7 @@ import shop.mtcoding.metamall.core.exception.Exception400;
 import shop.mtcoding.metamall.core.jwt.JwtProvider;
 import shop.mtcoding.metamall.core.session.LoginUser;
 import shop.mtcoding.metamall.dto.ResponseDto;
+import shop.mtcoding.metamall.model.user.User;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -31,12 +32,12 @@ public class JwtVerifyFilter implements Filter {
         String jwt = prefixJwt.replace(JwtProvider.TOKEN_PREFIX, "");
         try {
             DecodedJWT decodedJWT = JwtProvider.verify(jwt);
-            int id = decodedJWT.getClaim("id").asInt();
-            String role = decodedJWT.getClaim("role").asString();
+            Long id = decodedJWT.getClaim("id").asLong();
+            int role = decodedJWT.getClaim("role").asInt();
 
             // 세션을 사용하는 이유는 권한처리를 하기 위해서이다.
             HttpSession session =  req.getSession();
-            LoginUser loginUser = LoginUser.builder().id(id).role(role).build();
+            LoginUser loginUser = LoginUser.builder().id(id).role(User.Role.values()[role]).build();
             session.setAttribute("loginUser", loginUser);
             chain.doFilter(req, resp);
         }catch (SignatureVerificationException sve){
