@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
+import org.springframework.test.annotation.DirtiesContext;
 import shop.mtcoding.metamall.core.jwt.JwtProvider;
 import shop.mtcoding.metamall.dto.ResponseDto;
 import shop.mtcoding.metamall.dto.order.OrderRequest;
@@ -42,6 +43,7 @@ class OrderControllerTest {
     }
 
     @Test
+    @DirtiesContext
     @DisplayName("주문")
     void order() throws JsonProcessingException {
         //given
@@ -155,10 +157,10 @@ class OrderControllerTest {
     }
 
     @Test
+    @DirtiesContext
     @DisplayName("주문취소")
     void cancelOrder() throws JsonProcessingException {
         //given
-        order();
         long id = 1;
         User ssar = userRepository.findByUsername("ssar").orElse(null);
         HttpHeaders headers = headers(ssar);
@@ -178,6 +180,6 @@ class OrderControllerTest {
         ObjectMapper om = new ObjectMapper();
         JsonNode jsonNode = om.readTree(om.writeValueAsString(response.getBody()));
         JsonNode productListNode = jsonNode.get("data").get("orderProductList");
-        assertEquals(1,productListNode.get(0).get("product").get("qty").asInt());
+        assertEquals(2,productListNode.get(0).get("product").get("qty").asInt());
     }
 }
