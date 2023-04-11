@@ -7,7 +7,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import shop.mtcoding.metamall.model.product.ProductRepository;
 import shop.mtcoding.metamall.model.user.User;
 import shop.mtcoding.metamall.model.user.UserRepository;
 

@@ -43,7 +43,7 @@ class OrderControllerTest {
 
     @Test
     @DisplayName("주문")
-    void order(){
+    void order() throws JsonProcessingException {
         //given
         OrderRequest.OrderProductDto product1 = OrderRequest.OrderProductDto.builder()
                 .productId(1L)
@@ -69,7 +69,11 @@ class OrderControllerTest {
 
         //then
         assertEquals(HttpStatus.OK, response.getStatusCode());
-
+        ObjectMapper om = new ObjectMapper();
+        JsonNode jsonNode = om.readTree(om.writeValueAsString(response.getBody()));
+        JsonNode productListNode = jsonNode.get("data").get("orderProductList");
+        assertEquals(2,productListNode.size());
+        assertEquals(0,productListNode.get(0).get("product").get("qty").asInt());
     }
 
     @Nested
@@ -97,9 +101,7 @@ class OrderControllerTest {
             assertEquals(HttpStatus.OK, response.getStatusCode());
             ObjectMapper om = new ObjectMapper();
             JsonNode jsonNode = om.readTree(om.writeValueAsString(response.getBody()));
-            JsonNode orderSheetNode = jsonNode.get("data");
             JsonNode productListNode = jsonNode.get("data").get(0).get("orderProductList");
-            assertEquals(1,orderSheetNode.size());
             assertEquals(2,productListNode.size());
         }
 
@@ -125,9 +127,7 @@ class OrderControllerTest {
             assertEquals(HttpStatus.OK, response.getStatusCode());
             ObjectMapper om = new ObjectMapper();
             JsonNode jsonNode = om.readTree(om.writeValueAsString(response.getBody()));
-            JsonNode orderSheetNode = jsonNode.get("data");
             JsonNode productListNode = jsonNode.get("data").get(0).get("orderProductList");
-            assertEquals(2,orderSheetNode.size());
             assertEquals(1,productListNode.size());
         }
     }
@@ -156,8 +156,9 @@ class OrderControllerTest {
 
     @Test
     @DisplayName("주문취소")
-    void cancelOrder() {
+    void cancelOrder() throws JsonProcessingException {
         //given
+        order();
         long id = 1;
         User ssar = userRepository.findByUsername("ssar").orElse(null);
         HttpHeaders headers = headers(ssar);
@@ -174,5 +175,9 @@ class OrderControllerTest {
 
         //then
         assertEquals(HttpStatus.OK, response.getStatusCode());
+        ObjectMapper om = new ObjectMapper();
+        JsonNode jsonNode = om.readTree(om.writeValueAsString(response.getBody()));
+        JsonNode productListNode = jsonNode.get("data").get("orderProductList");
+        assertEquals(1,productListNode.get(0).get("product").get("qty").asInt());
     }
 }

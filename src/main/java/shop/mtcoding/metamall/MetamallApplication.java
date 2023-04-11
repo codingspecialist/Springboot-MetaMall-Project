@@ -4,9 +4,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import shop.mtcoding.metamall.core.exception.Exception404;
 import shop.mtcoding.metamall.model.orderproduct.OrderProduct;
-import shop.mtcoding.metamall.model.orderproduct.OrderProductRepository;
 import shop.mtcoding.metamall.model.ordersheet.OrderSheet;
 import shop.mtcoding.metamall.model.ordersheet.OrderSheetRepository;
 import shop.mtcoding.metamall.model.product.Product;
@@ -14,9 +12,7 @@ import shop.mtcoding.metamall.model.product.ProductRepository;
 import shop.mtcoding.metamall.model.user.User;
 import shop.mtcoding.metamall.model.user.UserRepository;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -25,7 +21,7 @@ import java.util.stream.Stream;
 public class MetamallApplication {
 
 	@Bean
-	CommandLineRunner initData(UserRepository userRepository, ProductRepository productRepository, OrderProductRepository orderProductRepository, OrderSheetRepository orderSheetRepository){
+	CommandLineRunner initData(UserRepository userRepository, ProductRepository productRepository, OrderSheetRepository orderSheetRepository){
 		return (args)->{
 			// 여기에서 save 하면 됨.
 			// bulk Collector는 saveAll 하면 됨.
@@ -37,26 +33,28 @@ public class MetamallApplication {
 			List<User> users = Stream.of(ssar,tester,seller1,seller2,admin).collect(Collectors.toList());
 			userRepository.saveAll(users);
 
-			Product product1 = Product.builder().user(seller1).name("제품1").qty(2).price(10000).build();
-			Product product2 = Product.builder().user(seller2).name("제품2").qty(2).price(1000).build();
+			Product product1 = Product.builder().user(seller1).name("제품1").qty(3).price(10000).build();
+			Product product2 = Product.builder().user(seller2).name("제품2").qty(3).price(1000).build();
 			List<Product> products = Stream.of(product1,product2).collect(Collectors.toList());
 			productRepository.saveAll(products);
 
-			orderSheetSave(product1,product2,ssar,orderSheetRepository);
-			orderSheetSave(product1,product2,tester,orderSheetRepository);
+			orderSheetSave(product1,product2,ssar,productRepository,orderSheetRepository);
+			orderSheetSave(product1,product2,tester,productRepository,orderSheetRepository);
 		};
 	}
-	private void orderSheetSave(Product product1, Product product2, User user, OrderSheetRepository orderSheetRepository){
-		List<OrderProduct> orders = Stream.of(
-						OrderProduct.builder().product(product1).count(1).orderPrice(product1.getPrice()).build(),
-						OrderProduct.builder().product(product2).count(1).orderPrice(product2.getPrice()).build())
-				.collect(Collectors.toList());
+
+	private void orderSheetSave(Product product1, Product product2, User user, ProductRepository productRepository, OrderSheetRepository orderSheetRepository){
+		product1.order(1);
+		product2.order(1);
+		productRepository.saveAll(Arrays.asList(product1,product2));
+		List<OrderProduct> orders = Arrays.asList(
+				OrderProduct.builder().product(product1).count(1).orderPrice(product1.getPrice()).build(),
+				OrderProduct.builder().product(product2).count(1).orderPrice(product2.getPrice()).build());
 		int totalPrice = orders.stream().mapToInt(OrderProduct::getOrderPrice).sum();
 		OrderSheet orderSheet = OrderSheet.builder().user(user).totalPrice(totalPrice).build();
-		orders.forEach(orderSheet::addOrderProductList);
+		orders.forEach(order -> order.syncOrderSheet(orderSheet));
 		orderSheetRepository.save(orderSheet);
 	}
-
 	public static void main(String[] args) {
 		SpringApplication.run(MetamallApplication.class, args);
 	}

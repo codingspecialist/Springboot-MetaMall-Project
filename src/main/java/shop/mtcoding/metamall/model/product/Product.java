@@ -3,6 +3,7 @@ package shop.mtcoding.metamall.model.product;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import shop.mtcoding.metamall.core.exception.Exception400;
 import shop.mtcoding.metamall.dto.product.ProductRequest;
 import shop.mtcoding.metamall.model.user.User;
 
@@ -24,6 +25,15 @@ public class Product {
     private User seller;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    public void order(int count){
+        if(this.qty < count) throw new Exception400("재고가 없습니다");
+        this.qty -= count;
+    }
+
+    public void cancelOrder(int count){
+        this.qty += count;
+    }
 
     @PrePersist
     protected void onCreate() {

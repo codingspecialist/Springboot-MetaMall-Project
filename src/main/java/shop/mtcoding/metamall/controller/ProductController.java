@@ -13,9 +13,7 @@ import shop.mtcoding.metamall.dto.product.ProductRequest;
 import shop.mtcoding.metamall.model.product.Product;
 import shop.mtcoding.metamall.model.product.ProductRepository;
 import shop.mtcoding.metamall.model.user.User;
-import shop.mtcoding.metamall.model.user.UserRepository;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Validated

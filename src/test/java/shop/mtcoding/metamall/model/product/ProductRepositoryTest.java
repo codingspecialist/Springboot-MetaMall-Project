@@ -3,13 +3,12 @@ package shop.mtcoding.metamall.model.product;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import shop.mtcoding.metamall.model.ordersheet.OrderSheet;
 import shop.mtcoding.metamall.model.user.User;
 import shop.mtcoding.metamall.model.user.UserRepository;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
 class ProductRepositoryTest {

@@ -1,6 +1,5 @@
 package shop.mtcoding.metamall.model.ordersheet;
 
-import org.hibernate.annotations.BatchSize;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

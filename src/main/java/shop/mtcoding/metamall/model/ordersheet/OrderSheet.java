@@ -3,8 +3,6 @@ package shop.mtcoding.metamall.model.ordersheet;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import shop.mtcoding.metamall.model.orderproduct.OrderProduct;
 import shop.mtcoding.metamall.model.user.User;
 
@@ -48,10 +46,5 @@ public class OrderSheet { // 주문서
         this.totalPrice = totalPrice;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-    }
-
-    public void addOrderProductList(OrderProduct orderProduct){
-        orderProductList.add(orderProduct);
-        orderProduct.setOrderSheet(this);
     }
 }

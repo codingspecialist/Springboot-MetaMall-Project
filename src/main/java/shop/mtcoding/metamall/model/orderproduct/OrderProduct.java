@@ -50,7 +50,7 @@ public class OrderProduct { // 주문 상품
         this.orderSheet = orderSheet;
     }
 
-    public void setOrderSheet(OrderSheet orderSheet){
+    public void syncOrderSheet(OrderSheet orderSheet){
         if(this.orderSheet != null) this.orderSheet.getOrderProductList().remove(this);
         this.orderSheet = orderSheet;
         orderSheet.getOrderProductList().add(this);

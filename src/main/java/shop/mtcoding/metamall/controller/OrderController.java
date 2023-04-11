@@ -41,6 +41,7 @@ public class OrderController {
                 .map(dto -> {
                     Product product = productRepository.findById(dto.getProductId()).orElseThrow(
                             () -> new Exception404("상품을 찾을 수 없습니다"));
+                    product.order(dto.getCount());
                     return OrderProduct.builder()
                             .product(product)
                             .count(dto.getCount())
@@ -52,8 +53,8 @@ public class OrderController {
                 .user(user)
                 .totalPrice(totalPrice)
                 .build();
-        orders.forEach(orderSheet::addOrderProductList);
-        orderSheet = orderSheetRepository.save(orderSheet);
+        orders.forEach(order -> order.syncOrderSheet(orderSheet));
+        orderSheetRepository.save(orderSheet);
         return ResponseEntity.ok().body(new ResponseDto<>().data(orderSheet));
     }
 
@@ -90,6 +91,7 @@ public class OrderController {
                 () -> new Exception404("주문이 없습니다"));
         else if(user.getRole() == User.Role.SELLER) orderSheet = orderSheetRepository.findByIdAndSeller(id,user).orElseThrow(
                 () -> new Exception404("주문이 없습니다"));
+        orderSheet.getOrderProductList().forEach(op -> op.getProduct().cancelOrder(op.getCount()));
         orderSheetRepository.delete(orderSheet);
         return ResponseEntity.ok().body(new ResponseDto<>().data(orderSheet));
     }
