@@ -7,7 +7,7 @@ import shop.mtcoding.metamall.dto.ResponseDto;
 
 // 권한 없음
 @Getter
-public class Exception403 extends RuntimeException {
+public class Exception403 extends RuntimeException implements CustomException{
     public Exception403(String message) {
         super(message);
     }

@@ -23,7 +23,7 @@ public class JwtProvider {
         String jwt = JWT.create()
                 .withSubject(SUBJECT)
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXP))
-                .withClaim("id", user.getId())
+                .withClaim("id", user.getUsername())
                 .withClaim("role", user.getRole())
                 .sign(Algorithm.HMAC512(SECRET));
         System.out.println("디버그 : 토큰 생성됨");

@@ -7,7 +7,7 @@ import shop.mtcoding.metamall.dto.ResponseDto;
 
 // 서버 에러
 @Getter
-public class Exception500 extends RuntimeException {
+public class Exception500 extends RuntimeException  implements CustomException{
     public Exception500(String message) {
         super(message);
     }

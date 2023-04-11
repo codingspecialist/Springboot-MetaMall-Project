@@ -8,7 +8,7 @@ import shop.mtcoding.metamall.dto.ResponseDto;
 
 // 인증 안됨
 @Getter
-public class Exception401 extends RuntimeException {
+public class Exception401 extends RuntimeException implements CustomException{
     public Exception401(String message) {
         super(message);
     }
