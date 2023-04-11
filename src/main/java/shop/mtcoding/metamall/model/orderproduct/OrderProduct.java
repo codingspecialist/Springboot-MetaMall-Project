@@ -21,7 +21,6 @@ public class OrderProduct { // 주문 상품
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_name",insertable = false,updatable = false)
     private Product product;
@@ -48,7 +47,7 @@ public class OrderProduct { // 주문 상품
     }
 
     @Builder
-    public OrderProduct(Long id, Product product, Integer count, Integer orderPrice, LocalDateTime createdAt, LocalDateTime updatedAt, OrderSheet orderSheet) {
+    public OrderProduct(Long id, Product product, Long productId,Integer count, Integer orderPrice, LocalDateTime createdAt, LocalDateTime updatedAt, OrderSheet orderSheet) {
         this.id = id;
         this.product = product;
         this.count = count;
@@ -56,6 +55,7 @@ public class OrderProduct { // 주문 상품
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.orderSheet = orderSheet;
+        this.productId = productId;
     }
 
 

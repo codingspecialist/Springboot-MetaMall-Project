@@ -42,11 +42,8 @@ public class OrderController {
      *      OneToMany를 두번 join fetch는 데이터를 튀기고 튀긴 데이터를 가져오기 때문에 기본적으로 여러번 쿼리가 일어나는 마이페이지에서는
      *      이런 구조가 성능에 발목을 잡을듯 하다.
      * */
-    private final OrderProductRepository orderProductRepository;
 
     private final OrderSheetRepository orderSheetRepository;
-
-    private final UserRepository userRepository;
 
     private final ProductRepository productRepository;
 
@@ -82,9 +79,11 @@ public class OrderController {
 
        OrderSheet orderSheet = orderSheetRepository.save(data);
 
-
+        if(orderSheet == null) log.error("ORDERSHEET E+MPTY");
         return ResponseEntity.status(CodeEnum.SUCCESS.getCode())
-                .body(new ResponseDto().data(orderSheet).code(CodeEnum.SUCCESS).msg(CodeEnum.SUCCESS.getMessage()));
+                .body(new ResponseDto()
+                        .data(orderSheet).code(CodeEnum.SUCCESS)
+                        .msg(CodeEnum.SUCCESS.getMessage()));
 
     }
 
@@ -96,6 +95,7 @@ public class OrderController {
         log.info("MY PAGE {}",username);
         Optional<List<OrderSheet>> orderSheet =orderSheetRepository.findOrdData(username);
         List<OrderSheet> list= orderSheet.get();
+
         if(orderSheet.isPresent()){
             return ResponseEntity.status(CodeEnum.SUCCESS.getCode())
                     .body(new ResponseDto().data(list)
