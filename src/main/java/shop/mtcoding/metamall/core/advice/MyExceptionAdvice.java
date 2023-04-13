@@ -18,6 +18,12 @@ public class MyExceptionAdvice {
 
     @ExceptionHandler(Exception400.class)
     public ResponseEntity<?> badRequest(Exception400 e){
+        // trace -> debug -> info -> warn -> error (포함관계, application.yml 테스트 -> DEBUG)
+        log.debug("디버그 : " + e.getMessage());
+        log.info("인포 : " + e.getMessage());
+        log.warn("경고 : " + e.getMessage());
+        log.error("에러 : " + e.getMessage());
+
         return new ResponseEntity<>(e.body(), e.status()); // 바디와 상태값
     }
 
