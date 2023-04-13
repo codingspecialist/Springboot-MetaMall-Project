@@ -10,7 +10,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
-@Setter // DTO 만들면 삭제해야됨
+@Setter // DTO 만들면 삭제해야됨 -> Entity setter X
 @Getter
 @Table(name = "user_tb")
 @Entity
@@ -23,7 +23,7 @@ public class User {
     @Column(unique = true, nullable = false, length = 20)
     private String username;
 
-    @JsonIgnore
+    @JsonIgnore // MessageConverter가 파싱하지 않도록
     @Column(nullable = false, length = 60)
     private String password;
 
@@ -31,7 +31,7 @@ public class User {
     private String email;
 
     @Column(nullable = false, length = 10)
-    private String role; // USER(고객), SELLER(판매자), ADMIN(관리자)
+    private String role; // USER(고객), SELLER(판매자), ADMIN(관리자) -> ENUM으로 만들면 좋다
 
     @Column(nullable = false, length = 10)
     private Boolean status; // TRUE 활성 FALSE 비활성
@@ -40,7 +40,7 @@ public class User {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    // 권한 변경 (관리자)
+    // 권한 변경 -> 의미있는 이름 (관리자)
     public void updateRole(String role) {
         if (this.role.equals(role)) {
             // checkpoint 동일한 권한으로 변경할 수 없습니다.
@@ -62,7 +62,8 @@ public class User {
         this.updatedAt = LocalDateTime.now();
     }
     @Builder
-    public User(Long id, String username, String password, String email, String role, Boolean status, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public User(Long id, String username, String password, String email, String role,
+                Boolean status, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.username = username;
         this.password = password;

@@ -25,8 +25,9 @@ public class OrderSheet { // 주문서
     @ManyToOne
     private User user; // 주문자
 
+    // 양방향 맵핑: OrderSheet에서 모든 것을 관리하겠다
     // checkpoint -> 무한참조
-    @OneToMany(mappedBy = "orderSheet", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "orderSheet", cascade = CascadeType.ALL, orphanRemoval = true) // 이 부분 생각해보기
     private List<OrderProduct> orderProductList = new ArrayList<>(); // 총 주문 상품 리스트
 
     @Column(nullable = false)
@@ -37,12 +38,12 @@ public class OrderSheet { // 주문서
 
     public void addOrderProduct(OrderProduct orderProduct) {
         orderProductList.add(orderProduct);
-        orderProduct.syncOrderSheet(this);
+        orderProduct.syncOrderSheet(this); // 내가 어느 주문서에 꼽혀있는지 알려주는 것
     }
 
     public void removeOrderProduct(OrderProduct orderProduct) {
         orderProductList.remove(orderProduct);
-        orderProduct.syncOrderSheet(null);
+        orderProduct.syncOrderSheet(null); // 주문에 등록이 되어있으면 안되니까
     }
 
     @PrePersist

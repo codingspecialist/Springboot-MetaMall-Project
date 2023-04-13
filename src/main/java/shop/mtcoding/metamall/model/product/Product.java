@@ -20,7 +20,7 @@ public class Product {
     private Long id;
 
     @ManyToOne
-    private User seller; // seller_id
+    private User seller; // 판매자 1명
 
     @Column(nullable = false, length = 50)
     private String name; // 상품 이름
@@ -63,7 +63,8 @@ public class Product {
         this.updatedAt = LocalDateTime.now();
     }
     @Builder
-    public Product(Long id, User seller, String name, Integer price, Integer qty, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Product(Long id, User seller, String name, Integer price,
+                   Integer qty, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.seller = seller;
         this.name = name;

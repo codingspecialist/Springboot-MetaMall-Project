@@ -20,6 +20,7 @@ public class ErrorLog {
 
     @Column(nullable = false, length = 100000)
     private String msg;
+
     private Long userId;
 
     private LocalDateTime createdAt;
