@@ -14,8 +14,8 @@ public class FilterRegisterConfig {
         registration.setFilter(new JwtVerifyFilter());
         registration.addUrlPatterns("/products/*");
         registration.addUrlPatterns("/orders/*");
-        registration.addUrlPatterns("/admin/*");
-        registration.addUrlPatterns("/seller/*");
+        registration.addUrlPatterns("/admin/*"); // ADMIN
+        registration.addUrlPatterns("/seller/*"); // ADMIN, SELLER
         registration.addUrlPatterns("/user/*");
         registration.setOrder(1);
         return registration;
