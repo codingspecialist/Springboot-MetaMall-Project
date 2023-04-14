@@ -16,7 +16,7 @@ public class FilterRegisterConfig {
         registration.addUrlPatterns("/orders/*");
         registration.addUrlPatterns("/admin/*"); // ADMIN
         registration.addUrlPatterns("/seller/*"); // ADMIN, SELLER
-        registration.addUrlPatterns("/user/*");
+        registration.addUrlPatterns("/user/*"); // USER
         registration.setOrder(1);
         return registration;
     }

@@ -15,7 +15,7 @@ public class SellerInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse
             response, Object handler) throws Exception {
         HttpSession session = request.getSession();
-        LoginUser loginUser = (LoginUser) session.getAttribute("sessionUser");
+        LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         if (loginUser.getRole().equals("SELLER") ||
                 loginUser.getRole().equals("ADMIN")) {
             return true;

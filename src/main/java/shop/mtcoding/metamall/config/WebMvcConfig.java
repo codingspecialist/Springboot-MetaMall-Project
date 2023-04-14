@@ -5,13 +5,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import shop.mtcoding.metamall.core.interceptor.AdminInterceptor;
 import shop.mtcoding.metamall.core.interceptor.SellerInterceptor;
+import shop.mtcoding.metamall.core.interceptor.UserInterceptor;
 
 @RequiredArgsConstructor
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
-    private final AdminInterceptor adminInterceptor;
+    private final UserInterceptor userInterceptor;
     private final SellerInterceptor sellerInterceptor;
 
     @Override
@@ -26,8 +26,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(adminInterceptor)
-                .addPathPatterns("/admin/**");
+        registry.addInterceptor(userInterceptor)
+                .addPathPatterns("/user/**");
 
         registry.addInterceptor(sellerInterceptor)
                 .addPathPatterns("/seller/**");

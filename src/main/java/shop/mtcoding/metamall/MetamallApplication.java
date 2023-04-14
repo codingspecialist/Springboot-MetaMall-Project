@@ -20,7 +20,7 @@ public class MetamallApplication {
     CommandLineRunner initData(UserRepository userRepository, ProductRepository productRepository, OrderProductRepository orderProductRepository, OrderSheetRepository orderSheetRepository) {
         return (args) -> {
             User seungmin = User.builder().username("ssar").password("1234").email("ssar@nate.com").role(Role.USER.getRole()).build();
-            User seller = User.builder().username("seller").password("1234").email("seller@nate.com").role(Role.USER.getRole()).build();
+            User seller = User.builder().username("seller").password("1234").email("seller@nate.com").role(Role.SELLER.getRole()).build();
             User admin = User.builder().username("admin").password("1234").email("admin@nate.com").role(Role.ADMIN.getRole()).build();
             userRepository.saveAll(Arrays.asList(seungmin, seller, admin));
         };

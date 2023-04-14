@@ -8,8 +8,8 @@ import shop.mtcoding.metamall.dto.ResponseDTO;
 import shop.mtcoding.metamall.dto.product.ProductRequest;
 import shop.mtcoding.metamall.model.product.Product;
 import shop.mtcoding.metamall.model.product.ProductRepository;
-import shop.mtcoding.metamall.model.user.UserRepository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -19,7 +19,6 @@ import java.util.List;
 @RestController
 public class ProductController {
     private final ProductRepository productRepository;
-    private final UserRepository userRepository;
 
     @PostMapping("/seller/products")
     public ResponseEntity<?> save(@RequestBody ProductRequest.saveDTO saveDTO) {
@@ -39,6 +38,7 @@ public class ProductController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
+    @Transactional
     @PutMapping("/seller/products/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody ProductRequest.updateDTO updateDTO) {
         if (updateDTO.getName().isBlank()) {
@@ -54,6 +54,8 @@ public class ProductController {
         Product productPS = productRepository.findById(id).orElseThrow(
                 () -> new Exception400("해당 상품을 찾을 수 없습니다.")
         );
+
+        productPS.update(updateDTO.getName(), updateDTO.getPrice(), updateDTO.getQty());
 
         ResponseDTO<?> responseDTO = new ResponseDTO<>().data(productPS);
         return ResponseEntity.ok().body(responseDTO);
