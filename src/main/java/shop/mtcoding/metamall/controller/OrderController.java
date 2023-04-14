@@ -2,10 +2,9 @@ package shop.mtcoding.metamall.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import shop.mtcoding.metamall.core.exception.Exception400;
+import shop.mtcoding.metamall.core.exception.Exception403;
 import shop.mtcoding.metamall.core.session.LoginUser;
 import shop.mtcoding.metamall.dto.ResponseDTO;
 import shop.mtcoding.metamall.dto.order.OrderRequest;
@@ -57,13 +56,63 @@ public class OrderController {
 
         // 주문서에 상품 추가 및 재고 변경
         orderProductListPS.stream()
-                .forEach((orderProductPS -> {
+                .forEach(orderProductPS -> {
                     orderSheetPS.addOrderProduct(orderProductPS);
                     orderProductPS.getProduct().updateQty(orderProductPS.getCount());
-                }));
+                });
 
         // 응답
         ResponseDTO<?> responseDTO = new ResponseDTO<>().data(orderSheetPS);
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @Transactional
+    @DeleteMapping("/user/orders/{id}")
+    public ResponseEntity<?> deleteCustomer(@PathVariable Long id) {
+        // 주문서 찾기
+        OrderSheet orderSheetPS = orderSheetRepository.findById(id)
+                .orElseThrow(() -> new Exception400("해당 주문을 찾을 수 없습니다.")
+                );
+
+        // 유저가 주문서의 주인인지 확인
+        LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
+        if (!orderSheetPS.getUser().getId().equals(loginUser.getId())) {
+            throw new Exception403("권한이 없습니다.");
+        }
+
+        // 재고 변경
+        orderSheetPS.getOrderProductList().stream()
+                .forEach(orderProduct -> {
+                    orderProduct.getProduct().rollbackQty(orderProduct.getCount());
+                });
+
+        // 주문서 삭제
+        orderSheetRepository.delete(orderSheetPS);
+
+        // 응답
+        ResponseDTO<?> responseDTO = new ResponseDTO<>();
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @Transactional
+    @DeleteMapping("/seller/orders/{id}")
+    public ResponseEntity<?> deleteSeller(@PathVariable Long id) {
+        // 주문서 찾기
+        OrderSheet orderSheetPS = orderSheetRepository.findById(id)
+                .orElseThrow(() -> new Exception400("해당 주문을 찾을 수 없습니다.")
+                );
+
+        // 재고 변경
+        orderSheetPS.getOrderProductList().stream()
+                .forEach(orderProduct -> {
+                    orderProduct.getProduct().rollbackQty(orderProduct.getCount());
+                });
+
+        // 주문서 삭제
+        orderSheetRepository.delete(orderSheetPS);
+
+        // 응답
+        ResponseDTO<?> responseDTO = new ResponseDTO<>();
         return ResponseEntity.ok().body(responseDTO);
     }
 }
