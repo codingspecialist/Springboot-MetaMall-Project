@@ -1,5 +1,6 @@
 package shop.mtcoding.metamall.model.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,12 +18,43 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(unique = true, nullable = false, length = 20)
     private String username;
+
+    @JsonIgnore // User로 응답 시 massage converter가 password를 파싱하여 노출하지 않도록 설정
+    @Column(nullable = false, length = 60)  // 단방향 암호 후 60byte
     private String password;
+
+    @Column(nullable = false, length = 50)
     private String email;
+
+    // @Enumerated(EnumType.STRING) Enum Type으로 설정하는 것이 좋음
+    @Column(nullable = false, length = 10)
     private String role; // USER(고객), SELLER(판매자), ADMIN(관리자)
+
+    @Column(nullable = false, length = 10)
+    private Boolean status; // ture 활성 계정, false 비활성 계정
+
+    @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    // 수정 시에 값이 들어오므로 Null 허용
     private LocalDateTime updatedAt;
+
+    // 권한 변경 (관리자)
+    public void updateRole() {
+        if (this.role.equals(role)) {
+            // checkpoint 동일한 권한으로 변경할 수 없습니다.
+        }
+        this.role = role;
+    }
+
+    // 회원 탈퇴
+    public void delete() {
+        this.status = false;
+    }
+
 
     @PrePersist
     protected void onCreate() {
@@ -35,12 +67,14 @@ public class User {
     }
 
     @Builder
-    public User(Long id, String username, String password, String email, String role, LocalDateTime createdAt) {
+    public User(Long id, String username, String password, String email, String role, Boolean status, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
         this.role = role;
+        this.status = status;
         this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 }
