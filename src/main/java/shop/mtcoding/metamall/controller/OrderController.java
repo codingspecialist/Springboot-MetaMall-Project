@@ -66,9 +66,26 @@ public class OrderController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
+    @GetMapping("/user/orders")
+    public ResponseEntity<?> findAllByUser() {
+        LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
+        List<OrderSheet> orderSheetListPS = orderSheetRepository.findByUserId(loginUser.getId());
+
+        ResponseDTO<?> responseDTO = new ResponseDTO<>().data(orderSheetListPS);
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @GetMapping("/seller/orders")
+    public ResponseEntity<?> findAllBySeller() {
+        List<OrderSheet> orderSheetListPS = orderSheetRepository.findAll();
+
+        ResponseDTO<?> responseDTO = new ResponseDTO<>().data(orderSheetListPS);
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
     @Transactional
     @DeleteMapping("/user/orders/{id}")
-    public ResponseEntity<?> deleteCustomer(@PathVariable Long id) {
+    public ResponseEntity<?> deleteByUser(@PathVariable Long id) {
         // 주문서 찾기
         OrderSheet orderSheetPS = orderSheetRepository.findById(id)
                 .orElseThrow(() -> new Exception400("해당 주문을 찾을 수 없습니다.")
@@ -96,7 +113,7 @@ public class OrderController {
 
     @Transactional
     @DeleteMapping("/seller/orders/{id}")
-    public ResponseEntity<?> deleteSeller(@PathVariable Long id) {
+    public ResponseEntity<?> deleteBySeller(@PathVariable Long id) {
         // 주문서 찾기
         OrderSheet orderSheetPS = orderSheetRepository.findById(id)
                 .orElseThrow(() -> new Exception400("해당 주문을 찾을 수 없습니다.")
