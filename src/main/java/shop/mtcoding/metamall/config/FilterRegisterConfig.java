@@ -12,6 +12,10 @@ public class FilterRegisterConfig {
     public FilterRegistrationBean<?> jwtVerifyFilterAdd() {
         FilterRegistrationBean<JwtVerifyFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new JwtVerifyFilter());
+        registration.addUrlPatterns("/products/*");
+        registration.addUrlPatterns("/orders/*");
+        registration.addUrlPatterns("/admin/*");
+        registration.addUrlPatterns("/seller/*");
         registration.addUrlPatterns("/user/*");
         registration.setOrder(1);
         return registration;
