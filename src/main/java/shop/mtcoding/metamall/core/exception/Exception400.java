@@ -2,7 +2,7 @@ package shop.mtcoding.metamall.core.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
-import shop.mtcoding.metamall.dto.ResponseDto;
+import shop.mtcoding.metamall.dto.ResponseDTO;
 
 
 // 유효성 실패
@@ -12,8 +12,8 @@ public class Exception400 extends RuntimeException {
         super(message);
     }
 
-    public ResponseDto<?> body(){
-        ResponseDto<String> responseDto = new ResponseDto<>();
+    public ResponseDTO<?> body(){
+        ResponseDTO<String> responseDto = new ResponseDTO<>();
         responseDto.fail(HttpStatus.BAD_REQUEST, "badRequest", getMessage());
         return responseDto;
     }

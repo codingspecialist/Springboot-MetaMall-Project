@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import shop.mtcoding.metamall.core.exception.Exception400;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -22,6 +23,27 @@ public class Product {
     private Integer qty; // 상품 재고
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    // 상품 수정하기(판매자)
+    public void update(String name, Integer price, Integer qty) {
+        this.name = name;
+        this.price = price;
+        this.qty = qty;
+    }
+
+    // 주문시 재고 수정(구매자)
+    public void updateQty(Integer orderCount) {
+        if (this.qty < orderCount) {
+            // checkpoint
+            throw new Exception400("주문 수량이 재고 수량을 초과하였습니다.");
+        }
+        this.qty = this.qty - orderCount;
+    }
+
+    // 주문 취소시 재고 변경(구매자, 판매자)
+    public void rollbackQty(Integer orderCount) {
+        this.qty += orderCount;
+    }
 
     @PrePersist
     protected void onCreate() {
