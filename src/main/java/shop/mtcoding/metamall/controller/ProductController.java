@@ -19,6 +19,7 @@ import shop.mtcoding.metamall.model.user.User;
 import shop.mtcoding.metamall.model.user.UserRepository;
 
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 /**
@@ -80,6 +81,22 @@ public class ProductController {
     /**
      * 상품상세보기
      */
+    @Transactional // 더티체킹 하고 싶다면 붙이기!!
+    @PutMapping("/seller/products/{id}")
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody @Valid
+    ProductRequest.UpdateDTO updateDTO, Errors errors){
+        // 1. 상품 찾기
+        Product productPS = productRepository.findById(id).orElseThrow(()->
+                new Exception400("id", "해당 상품을 찾을 수 없습니다"));
+
+        // 2. Update 더티체킹
+        productPS.update(updateDTO.getName(), updateDTO.getPrice(), updateDTO.getQty());
+
+        // 3. 응답하기
+        ResponseDTO<?> responseDto = new ResponseDTO<>().data(productPS);
+        return ResponseEntity.ok().body(responseDto);
+    }
+
 
     /**
      * 상품수정하기
