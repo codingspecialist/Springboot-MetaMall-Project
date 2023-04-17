@@ -21,7 +21,7 @@ public class MyWebMvcConfig implements WebMvcConfigurer {
     private final MySessionArgumentResolver mySessionArgumentResolver;
 
     @Override
-    public void addCorsMappings(CorsRegistry registry) {
+    public void addCorsMappings(CorsRegistry registry) { // CORS 설정
         registry.addMapping("/**")
                 .allowedHeaders("*")
                 .allowedMethods("*") // GET, POST, PUT, DELETE (Javascript 요청 허용)

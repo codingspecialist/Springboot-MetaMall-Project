@@ -28,18 +28,27 @@ public class UserController {
     private final LoginLogRepository loginLogRepository;
     private final HttpSession session;
 
+    // 핵심로직에 신경쓰자
+    @PostMapping("/join")
+    public ResponseEntity<?> join(@RequestBody @Valid UserRequest.JoinDto joinDto, Errors errors) {
+        User userPS = userRepository.save(joinDto.toEntity());
+        // RESTapi -> insert, update, select 된 모든 데이터를 응답해야 한다.
+        ResponseDTO<?> responseDTO = new ResponseDTO<>().data(userPS);
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
     @PostMapping("/login")
     public ResponseEntity<?> login(
-            @RequestBody @Valid UserRequest.LoginDto loginDto,
+            @RequestBody @Valid UserRequest.LoginDTO loginDTO,
             Errors errors, // loginDto의 에러가 모이는 곳!
             HttpServletRequest request) {
-        Optional<User> userOP = userRepository.findByUsername(loginDto.getUsername());
+        Optional<User> userOP = userRepository.findByUsername(loginDTO.getUsername());
         if (userOP.isPresent()) {
             // 1. 유저 정보 꺼내기
             User loginUser = userOP.get();
 
             // 2. 패스워드 검증하기
-            if(!loginUser.getPassword().equals(loginDto.getPassword())){
+            if(!loginUser.getPassword().equals(loginDTO.getPassword())){
                 throw new Exception401("인증되지 않았습니다");
             }
 

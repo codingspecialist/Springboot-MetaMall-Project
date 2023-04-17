@@ -17,6 +17,8 @@ public class FilterRegisterConfig {
         registration.addUrlPatterns("/users/*"); // 토큰
         registration.addUrlPatterns("/products/*"); // 토큰
         registration.addUrlPatterns("/orders/*");// 토큰
+
+        // 인터셉터 권한체크
         registration.addUrlPatterns("/admin/*"); // ADMIN 권한
         registration.addUrlPatterns("/seller/*"); // ADMIN, SELLER
 
