@@ -4,14 +4,10 @@ package shop.mtcoding.metamall.core.filter;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.HttpStatus;
 import shop.mtcoding.metamall.core.exception.Exception400;
-import shop.mtcoding.metamall.core.exception.Exception401;
 import shop.mtcoding.metamall.core.jwt.JwtProvider;
 import shop.mtcoding.metamall.core.session.SessionUser;
 import shop.mtcoding.metamall.core.util.MyFilterResponseUtil;
-import shop.mtcoding.metamall.dto.ResponseDTO;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-public class JwtVerifyFilter implements Filter {
+// 인증 체크
+public class MyJwtVerifyFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         System.out.println("디버그 : JwtVerifyFilter 동작함");
