@@ -3,7 +3,7 @@ server:
     encoding:
       charset: utf-8
       force: true
-
+  port: 8081
 spring:
   datasource:
     url: jdbc:h2:mem:test;MODE=MySQL
@@ -20,7 +20,18 @@ spring:
     properties:
       hibernate:
         format_sql: true
-      default_batch_fetch_size: 100 # in query 자동 작성
+      # in query 자동 작성
+      default_batch_fetch_size: 100
+  # 404 처리하는 법
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
+  # hibernateLazyInitializer 오류 해결법
+  # jackson:
+  #  serialization:
+  #    fail-on-empty-beans: false
 
 logging:
   level:
