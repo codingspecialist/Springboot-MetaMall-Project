@@ -1,5 +1,7 @@
 package shop.mtcoding.metamall.model.order.sheet;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +29,7 @@ public class OrderSheet { // 주문서
 
     // 양방향 맵핑: OrderSheet에서 모든 것을 관리하겠다
     // checkpoint -> 무한참조
+    @JsonIgnoreProperties({"orderSheet"})
     @OneToMany(mappedBy = "orderSheet", cascade = CascadeType.ALL, orphanRemoval = true) // 이 부분 생각해보기
     private List<OrderProduct> orderProductList = new ArrayList<>(); // 총 주문 상품 리스트
 
