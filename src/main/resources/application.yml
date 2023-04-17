@@ -15,12 +15,14 @@ spring:
       enabled: true
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
         format_sql: true
       default_batch_fetch_size: 100 # in query 자동 작성
+
+
 
 logging:
   level:
