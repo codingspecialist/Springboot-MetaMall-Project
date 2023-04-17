@@ -12,8 +12,4 @@ public interface OrderSheetRepository extends JpaRepository<OrderSheet, Long> {
   @Query("select os from OrderSheet os where os.user.id= :userId")
   List<OrderSheet> findByUserId(@Param("userId") Long userId);
 
-
-
-
-
 }
