@@ -51,7 +51,7 @@ public class ProductController {
     }
 
     /**
-     * 상품 등록
+     * 상품목록보기
      */
     // http://localhost:8080/products?page=1
     @GetMapping("/products")
@@ -65,7 +65,7 @@ public class ProductController {
     }
 
     /**
-     * 상품목록보기
+     * 상품상세보기
      */
     @GetMapping("/products/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id){
@@ -79,7 +79,7 @@ public class ProductController {
     }
 
     /**
-     * 상품상세보기
+     * 상품수정하기
      */
     @Transactional // 더티체킹 하고 싶다면 붙이기!!
     @PutMapping("/seller/products/{id}")
@@ -96,11 +96,6 @@ public class ProductController {
         ResponseDTO<?> responseDto = new ResponseDTO<>().data(productPS);
         return ResponseEntity.ok().body(responseDto);
     }
-
-    /**
-     * 상품수정하기
-     */
-
 
     /**
      * 상품삭제하기
