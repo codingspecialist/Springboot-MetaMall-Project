@@ -7,7 +7,7 @@ import shop.mtcoding.metamall.core.filter.MyJwtVerifyFilter;
 
 
 @Configuration
-public class FilterRegisterConfig {
+public class FilterRegisterConfig { // 인증 체크
     @Bean
     public FilterRegistrationBean<?> jwtVerifyFilterAdd() {
         FilterRegistrationBean<MyJwtVerifyFilter> registration = new

@@ -10,7 +10,7 @@ import javax.servlet.http.HttpSession;
 
 
 @Configuration
-public class MySellerInterceptor implements HandlerInterceptor {
+public class MySellerInterceptor implements HandlerInterceptor { // 동작 시점 -> 주소 seller
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse
             response, Object handler) throws Exception {
