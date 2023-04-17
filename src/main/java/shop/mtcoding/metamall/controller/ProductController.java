@@ -97,12 +97,20 @@ public class ProductController {
         return ResponseEntity.ok().body(responseDto);
     }
 
-
     /**
      * 상품수정하기
      */
 
+
     /**
      * 상품삭제하기
      */
+    @DeleteMapping("/seller/products/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable Long id){
+        Product productPS = productRepository.findById(id).orElseThrow(()->
+                new Exception400("id", "해당 상품을 찾을 수 없습니다"));
+        productRepository.delete(productPS);
+        ResponseDTO<?> responseDto = new ResponseDTO<>();
+        return ResponseEntity.ok().body(responseDto);
+    }
 }
