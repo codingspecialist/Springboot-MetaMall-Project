@@ -46,4 +46,11 @@ public class UserRequest {
                     .build();
         }
     }
+
+    @Getter @Setter
+    public static class RoleUpdateDTO {
+        @Pattern(regexp = "USER|SELLER|ADMIN")
+        @NotEmpty
+        private String role;
+    }
 }
