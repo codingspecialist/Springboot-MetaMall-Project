@@ -66,7 +66,16 @@ public class ProductController {
     /**
      * 상품목록보기
      */
+    @GetMapping("/products/{id}")
+    public ResponseEntity<?> findById(@PathVariable Long id){
+        // 1. 상품 찾기
+        Product productPS = productRepository.findById(id).orElseThrow(()->
+                new Exception400("id", "해당 상품을 찾을 수 없습니다"));
 
+        // 2. 응답하기
+        ResponseDTO<?> responseDto = new ResponseDTO<>().data(productPS);
+        return ResponseEntity.ok().body(responseDto);
+    }
 
     /**
      * 상품상세보기
