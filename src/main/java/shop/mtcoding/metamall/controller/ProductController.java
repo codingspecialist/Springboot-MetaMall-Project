@@ -45,8 +45,6 @@ public class ProductController {
 				.orElseThrow(
 						()-> new Exception400("id", "판매자를 찾을 수 없습니다")
 				);
-
-
 		// 2. 상품 등록하기
 		Product productPS = productRepository.save(saveDTO.toEntity(sellerPS));
 		ResponseDTO<?> responseDto = new ResponseDTO<>().data(productPS);
