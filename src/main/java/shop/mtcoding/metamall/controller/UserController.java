@@ -2,13 +2,13 @@ package shop.mtcoding.metamall.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import shop.mtcoding.metamall.core.exception.Exception400;
 import shop.mtcoding.metamall.core.exception.Exception401;
 import shop.mtcoding.metamall.core.jwt.JwtProvider;
-import shop.mtcoding.metamall.dto.ResponseDto;
+import shop.mtcoding.metamall.dto.ResponseDTO;
 import shop.mtcoding.metamall.dto.user.UserRequest;
-import shop.mtcoding.metamall.dto.user.UserResponse;
 import shop.mtcoding.metamall.model.log.login.LoginLog;
 import shop.mtcoding.metamall.model.log.login.LoginLogRepository;
 import shop.mtcoding.metamall.model.user.User;
@@ -16,6 +16,7 @@ import shop.mtcoding.metamall.model.user.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -27,8 +28,18 @@ public class UserController {
     private final LoginLogRepository loginLogRepository;
     private final HttpSession session;
 
+    @PostMapping("/join")
+    public ResponseEntity<?> join(@RequestBody @Valid UserRequest.JoinDTO joinDTO, Errors errors) {
+        User userPS = userRepository.save(joinDTO.toEntity());
+        // RestAPI는 insert, update, select 된 모든 데이터를 응답 해줘야 한다
+        ResponseDTO<?> responseDto = new ResponseDTO<>().data(userPS);
+        return ResponseEntity.ok().body(responseDto);
+    }
+
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserRequest.LoginDto loginDto, HttpServletRequest request) {
+    public ResponseEntity<?> login(@RequestBody @Valid UserRequest.LoginDto loginDto
+            , Errors errors
+            , HttpServletRequest request) {
         Optional<User> userOP = userRepository.findByUsername(loginDto.getUsername());
         if (userOP.isPresent()) {
             // 1. 유저 정보 꺼내기
@@ -54,10 +65,10 @@ public class UserController {
             loginLogRepository.save(loginLog);
 
             // 6. 응답 DTO 생성
-            ResponseDto<?> responseDto = new ResponseDto<>().data(loginUser);
+            ResponseDTO<?> responseDto = new ResponseDTO<>().data(loginUser);
             return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body(responseDto);
         } else {
-            throw new Exception400("유저네임 혹은 아이디가 잘못되었습니다");
+            throw new Exception400("", "유저네임 혹은 아이디가 잘못되었습니다");
         }
     }
 }
