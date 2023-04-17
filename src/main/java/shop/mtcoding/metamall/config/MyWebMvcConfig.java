@@ -14,7 +14,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Configuration
-public class WebMvcConfig implements WebMvcConfigurer {
+public class MyWebMvcConfig implements WebMvcConfigurer {
 
     private final MyAdminInterceptor adminInterceptor;
     private final MySellerInterceptor sellerInterceptor;
