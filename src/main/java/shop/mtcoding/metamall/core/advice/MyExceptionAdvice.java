@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import shop.mtcoding.metamall.core.annotation.MyErrorLogRecord;
 import shop.mtcoding.metamall.core.exception.*;
 import shop.mtcoding.metamall.dto.ResponseDTO;
 import shop.mtcoding.metamall.model.log.error.ErrorLogRepository;
@@ -16,6 +17,7 @@ import shop.mtcoding.metamall.model.log.error.ErrorLogRepository;
 @RestControllerAdvice
 public class MyExceptionAdvice {
 
+    @MyErrorLogRecord
     @ExceptionHandler(Exception400.class)
     public ResponseEntity<?> badRequest(Exception400 e){
         // trace -> debug -> info -> warn -> error (포함관계, application.yml 테스트 -> DEBUG)
@@ -27,16 +29,19 @@ public class MyExceptionAdvice {
         return new ResponseEntity<>(e.body(), e.status()); // 바디와 상태값
     }
 
+    @MyErrorLogRecord
     @ExceptionHandler(Exception401.class)
     public ResponseEntity<?> unAuthorized(Exception401 e){
         return new ResponseEntity<>(e.body(), e.status());
     }
 
+    @MyErrorLogRecord
     @ExceptionHandler(Exception403.class)
     public ResponseEntity<?> forbidden(Exception403 e){
         return new ResponseEntity<>(e.body(), e.status());
     }
 
+    @MyErrorLogRecord
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<?> notFound(NoHandlerFoundException e){
         ResponseDTO<String> responseDto = new ResponseDTO<>();
@@ -45,6 +50,7 @@ public class MyExceptionAdvice {
     }
 
     // 나머지 모든 예외는 이 친구에게 다 걸러진다. -> 로그의 필요성 (이유는 알지못하는 에러니까)
+    @MyErrorLogRecord
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> serverError(Exception e){
         ResponseDTO<String> responseDto = new ResponseDTO<>();
