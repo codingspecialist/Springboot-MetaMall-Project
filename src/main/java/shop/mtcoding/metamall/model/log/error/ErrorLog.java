@@ -17,6 +17,8 @@ public class ErrorLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, length = 100000)
     private String msg;
     private Long userId;
 
@@ -42,3 +44,4 @@ public class ErrorLog {
         this.updatedAt = updatedAt;
     }
 }
+
