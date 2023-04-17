@@ -2,62 +2,79 @@ package shop.mtcoding.metamall.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import shop.mtcoding.metamall.core.annotation.MySameUserIdCheck;
 import shop.mtcoding.metamall.core.exception.Exception400;
-import shop.mtcoding.metamall.core.exception.Exception401;
 import shop.mtcoding.metamall.core.jwt.JwtProvider;
-import shop.mtcoding.metamall.dto.ResponseDto;
+import shop.mtcoding.metamall.dto.ResponseDTO;
 import shop.mtcoding.metamall.dto.user.UserRequest;
-import shop.mtcoding.metamall.dto.user.UserResponse;
 import shop.mtcoding.metamall.model.log.login.LoginLog;
 import shop.mtcoding.metamall.model.log.login.LoginLogRepository;
 import shop.mtcoding.metamall.model.user.User;
 import shop.mtcoding.metamall.model.user.UserRepository;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.time.LocalDateTime;
-import java.util.Optional;
+
+/**
+ * 회원가입, 로그인, 유저상세보기 */
 
 @RequiredArgsConstructor
 @RestController
 public class UserController {
-
     private final UserRepository userRepository;
     private final LoginLogRepository loginLogRepository;
     private final HttpSession session;
 
+    //핵심 로직
+
+    //회원가입(POST)
+    @PostMapping("/join")
+    public ResponseEntity<?> join(@RequestBody @Valid UserRequest.JoinDTO joinDTO,
+                                  Errors errors) {
+        User userPS = userRepository.save(joinDTO.toEntity());
+        // RestAPI는 insert, update, select 된 모든 데이터를 응답해줘야 한다.
+        ResponseDTO<?> responseDto = new ResponseDTO<>().data(userPS);
+        return ResponseEntity.ok(responseDto);
+    }
+
+
+    //로그인(POST)
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserRequest.LoginDto loginDto, HttpServletRequest request) {
-        Optional<User> userOP = userRepository.findByUsername(loginDto.getUsername());
-        if (userOP.isPresent()) {
-            // 1. 유저 정보 꺼내기
-            User loginUser = userOP.get();
+    public ResponseEntity<?> login(@RequestBody @Valid UserRequest.LoginDTO
+                                           loginDTO, Errors errors, HttpServletRequest request) {
+        User userPS = userRepository.findByUsername(loginDTO.getUsername()).orElseThrow(
+                ()->new Exception400("username","유저네임을 찾을 수 없습니다"));
 
-            // 2. 패스워드 검증하기
-            if(!loginUser.getPassword().equals(loginDto.getPassword())){
-                throw new Exception401("인증되지 않았습니다");
-            }
+        // 1. 패스워드 검증하기
+        if (!userPS.getPassword().equals(loginDTO.getPassword())) {
+            throw new Exception400("password","패스워드가 잘못입력되었습니다"); }
+        // 2. JWT 생성하기
+        String jwt = JwtProvider.create(userPS);
 
-            // 3. JWT 생성하기
-            String jwt = JwtProvider.create(userOP.get());
+        // 3. 최종 로그인 날짜 기록 (더티체킹 - update 쿼리 발생)
+        userPS.setUpdatedAt(LocalDateTime.now());
 
-            // 4. 최종 로그인 날짜 기록 (더티체킹 - update 쿼리 발생)
-            loginUser.setUpdatedAt(LocalDateTime.now());
+        // 4. 로그 테이블 기록
+        LoginLog loginLog = LoginLog.builder()
+                .userId(userPS.getId())
+                .userAgent(request.getHeader("User-Agent"))
+                .clientIP(request.getRemoteAddr())
+                .build();
+        loginLogRepository.save(loginLog);
 
-            // 5. 로그 테이블 기록
-            LoginLog loginLog = LoginLog.builder()
-                    .userId(loginUser.getId())
-                    .userAgent(request.getHeader("User-Agent"))
-                    .clientIP(request.getRemoteAddr())
-                    .build();
-            loginLogRepository.save(loginLog);
-
-            // 6. 응답 DTO 생성
-            ResponseDto<?> responseDto = new ResponseDto<>().data(loginUser);
-            return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body(responseDto);
-        } else {
-            throw new Exception400("유저네임 혹은 아이디가 잘못되었습니다");
-        }
+        // 5. 응답 DTO 생성
+        ResponseDTO<?> responseDto = new ResponseDTO<>().data(userPS);
+        return ResponseEntity.ok().header(JwtProvider.HEADER,jwt).body(responseDto);
+    }
+    @MySameUserIdCheck
+    @GetMapping("/users/{id}")
+    public ResponseEntity<?> findById(@PathVariable Long id){
+        User userPS =userRepository.findById(id).orElseThrow(
+                ()->new Exception400("id","유저를 찾을 수 없습니다"));
+        ResponseDTO<?> responseDto = new ResponseDTO<>().data(userPS);
+        return ResponseEntity.ok().body(responseDto);
     }
 }
