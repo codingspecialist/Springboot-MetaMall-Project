@@ -39,6 +39,11 @@ public class User {
     @Column(nullable = false)
     private UserEnum role; // USER(고객), SELLER(판매자), ADMIN(관리자)
 
+    //사용자의 활성여부
+    @Column(nullable = false, length = 10)
+    private Boolean status; //true 활성, false 비활성계정
+
+
     @CreatedDate
     @Column(nullable = false)
     private LocalDateTime createdAt;
@@ -46,14 +51,32 @@ public class User {
     @LastModifiedDate
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+    //User와 관련된 메서드 작성 - 객체 상태 변경
+
+
+    //권한 변경 (관리자)
+    //: 관리자 권한 설정하는 메서드로 setter를 사용하지 않고, 의미있는 메서드를 작성한다.
+    public void updateRole(UserEnum role){
+        if(this.role.equals(role)){
+            //checkpoint : throw 동일한 권한으로 변경할 수 없습니다.
+        }
+        this.role=role;
+    }
+
+    //회원 탈퇴
+    public void delete(){
+        this.status=false;
+    }
+
 
     @Builder
-    public User(Long id, String username, String password, String email, UserEnum role, LocalDateTime createdAt,LocalDateTime updatedAt) {
+    public User(Long id, String username, String password, String email, UserEnum role, Boolean status, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
         this.role = role;
+        this.status = status;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }

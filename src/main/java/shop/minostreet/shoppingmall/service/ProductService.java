@@ -3,9 +3,15 @@ package shop.minostreet.shoppingmall.service;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import shop.minostreet.shoppingmall.config.auth.LoginUser;
 import shop.minostreet.shoppingmall.domain.Product;
 import shop.minostreet.shoppingmall.dto.product.ProductReqDto;
 
@@ -36,7 +42,7 @@ public class ProductService {
      * 2. 패스워드 인코딩
      * 3. dto 응답
      */
-    public ProductRegisterRespDto 상품등록(@Valid ProductReqDto.ProductRegisterReqDto productRegisterReqDto){
+    public ProductRegisterRespDto 상품등록(@Valid ProductReqDto.ProductRegisterReqDto productRegisterReqDto, @AuthenticationPrincipal LoginUser loginUser){
 //     1. 상품 이름 중복 체크
         Optional<Product> productOP = productRepository.findByName(productRegisterReqDto.getName());
         if(productOP.isPresent()){
@@ -44,14 +50,14 @@ public class ProductService {
             throw new MyApiException("동일한 이름의 상품이 존재합니다.");
         }
         //2. 상품 등록
-        Product productPS = productRepository.save(productRegisterReqDto.toEntity());
+        Product productPS = productRepository.save(productRegisterReqDto.toEntity(loginUser.getUser()));
 //     3. dto 응답
         return new ProductRegisterRespDto(productPS);
 
     }
 
-    public ProductListRespDto 상품목록() {
-        List<Product> productListPS=productRepository.findAll();
+    public ProductListRespDto 상품목록(Pageable pageable) {
+        Page<Product> productListPS=productRepository.findAll(pageable);
         ///checkpoint: 나중에 페이징 처리 필요
         return new ProductListRespDto(productListPS);
     }
@@ -67,6 +73,7 @@ public class ProductService {
     public ProductDto 상품수정(@Valid ProductReqDto.ProductUpdateReqDto productUpdateReqDto){
 
         Product productPS=productRepository.save(productUpdateReqDto.toEntity());
+        productPS.update(productUpdateReqDto);
 
         return new ProductDto(productPS);
     }

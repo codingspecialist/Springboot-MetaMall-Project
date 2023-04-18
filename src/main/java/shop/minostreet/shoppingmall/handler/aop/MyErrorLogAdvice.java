@@ -1,55 +1,60 @@
 package shop.minostreet.shoppingmall.handler.aop;
 
+import lombok.RequiredArgsConstructor;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import shop.minostreet.shoppingmall.config.auth.LoginUser;
+import shop.minostreet.shoppingmall.domain.ErrorLog;
 import shop.minostreet.shoppingmall.handler.exception.MyValidationException;
+import shop.minostreet.shoppingmall.repository.ErrorLogRepository;
 
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
-
+@RequiredArgsConstructor
 @Aspect
 //Aspect = PointCut + Advice
 @Component
 public class MyErrorLogAdvice {
+    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final HttpSession session;
 
-    @Pointcut("@annotation(org.springframework.web.bind.annotation.PostMapping)")
-    public void postMapping(){
+    private final ErrorLogRepository errorLogRepository;
+    @Pointcut("@annotation(shop.minostreet.shoppingmall.handler.annotation.MyErrorLogRecord)")
+    public void myErrorLog(){}
 
-    }
-    @Pointcut("@annotation(org.springframework.web.bind.annotation.PutMapping)")
-    public void putMapping(){
+    @Before("myErrorLog()")
+    public void errorLogAdvice(JoinPoint jp) throws HttpMessageNotReadableException {
+        log.debug("디버그 : errorLogAdvice 호출됨");
+        Object[] args = jp.getArgs();
 
-    }
-    //@Before, @After
-    @Around("postMapping() || putMapping()")    //1. @PostMapping(), @PutMapping() 어노테이션이 붙은 모든 메서드에서
-    //: joinPoint 메서드 실행 전 후 제어 가능한 어노테이션
-    public Object validationAdvice(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-        Object[] args = proceedingJoinPoint.getArgs();  //joinPoint의 매개변수
-        for(Object arg: args){
-            if(arg instanceof BindingResult){
-                //2. 에러가 존재할 경우 -> 예외 던짐
-                BindingResult bindingResult = (BindingResult) arg;
-                //담긴 에러를 처리
-                if(bindingResult.hasErrors()){
-                    //Map으로 담는다
-                    Map<String, String> errorMap  = new HashMap<>();
-                    for (FieldError error:bindingResult.getFieldErrors()) {
-                        errorMap.put(error.getField(), error.getDefaultMessage());
-                    }
-                    //return new ResponseEntity<>(new ResponseDto<>(-1, "유효성 검사 실패", errorMap), HttpStatus.BAD_REQUEST);
-                    //유효성 검사 예외를 던진다.
-                    throw new MyValidationException("유효성검사 실패", errorMap);
+        for (Object arg : args) {
+            //매개변수를 돌면서 Exception이 존재하는지 체크한다.
+            //: Exception의 자식까지 모두 확인
+            if(arg instanceof Exception){
+                Exception e = (Exception) arg;
+                Authentication authentication=(Authentication) SecurityContextHolder.getContext().getAuthentication();
+                LoginUser loginUser = (LoginUser)authentication.getDetails();
+//                LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
+                if(loginUser != null){
+                    ErrorLog errorLog =ErrorLog.builder().userId(loginUser.getUser().getId()).msg(e.getMessage()).build();
+                    //에러 로그의 아이디, 에러 로그 메시지를 전달해 객체 생성
+                    errorLogRepository.save(errorLog);
                 }
             }
-
         }
-        //3. 에러가 존재하지 않을 경우 해당 메서드 정상 수행
-        return proceedingJoinPoint.proceed();
     }
 }
 /**

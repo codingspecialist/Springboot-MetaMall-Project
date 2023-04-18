@@ -134,7 +134,8 @@ public class SecurityConfig {
 
         //접근 권한 설정
         http.authorizeRequests()
-                .antMatchers("/api/s/**").authenticated()
+                .antMatchers("/api/user/**").authenticated()
+                .antMatchers("/api/seller/**").access("hasRole('ADMIN') or hasRole('SELLER')")
                 .antMatchers("/api/admin/**").hasRole("" + UserEnum.ADMIN) //default prefix가 'ROLE_'
                 .anyRequest().permitAll();
 
@@ -168,8 +169,7 @@ public class SecurityConfig {
 //        public CustomSecurityFilterManager(LoginSuccessHandler loginSuccessHandler) {
 //            this.loginSuccessHandler = loginSuccessHandler;
 //        }
-        public CustomSecurityFilterManager() {
-        }
+        public CustomSecurityFilterManager() {}
 
         @Override
         public void configure(HttpSecurity builder) throws Exception {

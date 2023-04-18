@@ -17,6 +17,7 @@ public class DummyObject {
                 .password(encPassword)
                 .email(username+"@nate.com")
                 .role(UserEnum.ADMIN)
+                .status(true)
                 .build();
     }
     protected User newUser(String username){
@@ -28,6 +29,7 @@ public class DummyObject {
                 .password(encPassword)
                 .email(username+"@nate.com")
                 .role(UserEnum.CUSTOMER)
+                .status(true)
                 .build();
     }
     protected static User newMockUser(Long id,String username){
@@ -40,6 +42,7 @@ public class DummyObject {
                 .password(encPassword)
                 .email(username+"@nate.com")
                 .role(UserEnum.CUSTOMER)
+                .status(true)
                 .build();
     }
 

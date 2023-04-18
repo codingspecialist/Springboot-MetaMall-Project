@@ -103,19 +103,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         //(4) loginUser를 이용해 loginRespDto 변환
         LoginRespDto loginRespDto = new LoginRespDto(loginUser.getUser());
 
-//        loginSuccessHandler.onAuthenticationSuccess(request, response, authResult);
-        //+) 로깅
-//        User user = loginUser.getUser();
-//
-//        LoginLog loginLog = LoginLog.builder()
-//                .userId(user.getId())
-//                .userAgent(request.getHeader("User-Agent"))
-//                .clientIP(request.getRemoteAddr())
-//                .createdAt(LocalDateTime.now())
-//                .build();
-//
-//        loginLogRepository.save(loginLog);
-
         //MyResponseUtil에 JSON 응답 DTO 생성하는 메서드 작성
         //(5) JSON 응답 DTO 반환
         MyResponseUtil.success(response, loginRespDto);

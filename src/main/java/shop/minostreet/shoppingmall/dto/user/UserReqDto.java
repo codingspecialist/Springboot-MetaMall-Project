@@ -47,4 +47,19 @@ public class UserReqDto {
         private String username;
         private String password;
     }
+
+    @Getter
+    @Setter
+    //관리자만 상태를 변경할 수 있는 DTO
+    public static class RoleUpdateReqDto{
+        @NotEmpty
+        @Pattern(regexp = "USER|SELLER|ADMIN")
+        private String role;
+
+        public User toEntity(){
+            return User.builder()
+                    .role(UserEnum.valueOf(this.getRole()))
+                    .build();
+        }
+    }
 }
