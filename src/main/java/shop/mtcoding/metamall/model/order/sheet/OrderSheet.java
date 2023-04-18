@@ -1,4 +1,4 @@
-package shop.mtcoding.metamall.model.ordersheet;
+package shop.mtcoding.metamall.model.order.sheet;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -21,13 +21,27 @@ public class OrderSheet { // 주문서
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne
     private User user; // 주문자
+
+    // checkpoint -> 무한참조
     @OneToMany(mappedBy = "orderSheet")
     private List<OrderProduct> orderProductList = new ArrayList<>(); // 총 주문 상품 리스트
+
+    @Column(nullable = false)
     private Integer totalPrice; // 총 주문 금액 (총 주문 상품 리스트의 orderPrice 합)
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    public void addOrderProduct(OrderProduct orderProduct){
+        orderProductList.add(orderProduct);
+        orderProduct.syncOrderSheet(this);
+    }
+    public void removeOrderProduct(OrderProduct orderProduct){
+        orderProductList.remove(orderProduct);
+        orderProduct.syncOrderSheet(null);
+    }
 
     @PrePersist
     protected void onCreate() {
