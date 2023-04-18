@@ -9,5 +9,5 @@ import java.util.List;
 public interface OrderSheetRepository extends JpaRepository<OrderSheet, Long> {
     // 내가 주문한 목록보기
     @Query("select os from OrderSheet os where os.user.id = :userId")
-    List<OrderSheet> findByUserId(@Param("userID") Long userId);
+    List<OrderSheet> findByUserId(@Param("userId") Long userId);
 }
