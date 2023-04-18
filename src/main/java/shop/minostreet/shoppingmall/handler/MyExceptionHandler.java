@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import shop.minostreet.shoppingmall.dto.ResponseDto;
 import shop.minostreet.shoppingmall.handler.exception.MyApiException;
 import shop.minostreet.shoppingmall.handler.exception.MyForbiddenException;
@@ -35,10 +36,18 @@ public class MyExceptionHandler {
         log.error(e.getMessage());
         return new ResponseEntity<>(new ResponseDto<>(-1, e.getMessage(), null), HttpStatus.FORBIDDEN);
     }
+
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<?> notFoundException(NoHandlerFoundException e){
+        log.error(e.getMessage());
+        return new ResponseEntity<>(new ResponseDto<>(-1, e.getMessage(), null), HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> Exception(Exception e){
+    public ResponseEntity<?> serverErrorException(Exception e){
 
         log.error(e.getMessage());
-        return new ResponseEntity<>(new ResponseDto<>(-1, e.getMessage(), null), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ResponseDto<>(-1, e.getMessage(), null), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
