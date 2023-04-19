@@ -4,14 +4,10 @@ package shop.mtcoding.metamall.core.filter;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.HttpStatus;
 import shop.mtcoding.metamall.core.exception.Exception400;
-import shop.mtcoding.metamall.core.exception.Exception401;
 import shop.mtcoding.metamall.core.jwt.JwtProvider;
 import shop.mtcoding.metamall.core.session.SessionUser;
-import shop.mtcoding.metamall.core.util.MyFilterResponseUtil;
-import shop.mtcoding.metamall.dto.ResponseDTO;
+import shop.mtcoding.metamall.core.util.MyFilterResponseUtils;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -29,24 +25,25 @@ public class JwtVerifyFilter implements Filter {
         String prefixJwt = req.getHeader(JwtProvider.HEADER);
 
         if(prefixJwt == null){
-            MyFilterResponseUtil.badRequest(resp, new Exception400("authorization", "토큰이 전달되지 않았습니다"));
+            MyFilterResponseUtils.badRequest(resp, new Exception400("authorization", "토큰이 전달되지 않았습니다"));
             return;
         }
         String jwt = prefixJwt.replace(JwtProvider.TOKEN_PREFIX, "");
         try {
             DecodedJWT decodedJWT = JwtProvider.verify(jwt);
-            long id = decodedJWT.getClaim("id").asLong();
+            Long id = decodedJWT.getClaim("id").asLong();
             String role = decodedJWT.getClaim("role").asString();
 
-            // 세션을 사용하는 이유는 권한처리를 하기 위해서이다.
+            // 세션을 사용하는 이유는 role(권한) 처리를 하기 위해서이다.
             HttpSession session =  req.getSession();
             SessionUser sessionUser = SessionUser.builder().id(id).role(role).build();
-            session.setAttribute("loginUser", sessionUser);
+            session.setAttribute("sessionUser", sessionUser);
+            System.out.println("세션 생성됨");
             chain.doFilter(req, resp);
         }catch (SignatureVerificationException sve){
-            MyFilterResponseUtil.unAuthorized(resp, sve);
+            MyFilterResponseUtils.unAuthorized(resp, sve);
         }catch (TokenExpiredException tee){
-            MyFilterResponseUtil.unAuthorized(resp, tee);
+            MyFilterResponseUtils.unAuthorized(resp, tee);
         }
     }
 }

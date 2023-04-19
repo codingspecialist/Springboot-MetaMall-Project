@@ -13,10 +13,11 @@ import shop.mtcoding.metamall.dto.ResponseDTO;
 import shop.mtcoding.metamall.model.log.error.ErrorLogRepository;
 
 @Slf4j
-@RequiredArgsConstructor
+// @RequiredArgsConstructor
 @RestControllerAdvice
 public class MyExceptionAdvice {
 
+    @MyErrorLogRecord
     @ExceptionHandler(Exception400.class)
     public ResponseEntity<?> badRequest(Exception400 e){
         // trace -> debug -> info -> warn -> error
