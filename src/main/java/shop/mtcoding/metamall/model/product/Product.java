@@ -1,5 +1,6 @@
 package shop.mtcoding.metamall.model.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -71,5 +72,8 @@ public class Product {
         this.qty = qty;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    public void updateQty(Integer count) {
     }
 }
