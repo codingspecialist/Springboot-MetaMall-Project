@@ -1,9 +1,11 @@
 package shop.mtcoding.metamall.model.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import shop.mtcoding.metamall.model.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -17,11 +19,38 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne
+    private User seller;
+
+    @Column(nullable = false, length = 50)
     private String name; // 상품 이름
+    @Column(nullable = false)
     private Integer price; // 상품 가격
+    @Column(nullable = false)
     private Integer qty; // 상품 재고
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    // 상품 변경 (판매자)
+    public void update(String name, Integer price, Integer qty){
+        this.name = name;
+        this.price = price;
+        this.qty = qty;
+    }
+
+    // 주문시 재고 변경 (구매자)
+    public void udateQty(Integer orderCount){
+        if(this.qty < orderCount){
+            // checkpoint 주문 수량이 재고 수량을 초과하였습니다.
+        }
+        this.qty = this.qty - orderCount;
+    }
+
+    // 주문 취소 재고 변경 (구매자, 관리자)
+    public void rollbackQty(Integer orderCount){
+        this.qty = this.qty + orderCount;
+    }
 
     @PrePersist
     protected void onCreate() {
@@ -34,12 +63,17 @@ public class Product {
     }
 
     @Builder
-    public Product(Long id, String name, Integer price, Integer qty, LocalDateTime createdAt, LocalDateTime updatedAt) {
+
+    public Product(Long id, User seller, String name, Integer price, Integer qty, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
+        this.seller = seller;
         this.name = name;
         this.price = price;
         this.qty = qty;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    public void updateQty(Integer count) {
     }
 }

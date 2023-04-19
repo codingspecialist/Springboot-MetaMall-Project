@@ -3,7 +3,7 @@ package shop.mtcoding.metamall.core.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
-import shop.mtcoding.metamall.dto.ResponseDto;
+import shop.mtcoding.metamall.dto.ResponseDTO;
 
 
 // 인증 안됨
@@ -13,8 +13,8 @@ public class Exception401 extends RuntimeException {
         super(message);
     }
 
-    public ResponseDto<?> body(){
-        ResponseDto<String> responseDto = new ResponseDto<>();
+    public ResponseDTO<?> body(){
+        ResponseDTO<String> responseDto = new ResponseDTO<>();
         responseDto.fail(HttpStatus.UNAUTHORIZED, "unAuthorized", getMessage());
         return responseDto;
     }
