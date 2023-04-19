@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
@@ -43,11 +44,11 @@ public class User {
     private LocalDateTime updatedAt;
 
     // 권한 변경 (관리자)
-    public void updateRole() {
+    public void updateRole(@NotEmpty String role) {
         if (this.role.equals(role)) {
             // checkpoint 동일한 권한으로 변경할 수 없습니다.
         }
-        this.role = role;
+        this.role = this.role;
     }
 
     // 회원 탈퇴

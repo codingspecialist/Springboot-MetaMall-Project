@@ -1,5 +1,6 @@
 package shop.mtcoding.metamall.model.order.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ public class OrderProduct { // 주문 상품
     private Long id;
 
     // checkpoint -> 무한참조
+    @JsonIgnoreProperties({"seller"})
     @ManyToOne
     private Product product;
 
