@@ -23,8 +23,10 @@ public class OrderSheet { // 주문서
     private Long id;
     @ManyToOne
     private User user; // 주문자
-    @OneToMany(mappedBy = "orderSheet")
-    private List<OrderProduct> orderProductList = new ArrayList<>(); // 총 주문 상품 리스트
+
+//    @OneToMany(mappedBy = "orderSheet")
+//: 양방향 관계를 단뱡항 관계로 변경
+//    private List<OrderProduct> orderProductList = new ArrayList<>(); // 총 주문 상품 리스트
     private Integer totalPrice; // 총 주문 금액 (총 주문 상품 리스트의 orderPrice 합)
 
     @CreatedDate
@@ -35,7 +37,7 @@ public class OrderSheet { // 주문서
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    // 연관관계 메서드 구현 필요
+    // 연관관계 메서드 구현 필요 -> 양방향 매핑 사용시에
 
     @Builder
     public OrderSheet(Long id, User user, Integer totalPrice, LocalDateTime createdAt, LocalDateTime updatedAt) {

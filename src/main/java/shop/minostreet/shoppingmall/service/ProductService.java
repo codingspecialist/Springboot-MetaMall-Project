@@ -15,8 +15,8 @@ import shop.minostreet.shoppingmall.config.auth.LoginUser;
 import shop.minostreet.shoppingmall.domain.Product;
 import shop.minostreet.shoppingmall.dto.product.ProductReqDto;
 
+import shop.minostreet.shoppingmall.dto.product.ProductRespDto.ProductDto;
 import shop.minostreet.shoppingmall.dto.product.ProductRespDto.ProductListRespDto;
-import shop.minostreet.shoppingmall.dto.product.ProductRespDto.ProductListRespDto.ProductDto;
 import shop.minostreet.shoppingmall.dto.product.ProductRespDto.ProductRegisterRespDto;
 import shop.minostreet.shoppingmall.handler.exception.MyApiException;
 import shop.minostreet.shoppingmall.repository.ProductRepository;
