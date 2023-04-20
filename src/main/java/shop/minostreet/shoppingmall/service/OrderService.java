@@ -72,4 +72,17 @@ public class OrderService {
         // 2. 주문서 삭제하기
         orderSheetRepository.delete(orderSheetPS);
     }
+
+    public void 유저주문취소(OrderSheet orderSheetPS) {
+        //1. 주문 상품목록 조회
+        List<OrderProduct> orderProductList= orderProductRepository.findByOrderSheetId(orderSheetPS.getId());
+        //2. 재고 변경하기
+        orderProductList.stream().forEach(orderProduct -> {
+            orderProduct.getProduct().rollbackQty(orderProduct.getCount());
+            //더티체킹하겠지??
+        });
+
+        //3. 주문서 삭제하기
+        orderSheetRepository.delete(orderSheetPS);
+    }
 }

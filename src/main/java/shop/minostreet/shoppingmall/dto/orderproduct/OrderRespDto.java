@@ -83,19 +83,20 @@ public class OrderRespDto {
             private Long id;
             private String username; // 주문자
             private Integer totalPrice; // 총 주문 금액 (총 주문 상품 리스트의 orderPrice 합)
-            private LocalDateTime createdAt;
+            private String createdAt;
 
             public OrderSheetDto(OrderSheet orderSheet) {
                 this.id = orderSheet.getId();
                 this.username = orderSheet.getUser().getUsername();
                 this.totalPrice = orderSheet.getTotalPrice();
-                this.createdAt = orderSheet.getCreatedAt();
+                this.createdAt = MyDateUtil.toStringFormat(orderSheet.getCreatedAt());
             }
         }
     }
     @Getter
     @Setter
     public static class OrderListBySellerRespDto{
+
         private List<OrderListRespDto.OrderSheetDto> orderList;
         public OrderListBySellerRespDto(List<OrderSheet> orders) {
             this.orderList = orders.stream().map(
@@ -107,15 +108,13 @@ public class OrderRespDto {
         @Setter
         public static class OrderSheetDto{
             private Long id;
-            private String username; // 주문자
             private Integer totalPrice; // 총 주문 금액 (총 주문 상품 리스트의 orderPrice 합)
-            private LocalDateTime createdAt;
+            private String createdAt;
 
             public OrderSheetDto(OrderSheet orderSheet) {
                 this.id = orderSheet.getId();
-                this.username = orderSheet.getUser().getUsername();
                 this.totalPrice = orderSheet.getTotalPrice();
-                this.createdAt = orderSheet.getCreatedAt();
+                this.createdAt = MyDateUtil.toStringFormat(orderSheet.getCreatedAt());
             }
         }
     }
