@@ -45,7 +45,6 @@ import java.util.List;
         private final UserRepository userRepository;
         private final OrderService orderService;
 
-        @Transactional
         @PostMapping("/orders")
         public ResponseEntity<?> save(@RequestBody @Valid OrderReqDto.SaveReqDTO saveReqDTO, Errors errors, @AuthenticationPrincipal LoginUser loginUser) {
             //checkpoint : 해당 상품번호가 없어도 성공하는 에러 체크

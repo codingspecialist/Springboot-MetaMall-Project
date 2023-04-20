@@ -37,6 +37,7 @@ import shop.minostreet.shoppingmall.service.ProductService;
 import javax.validation.Valid;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -49,26 +50,26 @@ public class ProductController {
     private final UserRepository userRepository;
 
     @PostMapping("/seller/product/register")
-    public ResponseEntity<?> registerProduct(@RequestBody @Valid ProductReqDto.ProductRegisterReqDto productRegisterReqDto, BindingResult bindingResult, @AuthenticationPrincipal LoginUser loginUser){
+    public ResponseEntity<?> registerProduct(@RequestBody @Valid ProductReqDto.ProductRegisterReqDto productRegisterReqDto, Errors errors, @AuthenticationPrincipal LoginUser loginUser){
         // 1. 판매자 찾기
         User sellerPS = userRepository.findById(loginUser.getUser().getId())
                 .orElseThrow(
                         () -> new MyApiException("판매자를 찾을 수 없습니다")
                 );
-        ProductRegisterRespDto productRegisterRespDto = productService.상품등록(productRegisterReqDto, loginUser);
+        ProductRegisterRespDto productRegisterRespDto = productService.상품등록(productRegisterReqDto, sellerPS);
         //checkPoint: 누가 상품등록했는지 추후 추가하거나 로그 남기는 것 필요
-        return new ResponseEntity<>(new ResponseDto<>(1,"상품 등록 완료", productRegisterRespDto), CREATED);
+        return new ResponseEntity<>(new ResponseDto<>(1,"상품 등록 완료", productRegisterRespDto), OK);
     }
 
     @GetMapping("/user/product")
     public ResponseEntity<?> listProduct(@PageableDefault(size = 10, page = 0, direction = Sort.Direction.DESC) Pageable pageable) {
         ProductListRespDto productListRespDto=productService.상품목록(pageable);
-        return new ResponseEntity<>(new ResponseDto<>(1,"상품목록 보기 완료", productListRespDto), CREATED);
+        return new ResponseEntity<>(new ResponseDto<>(1,"상품목록 보기 완료", productListRespDto), OK);
     }
     @GetMapping("/user/product/{id}")
     public ResponseEntity<?> getProduct(@PathVariable Long id){
         ProductDto productdto = productService.상품상세(id);
-        return new ResponseEntity<>(new ResponseDto<>(1,"상품상세 보기 완료", productdto), CREATED);
+        return new ResponseEntity<>(new ResponseDto<>(1,"상품상세 보기 완료", productdto), OK);
     }
 
     @Transactional
@@ -79,12 +80,14 @@ public class ProductController {
         productPS.update(productUpdateReqDto);
         ProductUpdateRespDto productUpdateRespDto=new ProductUpdateRespDto(productPS);
 
-        return new ResponseEntity<>(new ResponseDto<>(1,"상품수정 완료", productUpdateRespDto), CREATED);
+        return new ResponseEntity<>(new ResponseDto<>(1,"상품수정 완료", productUpdateRespDto), OK);
     }
 
     @DeleteMapping("/seller/product/{id}")
     public ResponseEntity<?> removeProduct(@PathVariable Long id){
-         productService.상품삭제(id);
-        return new ResponseEntity<>(new ResponseDto<>(1,"상품삭제 완료", null), CREATED);
+        //(1) 전달 받은 값을 확인하는 절차
+        Product productPS = productRepository.findById(id).orElseThrow(() -> new MyApiException("해당 상품을 찾을 수 없습니다"));
+        productService.상품삭제(productPS);
+        return new ResponseEntity<>(new ResponseDto<>(1,"상품삭제 완료", null), OK);
     }
 }

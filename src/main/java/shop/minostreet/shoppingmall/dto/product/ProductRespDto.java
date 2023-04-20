@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.domain.Page;
 import shop.minostreet.shoppingmall.domain.Product;
+import shop.minostreet.shoppingmall.util.MyDateUtil;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotEmpty;
@@ -47,12 +48,14 @@ public class ProductRespDto {
         private String name;
         private Integer price;
         private Integer qty;
+        private String createdAt;
 
         public ProductDto(Product product) {
             this.id = product.getId();
             this.name = product.getName();
             this.price = product.getPrice();
             this.qty = product.getQty();
+            this.createdAt= MyDateUtil.toStringFormat(product.getCreatedAt());
         }
     }
 
@@ -62,11 +65,16 @@ public class ProductRespDto {
         private String name;
         private Integer price;
         private Integer qty;
+        private String createdAt;
+        private String updatedAt;
+
 
         public ProductUpdateRespDto(Product product) {
             this.name = product.getName();
             this.price = product.getPrice();
             this.qty = product.getQty();
+            this.createdAt=MyDateUtil.toStringFormat(product.getCreatedAt());
+            this.updatedAt=MyDateUtil.toStringFormat(product.getUpdatedAt());
         }
     }
 }

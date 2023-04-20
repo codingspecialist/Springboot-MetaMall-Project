@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import shop.minostreet.shoppingmall.config.auth.LoginUser;
 import shop.minostreet.shoppingmall.domain.OrderProduct;
 import shop.minostreet.shoppingmall.domain.OrderSheet;
@@ -29,6 +30,7 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final OrderSheetRepository orderSheetRepository;
 
+    @Transactional
     public SaveRespDTO 주문등록(@Valid SaveReqDTO saveReqDTO, User userPS) {
         // 1. 주문 상품
         List<Product> productListPS = productRepository.findAllById(saveReqDTO.getIds());
@@ -64,10 +66,10 @@ public class OrderService {
         List<OrderProduct> orderProductList= orderProductRepository.findByOrderSheetId(orderSheetPS.getId());
         orderProductList.stream().forEach(orderProduct -> {
             orderProduct.getProduct().rollbackQty(orderProduct.getCount());
+//            orderProductRepository.save(orderProduct); //더티체킹하겠지?
         });
 
         // 2. 주문서 삭제하기
         orderSheetRepository.delete(orderSheetPS);
-
     }
 }

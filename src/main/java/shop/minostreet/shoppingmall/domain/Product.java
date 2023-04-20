@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 
 @NoArgsConstructor
-@Setter // DTO 만들면 삭제해야됨
 @Getter
 @Table(name = "product_tb")
 @Entity
@@ -27,12 +26,12 @@ public class Product {
 
     @ManyToOne (fetch = FetchType.LAZY)
     private User seller;
-    @Column(unique = false, length =20)
+    @Column(nullable = false, length =20)
     private String name; // 상품 이름
     @Column(nullable = false)
     private Integer price; // 상품 가격
 
-    @Column(unique = false, length =20)
+    @Column(nullable = false, length =20)
     private Integer qty; // 상품 재고
     @CreatedDate
     @Column(nullable = false)
@@ -42,15 +41,6 @@ public class Product {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
 
     //Product와 관련된 메서드 작성 - 객체 상태 변경
 
@@ -75,7 +65,6 @@ public class Product {
     }
 
     @Builder
-
     public Product(Long id, User seller, String name, Integer price, Integer qty, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.seller = seller;

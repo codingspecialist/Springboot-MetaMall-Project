@@ -177,4 +177,12 @@ public class RegexTest {
         boolean result = Pattern.matches("^[0-9]{11}", tel);
         System.out.println("테스트 : "+result);
     }
+    
+    @Test
+    public void productNameTest()throws Exception{
+        String name="딸기 수정";
+        boolean result =Pattern.matches("^[ㄱ-힣A-Za-z0-9\\s]{2,20}$", name);
+        System.out.println("테스트 : "+result);
+    }
+
 }

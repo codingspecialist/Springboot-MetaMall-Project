@@ -21,7 +21,7 @@ public class ProductReqDto {
     @Setter
     public static class ProductRegisterReqDto {
         //한글, 영문, 숫자만 가능하고, 길이는 2~20자만 가능하도록, 공백도 불가능
-//        @Pattern(regexp = "^[ㄱ-힣A-Za-z0-9]{2,20}$", message = "한글/영문/숫자 2~20자 이내로 작성해 주세요.")
+        @Pattern(regexp = "^[ㄱ-힣A-Za-z0-9\\s]{2,20}$", message = "한글/영문/숫자 2~20자 이내로 작성해 주세요.")
         @NotEmpty
         private String name;
 
@@ -47,7 +47,7 @@ public class ProductReqDto {
     @Setter
     public static class ProductUpdateReqDto {
         //한글, 영문, 숫자만 가능하고, 길이는 2~20자만 가능하도록, 공백도 불가능
-//        @Pattern(regexp = "^[ㄱ-힣A-Za-z0-9]{2,20}$", message = "한글/영문/숫자 2~20자 이내로 작성해 주세요.")
+        @Pattern(regexp = "^[ㄱ-힣A-Za-z0-9\\s]{2,20}$", message = "한글/영문/숫자 2~20자 이내로 작성해 주세요.")
         @NotEmpty
         private String name;
 

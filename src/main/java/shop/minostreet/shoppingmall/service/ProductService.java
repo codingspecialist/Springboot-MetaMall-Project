@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.minostreet.shoppingmall.config.auth.LoginUser;
 import shop.minostreet.shoppingmall.domain.Product;
+import shop.minostreet.shoppingmall.domain.User;
 import shop.minostreet.shoppingmall.dto.product.ProductReqDto;
 
 import shop.minostreet.shoppingmall.dto.product.ProductRespDto.ProductDto;
@@ -42,7 +43,7 @@ public class ProductService {
      * 2. 패스워드 인코딩
      * 3. dto 응답
      */
-    public ProductRegisterRespDto 상품등록(@Valid ProductReqDto.ProductRegisterReqDto productRegisterReqDto, @AuthenticationPrincipal LoginUser loginUser){
+    public ProductRegisterRespDto 상품등록(@Valid ProductReqDto.ProductRegisterReqDto productRegisterReqDto, User sellerPS){
 //     1. 상품 이름 중복 체크
         Optional<Product> productOP = productRepository.findByName(productRegisterReqDto.getName());
         if(productOP.isPresent()){
@@ -50,7 +51,7 @@ public class ProductService {
             throw new MyApiException("동일한 이름의 상품이 존재합니다.");
         }
         //2. 상품 등록
-        Product productPS = productRepository.save(productRegisterReqDto.toEntity(loginUser.getUser()));
+        Product productPS = productRepository.save(productRegisterReqDto.toEntity(sellerPS));
 //     3. dto 응답
         return new ProductRegisterRespDto(productPS);
 
@@ -70,12 +71,9 @@ public class ProductService {
         return new ProductDto(productPS);
     }
 
-    @Transactional
-    public void 상품삭제(Long id){
-        //해당 아이디의 상품 존재 확인
-        Product productPS = productRepository.findById(id).orElseThrow(
-                () -> new MyApiException("해당 상품이 존재하지 않습니다.")
-        );
-        productRepository.deleteById(id);
+    public void 상품삭제(Product productPS){
+        productRepository.delete(productPS);
+
+      //  productRepository.deleteById(id);
     }
 }
