@@ -8,6 +8,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import shop.minostreet.shoppingmall.dto.product.ProductReqDto.ProductUpdateReqDto;
+import shop.minostreet.shoppingmall.handler.exception.MyApiException;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -63,7 +64,7 @@ public class Product {
     //상품 주문시 재고 변경하는 메서드 (구매자가 호출)
     public void updateQty(Integer orderCount){
         if(this.qty<orderCount){
-
+            throw new MyApiException("주문수량이 재고 수량을 초과했습니다.");
         }
         this.qty=this.qty-orderCount;
     }
