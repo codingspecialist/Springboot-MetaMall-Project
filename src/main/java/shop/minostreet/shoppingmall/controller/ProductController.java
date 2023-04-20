@@ -30,6 +30,7 @@ import shop.minostreet.shoppingmall.dto.product.ProductRespDto.ProductListRespDt
 import shop.minostreet.shoppingmall.dto.product.ProductRespDto.ProductRegisterRespDto;
 import shop.minostreet.shoppingmall.dto.product.ProductRespDto.ProductUpdateRespDto;
 import shop.minostreet.shoppingmall.handler.exception.MyApiException;
+import shop.minostreet.shoppingmall.handler.exception.MyValidationException;
 import shop.minostreet.shoppingmall.repository.ProductRepository;
 import shop.minostreet.shoppingmall.repository.UserRepository;
 import shop.minostreet.shoppingmall.service.ProductService;
@@ -76,6 +77,10 @@ public class ProductController {
     @PutMapping("/seller/product/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody @Valid ProductUpdateReqDto productUpdateReqDto, Errors errors){
         Product productPS = productRepository.findById(id).orElseThrow(()-> new MyApiException("해당 상품을 찾을 수 없습니다"));
+
+        if(productRepository.findByName(productUpdateReqDto.getName()).isPresent()){
+            throw new MyApiException("존재하는 상품명입니다.");
+        }
 
         productPS.update(productUpdateReqDto);
         ProductUpdateRespDto productUpdateRespDto=new ProductUpdateRespDto(productPS);
