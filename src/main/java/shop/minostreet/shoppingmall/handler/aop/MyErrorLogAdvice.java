@@ -46,7 +46,7 @@ public class MyErrorLogAdvice {
             if(arg instanceof Exception){
                 Exception e = (Exception) arg;
                 Authentication authentication=(Authentication) SecurityContextHolder.getContext().getAuthentication();
-                LoginUser loginUser = (LoginUser)authentication.getDetails();
+                LoginUser loginUser = (LoginUser)authentication.getPrincipal();
 //                LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
                 if(loginUser != null){
                     ErrorLog errorLog =ErrorLog.builder().userId(loginUser.getUser().getId()).msg(e.getMessage()).build();
