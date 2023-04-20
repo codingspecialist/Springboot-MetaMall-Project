@@ -2,6 +2,8 @@ package shop.minostreet.shoppingmall.dto.orderproduct;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.Page;
@@ -14,6 +16,7 @@ import shop.minostreet.shoppingmall.dto.orderproduct.OrderReqDto.SaveReqDTO;
 import shop.minostreet.shoppingmall.dto.orderproduct.OrderReqDto.SaveReqDTO.OrderProductDTO;
 import shop.minostreet.shoppingmall.dto.orderproduct.OrderRespDto.OrderListRespDto.OrderSheetDto;
 import shop.minostreet.shoppingmall.dto.product.ProductRespDto.ProductDto;
+import shop.minostreet.shoppingmall.util.MyDateUtil;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -25,38 +28,45 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class OrderRespDto {
+    private final Logger log = LoggerFactory.getLogger(getClass());
     @Getter
     @Setter
     public static class SaveRespDTO {
         private Long id;
         private String username; // 주문자
         private Integer totalPrice; // 총 주문 금액 (총 주문 상품 리스트의 orderPrice 합)
-        private LocalDateTime createdAt;
+        private String createdAt;
         private List<OrderDto> orderProductListPS;
+
 
         public SaveRespDTO(List<OrderProduct> orderProductListPS, OrderSheet orderSheetPS) {
             this.orderProductListPS=orderProductListPS.stream().map(
                     OrderDto::new
             ).collect(Collectors.toList());
+            this.totalPrice = orderSheetPS.getTotalPrice();
             this.id=orderSheetPS.getId();
+            this.createdAt= MyDateUtil.toStringFormat(orderSheetPS.getCreatedAt());
             this.username=orderSheetPS.getUser().getUsername();
         }
-    }
-    @Getter
-    @Setter
-    public static class OrderDto{
-        private Long id;
-        private Product product;
-        private Integer count; // 상품 주문 개수
-        private Integer orderPrice; // 상품 주문 금액
+        @Getter
+        @Setter
+        public static class OrderDto{
+            private Long id;
+//            private Product product;
+            private  String productName;
 
-        public OrderDto(OrderProduct orderProduct) {
-            this.id = orderProduct.getId();
-            this.product = orderProduct.getProduct();
-            this.count = orderProduct.getCount();
-            this.orderPrice = orderProduct.getOrderPrice();
+            private Integer count; // 상품 주문 개수
+            private Integer orderPrice; // 상품 주문 금액
+
+            public OrderDto(OrderProduct orderProduct) {
+                this.id = orderProduct.getProduct().getId();
+                this.productName = orderProduct.getProduct().getName();
+                this.count = orderProduct.getCount();
+                this.orderPrice = orderProduct.getOrderPrice();
+            }
         }
     }
+
     @Getter
     @Setter
     public static class OrderListRespDto{

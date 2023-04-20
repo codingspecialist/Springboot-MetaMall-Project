@@ -69,5 +69,4 @@ public class ProductRespDto {
             this.qty = product.getQty();
         }
     }
-
 }

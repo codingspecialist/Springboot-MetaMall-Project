@@ -69,14 +69,7 @@ public class ProductService {
         );
         return new ProductDto(productPS);
     }
-    @Transactional
-    public ProductDto 상품수정(@Valid ProductReqDto.ProductUpdateReqDto productUpdateReqDto){
 
-        Product productPS=productRepository.save(productUpdateReqDto.toEntity());
-        productPS.update(productUpdateReqDto);
-
-        return new ProductDto(productPS);
-    }
     @Transactional
     public void 상품삭제(Long id){
         //해당 아이디의 상품 존재 확인

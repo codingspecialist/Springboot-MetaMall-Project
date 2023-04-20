@@ -8,7 +8,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -68,8 +70,10 @@ public class ProductController {
         ProductDto productdto = productService.상품상세(id);
         return new ResponseEntity<>(new ResponseDto<>(1,"상품상세 보기 완료", productdto), CREATED);
     }
+
+    @Transactional
     @PutMapping("/seller/product/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody @Valid ProductUpdateReqDto productUpdateReqDto){
+    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody @Valid ProductUpdateReqDto productUpdateReqDto, Errors errors){
         Product productPS = productRepository.findById(id).orElseThrow(()-> new MyApiException("해당 상품을 찾을 수 없습니다"));
 
         productPS.update(productUpdateReqDto);
