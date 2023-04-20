@@ -25,7 +25,7 @@ public class OrderProduct { // 주문 상품
     private Integer count; // 상품 주문 개수
     private Integer orderPrice; // 상품 주문 금액
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)   //모두 삭제되도록
     private OrderSheet orderSheet;
 
     @CreatedDate
