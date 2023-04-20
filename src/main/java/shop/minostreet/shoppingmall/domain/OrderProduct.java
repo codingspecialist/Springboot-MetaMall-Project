@@ -36,6 +36,10 @@ public class OrderProduct { // 주문 상품
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+    public void setOrderSheet(OrderSheet orderSheet) {
+        this.orderSheet=orderSheet;
+    }
+
     @Builder
     public OrderProduct(Long id, Product product, Integer count, Integer orderPrice, LocalDateTime createdAt, LocalDateTime updatedAt, OrderSheet orderSheet) {
         this.id = id;
