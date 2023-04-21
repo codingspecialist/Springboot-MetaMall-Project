@@ -1,15 +1,22 @@
 package shop.minostreet.shoppingmall.config;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.security.test.context.support.TestExecutionEvent;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import shop.minostreet.shoppingmall.config.dummy.DummyObject;
+import shop.minostreet.shoppingmall.repository.UserRepository;
+
+import javax.persistence.EntityManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,10 +28,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 //통합 테스트 수행
 //: 가짜 환경에서 수행하는 Mockito 테스트
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
-public class SecurityConfigTest {
+public class SecurityConfigTest extends DummyObject {
     //가짜 환경에 등록된 MockMvc를 의존성 주입
     @Autowired
     private MockMvc mvc;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private EntityManager em;
+
 
     //서버는 일관성있게 에러가 리턴되어야 하므로, 프론트에 전달되기 전 모든 에러를 제어
     @Test
@@ -32,7 +46,7 @@ public class SecurityConfigTest {
         //given
 
         //when
-        ResultActions resultActions=mvc.perform(MockMvcRequestBuilders.get(("/api/s/hello")));
+        ResultActions resultActions=mvc.perform(MockMvcRequestBuilders.get(("/api/user/hello")));
 
         //웹, PostMan, 테스트에서 응답의 일관성을 유지하기 위해서 코드 변경 필요
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
@@ -46,7 +60,14 @@ public class SecurityConfigTest {
 
         assertThat(httpStatusCode).isEqualTo(401);
     }
+
+    @BeforeEach
+    public void setUp(){
+        userRepository.save(newUser("ssar"));
+        em.clear();
+    }
     @Test
+    @WithUserDetails(value = "ssar", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     public void authorization_test() throws Exception{
         //given
 

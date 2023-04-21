@@ -136,7 +136,7 @@ public class SecurityConfig {
         http.authorizeRequests()
                 .antMatchers("/api/user/**").authenticated()
                 .antMatchers("/api/seller/**").access("hasRole('ADMIN') or hasRole('SELLER')")
-                .antMatchers("/api/admin/**").hasRole("" + UserEnum.ADMIN) //default prefix가 'ROLE_'
+                .antMatchers("/api/admin/**").hasRole("ADMIN") //default prefix가 'ROLE_'
                 .anyRequest().permitAll();
 
         return http.build();

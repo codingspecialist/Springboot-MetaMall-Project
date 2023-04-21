@@ -18,10 +18,7 @@ import javax.validation.Valid;
 @RequestMapping("/api")
 @RestController
 public class UserController {
-
-    private final UserRepository userRepository;
     private final UserService userService;
-    private final LoginLogRepository loginLogRepository;
 //    private final HttpSession session;
 
 //    @PostMapping("/login")

@@ -61,7 +61,7 @@ class JwtAuthorizationFilterTest {
 
         //when
         //(1) 인증이 필요하지만, 토큰 없이 페이지 요청
-        ResultActions resultActions = mvc.perform(get("/api/s"));
+        ResultActions resultActions = mvc.perform(get("/api/user"));
 
         //then
         //(2) 인증이 필요한 401에러 발생 예상
