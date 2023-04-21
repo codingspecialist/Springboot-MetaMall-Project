@@ -48,19 +48,16 @@ JUnit
 
 * 시퀀스 다이어그램
 
-- 사용자 회원가입
-
-![UserController_join](https://user-images.githubusercontent.com/37648641/233537923-6c608c22-d783-46d0-a58b-65aed6bd967c.png)
-
-
-- 상품 등록
-
-![ProductController_registerProduct](https://user-images.githubusercontent.com/37648641/233537971-ca5b23df-d7e5-4fc4-a273-12c035d9711f.png)
+  1. 사용자 회원가입
+  ![UserController_join](https://user-images.githubusercontent.com/37648641/233537923-6c608c22-d783-46d0-a58b-65aed6bd967c.png)
 
 
-- 상품 주문
+  2. 상품 등록
+  ![ProductController_registerProduct](https://user-images.githubusercontent.com/37648641/233537971-ca5b23df-d7e5-4fc4-a273-12c035d9711f.png)
 
-![OrderController_save](https://user-images.githubusercontent.com/37648641/233537898-9faf0c0e-aa55-4763-b820-1af23245e234.png)
+
+  3. 상품 주문
+  ![OrderController_save](https://user-images.githubusercontent.com/37648641/233537898-9faf0c0e-aa55-4763-b820-1af23245e234.png)
 
 
 ## 프로젝트 설명
