@@ -30,7 +30,7 @@ JUnit
 |진행기간|목표|팀원|
 |------|---|---|
 |2023-04-09~2023-04-10 | 프로젝트 설계 및 기본 구현 |이지훈|
-|2023-04-10~2023-04-18 | 유저 기능 설계 및 구현 |이지훈|
+|2023-04-10~2023-04-18 | 유저 기능, AOP 설계 및 구현 |이지훈|
 |2023-04-18~2023-04-21 | 상품, 주문 기능 설계 및 구현 |이지훈|
 
 ## 프로젝트 구조
@@ -39,7 +39,7 @@ JUnit
 <!-- * 비즈니스 로직 -->
 
 * ERD 
-<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FWyEYE%2FbtrXyoWlGFc%2FhG1vZLFkWs1NASnwZwAmqK%2Fimg.png">
+![ERD](https://user-images.githubusercontent.com/37648641/233539052-1d19db0c-6608-4578-8259-adcf72253a39.png)
           
 * 클래스 다이어그램
 ![mvc구조도.png](MVC구조도.png)
@@ -168,10 +168,10 @@ JUnit
     @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
     //(4) 웹 애플리케이션을 위한 Mock 객체를 빈으로 주입해주는 어노테이션
     ```
-    
+<!--     
 ## 구현한 기능 설명
 * 
 
 ## 개선해야할 점
 * 
-
+ -->
