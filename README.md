@@ -5,8 +5,10 @@
    - 사용자 권한 열거형 이용
    - Auditing 기능을 사용한 자동 타임스탬프 생성
    - 자주 사용하는 유틸을 모아둔 유틸 클래스
-     - MyDateUtil : LocalDateTime타입을 DTO 반환을 위해 String으로 변환해주는 클래스
-     - MyResponseUtil : 응답 DTO 클래스로 응답 DTO 작성시 사용하는 클래스로 성공을 응답하거나 실패를 응답한다.
+     - MyDateUtil
+         - LocalDateTime타입을 DTO 반환을 위해 String으로 변환해주는 클래스
+     - MyResponseUtil
+         - 응답 DTO 클래스로 응답 DTO 작성시 사용하는 클래스로 성공을 응답하거나 실패를 응답한다.
    - AOP
      - MyErrorLogAdvice
          - @MyErrorLogRecord 커스텀 어노테이션 작성해, 로그인한 유저의 예외 발생시 자동으로 로깅처리
