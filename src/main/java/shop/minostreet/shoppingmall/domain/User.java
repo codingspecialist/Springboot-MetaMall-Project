@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import shop.minostreet.shoppingmall.handler.exception.MyApiException;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -59,8 +60,19 @@ public class User {
     public void updateRole(UserEnum role){
         if(this.role.equals(role)){
             //checkpoint : throw 동일한 권한으로 변경할 수 없습니다.
+            throw new MyApiException("동일한 권한으로 변경할 수 없습니다.");
         }
         this.role=role;
+    }
+
+    //활성상태 변경 (관리자)
+    //: 관리자 권한 설정하는 메서드로 setter를 사용하지 않고, 의미있는 메서드를 작성한다.
+    public void updateStatus(boolean status){
+        if(this.status.equals(status)){
+            //checkpoint : throw 동일한 상태로 변경할 수 없습니다.
+            throw new MyApiException("이미 동일한 상태입니다.");
+        }
+        this.status=status;
     }
 
     //회원 탈퇴

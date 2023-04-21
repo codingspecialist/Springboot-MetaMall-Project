@@ -37,6 +37,7 @@ public class UserReqDto {
 //                    .password(password)
                     .password(bCryptPasswordEncoder.encode(password))
                     .role(UserEnum.CUSTOMER)
+                    .status(true)
                     .build();
         }
     }
@@ -59,6 +60,21 @@ public class UserReqDto {
         public User toEntity(){
             return User.builder()
                     .role(UserEnum.valueOf(this.getRole()))
+                    .build();
+        }
+    }
+
+    @Getter
+    @Setter
+    //관리자가 유저의 활성 상태를 변경할 수 있는 DTO
+    public static class StatusUpdateReqDto{
+        @NotEmpty
+        @Pattern(regexp = "TRUE||FALSE")
+        private String status;
+
+        public User toEntity(){
+            return User.builder()
+                    .status(Boolean.parseBoolean(status))
                     .build();
         }
     }

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import shop.minostreet.shoppingmall.config.auth.LoginUser;
 import shop.minostreet.shoppingmall.domain.User;
 import shop.minostreet.shoppingmall.domain.UserEnum;
+import shop.minostreet.shoppingmall.handler.exception.MyForbiddenException;
 
 import java.util.Date;
 

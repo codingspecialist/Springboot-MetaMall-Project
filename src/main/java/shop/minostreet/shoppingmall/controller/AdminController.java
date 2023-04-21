@@ -29,7 +29,7 @@ public class AdminController {
     private final UserRepository userRepository;
 
     @Transactional // 트랜잭션이 시작되지 않으면 강제로 em.flush() 를 할 수 없고, 더티체킹도 할 수 없다. (원래는 서비스에서)
-    @PutMapping("/admin/user/{id}/role")
+    @PutMapping("/admin/{id}/role")
     public ResponseEntity<?> updateRole(@PathVariable Long id, @RequestBody @Valid UserReqDto.RoleUpdateReqDto roleUpdateReqDto, Errors errors) {
 
         User userPS = userRepository.findById(id)
@@ -40,5 +40,19 @@ public class AdminController {
 //        return ResponseEntity.ok().body(responseDto);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "회원 권한 변경 완료", null), HttpStatus.OK);
+    }
+
+    @Transactional // 트랜잭션이 시작되지 않으면 강제로 em.flush() 를 할 수 없고, 더티체킹도 할 수 없다. (원래는 서비스에서)
+    @PutMapping("/admin/{id}/status")
+    public ResponseEntity<?> updateStatus(@PathVariable Long id, @RequestBody @Valid UserReqDto.StatusUpdateReqDto statusUpdateReqDto, Errors errors) {
+
+        User userPS = userRepository.findById(id)
+                .orElseThrow(() -> new MyApiException("해당 유저를 찾을 수 없습니다"));
+        userPS.updateStatus(statusUpdateReqDto.toEntity().getStatus());
+
+//        ResponseDTO<?> responseDto = new ResponseDTO<>();
+//        return ResponseEntity.ok().body(responseDto);
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "회원 활성상태 변경 완료", null), HttpStatus.OK);
     }
 }

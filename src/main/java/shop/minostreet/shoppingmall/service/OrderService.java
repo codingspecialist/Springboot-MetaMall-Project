@@ -69,7 +69,7 @@ public class OrderService {
         orderProductList.stream().forEach(orderProductPS -> {
             orderProductPS.getProduct().rollbackQty(orderProductPS.getCount());
             orderProductPS.setOrderSheet(orderSheetPS);
-            orderProductRepository.save(orderProductPS); //더티체킹하겠지?
+            orderProductRepository.delete(orderProductPS); //더티체킹하겠지??
         });
 
         // 2. 주문서 삭제하기
@@ -83,7 +83,7 @@ public class OrderService {
         orderProductList.stream().forEach(orderProductPS -> {
             orderProductPS.getProduct().rollbackQty(orderProductPS.getCount());
             orderProductPS.setOrderSheet(orderSheetPS);
-            orderProductRepository.save(orderProductPS); //더티체킹하겠지??
+            orderProductRepository.delete(orderProductPS); //더티체킹하겠지??
         });
 
         //3. 주문서 삭제하기
