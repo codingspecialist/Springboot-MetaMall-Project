@@ -12,11 +12,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import shop.minostreet.shoppingmall.config.auth.LoginUser;
 import shop.minostreet.shoppingmall.domain.ErrorLog;
+import shop.minostreet.shoppingmall.domain.User;
 import shop.minostreet.shoppingmall.handler.exception.MyValidationException;
 import shop.minostreet.shoppingmall.repository.ErrorLogRepository;
 
@@ -45,14 +47,29 @@ public class MyErrorLogAdvice {
             //: Exception의 자식까지 모두 확인
             if(arg instanceof Exception){
                 Exception e = (Exception) arg;
-                Authentication authentication=(Authentication) SecurityContextHolder.getContext().getAuthentication();
-                LoginUser loginUser = (LoginUser)authentication.getPrincipal();
-//                LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
-                if(loginUser != null){
-                    ErrorLog errorLog =ErrorLog.builder().userId(loginUser.getUser().getId()).msg(e.getMessage()).build();
-                    //에러 로그의 아이디, 에러 로그 메시지를 전달해 객체 생성
+
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+                    User userDetails = (User) authentication.getPrincipal();
+                    LoginUser loginUser = new LoginUser(userDetails); // UserDetails 객체를 LoginUser 객체로 변환합니다.
+
+                    ErrorLog errorLog = ErrorLog.builder()
+                            .userId(loginUser.getUser().getId())
+                            .msg(e.getMessage())
+                            .build();
                     errorLogRepository.save(errorLog);
                 }
+
+//                Authentication authentication=(Authentication) SecurityContextHolder.getContext().getAuthentication();
+//                if(authentication != null){
+//                LoginUser loginUser = (LoginUser)authentication.getPrincipal();
+//
+////                LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
+//
+//                    ErrorLog errorLog =ErrorLog.builder().userId(loginUser.getUser().getId()).msg(e.getMessage()).build();
+//                    //에러 로그의 아이디, 에러 로그 메시지를 전달해 객체 생성
+//                    errorLogRepository.save(errorLog);
+//                }
             }
         }
     }
