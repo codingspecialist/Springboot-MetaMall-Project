@@ -39,18 +39,28 @@ JUnit
 <!-- * 비즈니스 로직 -->
 
 * ERD 
+
 ![ERD](https://user-images.githubusercontent.com/37648641/233539052-1d19db0c-6608-4578-8259-adcf72253a39.png)
           
 * 클래스 다이어그램
+
 ![mvc구조도.png](MVC구조도.png)
 
 * 시퀀스 다이어그램
+
 - 사용자 회원가입
-- ![UserController_join](https://user-images.githubusercontent.com/37648641/233537923-6c608c22-d783-46d0-a58b-65aed6bd967c.png)
+
+![UserController_join](https://user-images.githubusercontent.com/37648641/233537923-6c608c22-d783-46d0-a58b-65aed6bd967c.png)
+
+
 - 상품 등록
-- ![ProductController_registerProduct](https://user-images.githubusercontent.com/37648641/233537971-ca5b23df-d7e5-4fc4-a273-12c035d9711f.png)
+
+![ProductController_registerProduct](https://user-images.githubusercontent.com/37648641/233537971-ca5b23df-d7e5-4fc4-a273-12c035d9711f.png)
+
+
 - 상품 주문
-- ![OrderController_save](https://user-images.githubusercontent.com/37648641/233537898-9faf0c0e-aa55-4763-b820-1af23245e234.png)
+
+![OrderController_save](https://user-images.githubusercontent.com/37648641/233537898-9faf0c0e-aa55-4763-b820-1af23245e234.png)
 
 
 ## 프로젝트 설명
