@@ -1,4 +1,59 @@
-## 상품 주문 서비스 프로젝트
+## [상품 주문 서비스 프로젝트](https://github.com/ji-hoooon/Springboot-MetaMall-Project)
+
+
+## 목차
+* [프로젝트 간단 요약](#프로젝트-간단-요약)<br>
+* [사용한 기술 스택](#사용한-기술-스택)<br>
+* [프로젝트 정보](#프로젝트-정보)<br>
+* [프로젝트 구조](#프로젝트-설명)<br>
+* [프로젝트 설명](#프로젝트-설명)<br>
+* [구현한 기능 설명](#구현한-기능-설명)<br>
+* [개선해야할 점](#개선해야할-점)<br>
+
+
+## 프로젝트 간단 요약
+상용 가능한 상품 주문 서비스 API를 만들기 위한 프로젝트
+* REST API로 요청과 응답을 JSON으로 처리
+* 스프링부트로 MVC 처리
+* 스프링 시큐리티를 이용해 권한과 인가 처리
+* JWT을 이용한 토큰 기반 인증 처리
+* Spring Data JPA로 영속 계층 처리
+
+## 사용한 기술 스택
+Spring Boot
+Spring Security
+MySQL
+JWT
+JUnit
+
+## 프로젝트 정보
+|진행기간|목표|팀원|
+|------|---|---|
+|2023-04-09~2023-04-10 | 프로젝트 설계 및 기본 구현 |이지훈|
+|2023-04-10~2023-04-18 | 유저 기능 설계 및 구현 |이지훈|
+|2023-04-18~2023-04-21 | 상품, 주문 기능 설계 및 구현 |이지훈|
+
+## 프로젝트 구조
+<!-- * 요청과 응답 처리 로직 -->
+
+<!-- * 비즈니스 로직 -->
+
+* ERD 
+<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FWyEYE%2FbtrXyoWlGFc%2FhG1vZLFkWs1NASnwZwAmqK%2Fimg.png">
+          
+* 클래스 다이어그램
+![mvc구조도.png](MVC구조도.png)
+
+* 시퀀스 다이어그램
+- 사용자 회원가입
+![UserController_join](https://user-images.githubusercontent.com/37648641/233537923-6c608c22-d783-46d0-a58b-65aed6bd967c.png)
+- 상품 등록
+![ProductController_registerProduct](https://user-images.githubusercontent.com/37648641/233537971-ca5b23df-d7e5-4fc4-a273-12c035d9711f.png)
+- 상품 주문
+![OrderController_save](https://user-images.githubusercontent.com/37648641/233537898-9faf0c0e-aa55-4763-b820-1af23245e234.png)
+
+
+## 프로젝트 설명
 
 ### 개요
 1. 공통 모듈 / 공통 유틸리티
@@ -47,11 +102,17 @@
         };
     }
    ```
-3. 
-4. LAZY 로딩과 단방향 매핑을 이용해 쿼리를 수행하도록 한다.
+3. LAZY 로딩과 단방향 매핑을 이용해 쿼리를 수행하도록 한다.
    - OrderSheet와 OrderProduct는 일대다 관계로, 단방향 매핑으로 연결
-   - 비즈니스 로직에 따라 유기적으로 동작하도록 작성
+   - 연관관계에 있는 두 엔티티는 비즈니스 로직에 따라 유기적으로 동작하도록 작성
    - @EntityGraph로 LAZY LOADING 발동 하도록 해서 N+1문제 해결
+   
+4. 요청과 응답은 반드시 독립적인 DTO로 처리
+   - 엔티티를 노출시키면 DB 공격에 취약할 수 있으므로 DTO를 이용해 필요한 데이터만 전달
+      - ResponseDto
+      - UserReqDto, UserRespDto
+      - OrderReqDto, OderRespDto
+      - ProductReqDto, ProductRespDto
 
 ### 테스트
 1. 테스트시 인증처리 용이하도록 설정
@@ -107,5 +168,10 @@
     @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
     //(4) 웹 애플리케이션을 위한 Mock 객체를 빈으로 주입해주는 어노테이션
     ```
+    
+## 구현한 기능 설명
+* 
 
-![mvc구조도.png](MVC구조도.png)
+## 개선해야할 점
+* 
+
