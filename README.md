@@ -105,6 +105,5 @@
     @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
     //(4) 웹 애플리케이션을 위한 Mock 객체를 빈으로 주입해주는 어노테이션
     ```
-   
 
-   ![img_1.png](img_1.png)
+![mvc구조도.png](MVC구조도.png)
