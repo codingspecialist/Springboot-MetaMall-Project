@@ -22,6 +22,7 @@
 ## 사용한 기술 스택
 Spring Boot
 Spring Security
+Spring Data JPA
 MySQL
 JWT
 JUnit
