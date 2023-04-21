@@ -1,13 +1,26 @@
 ## 상품 주문 서비스 프로젝트
 
 ### 개요
-1. 헤더에 JWT 노출
-    ```java
-    //(1) JS코드로 토큰에 접근해서 클라이언트의 로컬영역에 저장할 수 있도록 설정해야한다. (기본값이 disable)
-    //(2) 실제 서버에서는 JWT 탈취 위험성 때문에 보안조치가 필요하다.
-    //(3) 기본값은 cors-safelisted reponse header만 노출
-    configuration.addExposedHeader("Authorization");
-    ```
+1. 공통 모듈 / 공통 유틸리티
+   - 사용자 권한 열거형 이용
+   - Auditing 기능을 사용한 자동 타임스탬프 생성
+   - 자주 사용하는 유틸을 모아둔 유틸 클래스
+     - MyDateUtil : LocalDateTime타입을 DTO 반환을 위해 String으로 변환해주는 클래스
+     - MyResponseUtil : 응답 DTO 클래스로 응답 DTO 작성시 사용하는 클래스로 성공을 응답하거나 실패를 응답한다.
+   - AOP
+     - MyErrorLogAdvice
+         - @MyErrorLogRecord 커스텀 어노테이션 작성해, 로그인한 유저의 예외 발생시 자동으로 로깅처리
+     - MyValidationAdvice
+         - PostMapping과 PutMapping에 대해서 @Valid가 붙은 경우 유효성 검사 수행하고, Errors 객체에 결과를 담는다.
+         - MyExceptionHandler의 예외처리 메서드에 모두 @MyErrorLogRecord를 붙여서 예외발생시 기록하도록 한다.
+2. 토큰을 이용한 인증
+   - 헤더에 JWT 토큰 노출
+       ```java
+       //(1) JS코드로 토큰에 접근해서 클라이언트의 로컬영역에 저장할 수 있도록 설정해야한다. (기본값이 disable)
+       //(2) 실제 서버에서는 JWT 탈취 위험성 때문에 보안조치가 필요하다.
+       //(3) 기본값은 cors-safelisted reponse header만 노출
+       configuration.addExposedHeader("Authorization");
+       ```
 2. ApplicationListener로 로그인 로깅 구현
    ```java
    @Bean
@@ -32,13 +45,11 @@
         };
     }
    ```
-3. AOP로 유효성 검사, 예외처리 수행, 에러 로깅 처리 수행
-   - MyErrorLogAdvice
-     - @MyErrorLogRecord 커스텀 어노테이션 작성해, 로그인한 유저의 예외 발생시 자동으로 로깅처리
-   - MyValidationAdvice
-     - PostMapping과 PutMapping에 대해서 @Valid가 붙은 경우 유효성 검사 수행하고, Errors 객체에 결과를 담는다.
-     - MyExceptionHandler의 예외처리 메서드에 모두 @MyErrorLogRecord를 붙여서 예외발생시 기록하도록 한다.
+3. 
 4. LAZY 로딩과 단방향 매핑을 이용해 쿼리를 수행하도록 한다.
+   - OrderSheet와 OrderProduct는 일대다 관계로, 단방향 매핑으로 연결
+   - 비즈니스 로직에 따라 유기적으로 동작하도록 작성
+   - @EntityGraph로 LAZY LOADING 발동 하도록 해서 N+1문제 해결
 
 ### 테스트
 1. 테스트시 인증처리 용이하도록 설정
@@ -95,3 +106,4 @@
     //(4) 웹 애플리케이션을 위한 Mock 객체를 빈으로 주입해주는 어노테이션
     ```
    
+![img_1.png](img_1.png)
