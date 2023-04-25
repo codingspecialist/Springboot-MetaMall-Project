@@ -22,15 +22,15 @@ public class ProductReqDto {
     public static class ProductRegisterReqDto {
         //한글, 영문, 숫자만 가능하고, 길이는 2~20자만 가능하도록, 공백도 불가능
         @Pattern(regexp = "^[ㄱ-힣A-Za-z0-9\\s]{2,20}$", message = "한글/영문/숫자 2~20자 이내로 작성해 주세요.")
-        @NotEmpty
+        @NotEmpty(message = "상품명은 빈칸으로 둘 수 없습니다.")
         private String name;
 
         @Digits(fraction = 0, integer = 9)
-        @NotNull
+        @NotNull(message = "상품가격이 없습니다.")
         private Integer price;
 
         @Digits(fraction = 0, integer = 9)
-        @NotNull        //최소 1개부터 ~ 9999개까지
+        @NotNull(message = "상품개수가 없습니다.")        //최소 1개부터 ~ 9999개까지
         private Integer qty;
 
         public Product toEntity(User user) {
@@ -48,16 +48,16 @@ public class ProductReqDto {
     public static class ProductUpdateReqDto {
         //한글, 영문, 숫자만 가능하고, 길이는 2~20자만 가능하도록, 공백도 불가능
         @Pattern(regexp = "^[ㄱ-힣A-Za-z0-9\\s]{2,20}$", message = "한글/영문/숫자 2~20자 이내로 작성해 주세요.")
-        @NotEmpty
+        @NotEmpty(message = "상품명은 빈칸으로 둘 수 없습니다.")
         private String name;
 
         @Digits(fraction = 0, integer = 9)
-        @NotNull    //: 숫자의 길이 체크 최소 3자 최대 8자
+        @NotNull(message = "상품가격이 없습니다.")    //: 숫자의 길이 체크 최소 3자 최대 8자
         //최소 100원부터 ~ 9000만원까지
         private Integer price;
 
         @Digits(fraction = 0, integer = 9)
-        @NotNull
+        @NotNull(message = "상품개수가 없습니다.")
         //최소 1개부터 ~ 9999개까지
         private Integer qty;
     }

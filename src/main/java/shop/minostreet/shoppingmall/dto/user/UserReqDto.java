@@ -16,16 +16,16 @@ public class UserReqDto {
 
         //영문, 숫자만 가능하고, 길이는 2~20자만 가능하도록, 공백도 불가능
         @Pattern(regexp = "^[A-Za-z0-9]{2,20}$",message = "영문/숫자 2~20자 이내로 작성해 주세요.")
-        @NotEmpty
+        @NotEmpty(message = "이름은 빈칸으로 만들 수 없습니다.")
         private String username;
 
         //길이 4~20만 가능
         @Size(min=4, max=20) //String에만 사용가능한 어노테이션
-        @NotEmpty
+        @NotEmpty(message = "비밀번호는 빈칸으로 만들 수 없습니다.")
         private String password;
         //이메일 형식을 준수하도록
         @Pattern(regexp = "^[A-Za-z0-9]{2,10}@[A-Za-z0-9]{2,6}\\.[a-zA-Z]{2,3}$",message = "이메일 형식으로 작성해 주세요.")
-        @NotEmpty
+        @NotEmpty(message = "이메일은 빈칸으로 만들 수 없습니다.")
         private String email;
 
         //DTO를 엔티티로 변환하는 메서드 작성

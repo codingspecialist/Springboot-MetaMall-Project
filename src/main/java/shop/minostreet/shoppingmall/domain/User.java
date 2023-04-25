@@ -24,7 +24,6 @@ public class User {
     private Long id;
 
     @Column(unique = false, length =20)
-
     private String username;
 
     @Column(unique = false, length =60)
