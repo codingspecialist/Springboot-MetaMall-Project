@@ -41,6 +41,7 @@ public class MyValidationAdvice {
                     //Map으로 담는다
                     Map<String, String> errorMap = new HashMap<>();
                     for (FieldError error : bindingResult.getFieldErrors()) {
+                        //errorMap.put("ErrorField", error.getDefaultMessage());
                         errorMap.put(error.getField(), error.getDefaultMessage());
                     }
                     //return new ResponseEntity<>(new ResponseDto<>(-1, "유효성 검사 실패", errorMap), HttpStatus.BAD_REQUEST);
@@ -48,6 +49,7 @@ public class MyValidationAdvice {
                     throw new MyValidationException("유효성검사 실패", errorMap);
                 }
             }
+
         }
     }
 }
