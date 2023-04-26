@@ -56,7 +56,8 @@ public class UserController {
             ResponseDto<?> responseDto = new ResponseDto<>().data(loginUser);
             return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body(responseDto);
         } else {
-            throw new Exception400("유저네임 혹은 아이디가 잘못되었습니다");
+            // checkpoint
+            throw new Exception400("", "유저네임 혹은 아이디가 잘못되었습니다");
         }
     }
 }
