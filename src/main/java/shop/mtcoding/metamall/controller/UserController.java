@@ -8,7 +8,6 @@ import shop.mtcoding.metamall.core.exception.Exception401;
 import shop.mtcoding.metamall.core.jwt.JwtProvider;
 import shop.mtcoding.metamall.dto.ResponseDto;
 import shop.mtcoding.metamall.dto.user.UserRequest;
-import shop.mtcoding.metamall.dto.user.UserResponse;
 import shop.mtcoding.metamall.model.log.login.LoginLog;
 import shop.mtcoding.metamall.model.log.login.LoginLogRepository;
 import shop.mtcoding.metamall.model.user.User;
