@@ -27,7 +27,7 @@ public class OrderSheet { // 주문서
     private User user; // 주문자
 
     // checkpoint -> 무한참조
-//    @JsonIgnoreProperties("orderSheet")
+    @JsonIgnoreProperties("orderSheet")
     @OneToMany(mappedBy = "orderSheet", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderProduct> orderProductList = new ArrayList<>(); // 총 주문 상품 리스트
 

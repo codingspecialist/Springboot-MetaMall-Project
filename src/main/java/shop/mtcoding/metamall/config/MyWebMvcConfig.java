@@ -18,7 +18,7 @@ public class MyWebMvcConfig implements WebMvcConfigurer {
 
     private final MyAdminInterceptor adminInterceptor;
     private final MySellerInterceptor sellerInterceptor;
-    private MySessionArgumentResolver mySessionArgumentResolver;
+    private final MySessionArgumentResolver mySessionArgumentResolver;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
